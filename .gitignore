@@ -74,4 +74,4 @@ dmypy.json
 .vscode/
 
 # Local uv package cache
-.uv/
+.uv/docs/build/
