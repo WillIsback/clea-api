@@ -5,13 +5,14 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-from clea_vectordb.api.database_endpoint import router as database_router
-from clea_vectordb.api.search_endpoint import router as search_router
-from clea_doc_loader.api.loader_endpoint import router as doc_loader_router
-from clea_pipeline.api.pipeline_endpoint import router as pipeline_router
+from vectordb.api.database_endpoint import router as database_router
+from vectordb.api.search_endpoint import router as search_router
+from doc_loader.api.loader_endpoint import router as doc_loader_router
+from pipeline.api.pipeline_endpoint import router as pipeline_router
 from dotenv import load_dotenv
 import os
 import subprocess
+import uvicorn
 
 # Charger les variables d'environnement depuis le fichier .env
 load_dotenv()
@@ -120,7 +121,7 @@ async def root():
 def setup_database():
     """Initialise la base de données et configure pgvector"""
     print("Initialisation de la base de données...")
-    from clea_vectordb.src.database import init_db, engine
+    from vectordb.src.database import init_db, engine
 
     init_db()
 
@@ -150,6 +151,10 @@ def setup_database():
             return False
 
     return True
+
+
+def run():
+    uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=True)
 
 
 if __name__ == "__main__":

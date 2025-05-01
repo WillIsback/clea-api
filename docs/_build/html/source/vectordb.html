@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+
+<html lang="fr" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>vectordb package &#8212; Documentation Cléa-API v0.1.0</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <script src="../_static/documentation_options.js?v=72cb410a"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/translations.js?v=e6b791cb"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="vectordb-package">
+<h1>vectordb package<a class="headerlink" href="#vectordb-package" title="Lien vers cette rubrique">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Lien vers cette rubrique">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="vectordb.api.html">vectordb.api package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="vectordb.api.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vectordb.api.html#module-vectordb.api.database_endpoint">vectordb.api.database_endpoint module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.api.html#vectordb.api.database_endpoint.add_documents_endpoint"><code class="docutils literal notranslate"><span class="pre">add_documents_endpoint()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.api.html#vectordb.api.database_endpoint.delete_document_endpoint"><code class="docutils literal notranslate"><span class="pre">delete_document_endpoint()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.api.html#vectordb.api.database_endpoint.list_documents_endpoint"><code class="docutils literal notranslate"><span class="pre">list_documents_endpoint()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.api.html#vectordb.api.database_endpoint.update_document_endpoint"><code class="docutils literal notranslate"><span class="pre">update_document_endpoint()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="vectordb.api.html#module-vectordb.api.search_endpoint">vectordb.api.search_endpoint module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.api.html#vectordb.api.search_endpoint.search_documents"><code class="docutils literal notranslate"><span class="pre">search_documents()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="vectordb.api.html#module-vectordb.api">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="vectordb.src.html">vectordb.src package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="vectordb.src.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vectordb.src.html#module-vectordb.src.database">vectordb.src.database module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.Document"><code class="docutils literal notranslate"><span class="pre">Document</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.Document.content"><code class="docutils literal notranslate"><span class="pre">Document.content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.Document.document_type"><code class="docutils literal notranslate"><span class="pre">Document.document_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.Document.embedding"><code class="docutils literal notranslate"><span class="pre">Document.embedding</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.Document.id"><code class="docutils literal notranslate"><span class="pre">Document.id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.Document.publish_date"><code class="docutils literal notranslate"><span class="pre">Document.publish_date</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.Document.theme"><code class="docutils literal notranslate"><span class="pre">Document.theme</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.Document.title"><code class="docutils literal notranslate"><span class="pre">Document.title</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.DocumentCreate"><code class="docutils literal notranslate"><span class="pre">DocumentCreate</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.DocumentCreate.content"><code class="docutils literal notranslate"><span class="pre">DocumentCreate.content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.DocumentCreate.document_type"><code class="docutils literal notranslate"><span class="pre">DocumentCreate.document_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.DocumentCreate.model_config"><code class="docutils literal notranslate"><span class="pre">DocumentCreate.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.DocumentCreate.publish_date"><code class="docutils literal notranslate"><span class="pre">DocumentCreate.publish_date</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.DocumentCreate.theme"><code class="docutils literal notranslate"><span class="pre">DocumentCreate.theme</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.DocumentCreate.title"><code class="docutils literal notranslate"><span class="pre">DocumentCreate.title</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.DocumentResponse"><code class="docutils literal notranslate"><span class="pre">DocumentResponse</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.DocumentResponse.content"><code class="docutils literal notranslate"><span class="pre">DocumentResponse.content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.DocumentResponse.document_type"><code class="docutils literal notranslate"><span class="pre">DocumentResponse.document_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.DocumentResponse.id"><code class="docutils literal notranslate"><span class="pre">DocumentResponse.id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.DocumentResponse.model_config"><code class="docutils literal notranslate"><span class="pre">DocumentResponse.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.DocumentResponse.publish_date"><code class="docutils literal notranslate"><span class="pre">DocumentResponse.publish_date</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.DocumentResponse.theme"><code class="docutils literal notranslate"><span class="pre">DocumentResponse.theme</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.DocumentResponse.title"><code class="docutils literal notranslate"><span class="pre">DocumentResponse.title</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.DocumentUpdate"><code class="docutils literal notranslate"><span class="pre">DocumentUpdate</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.DocumentUpdate.content"><code class="docutils literal notranslate"><span class="pre">DocumentUpdate.content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.DocumentUpdate.document_id"><code class="docutils literal notranslate"><span class="pre">DocumentUpdate.document_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.DocumentUpdate.document_type"><code class="docutils literal notranslate"><span class="pre">DocumentUpdate.document_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.DocumentUpdate.model_config"><code class="docutils literal notranslate"><span class="pre">DocumentUpdate.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.DocumentUpdate.publish_date"><code class="docutils literal notranslate"><span class="pre">DocumentUpdate.publish_date</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.DocumentUpdate.theme"><code class="docutils literal notranslate"><span class="pre">DocumentUpdate.theme</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.DocumentUpdate.title"><code class="docutils literal notranslate"><span class="pre">DocumentUpdate.title</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.add_documents"><code class="docutils literal notranslate"><span class="pre">add_documents()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.delete_document"><code class="docutils literal notranslate"><span class="pre">delete_document()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.get_db"><code class="docutils literal notranslate"><span class="pre">get_db()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.init_db"><code class="docutils literal notranslate"><span class="pre">init_db()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.src.html#vectordb.src.database.update_document"><code class="docutils literal notranslate"><span class="pre">update_document()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="vectordb.src.html#module-vectordb.src.embeddings">vectordb.src.embeddings module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.src.html#vectordb.src.embeddings.EmbeddingGenerator"><code class="docutils literal notranslate"><span class="pre">EmbeddingGenerator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.embeddings.EmbeddingGenerator.compute_similarity"><code class="docutils literal notranslate"><span class="pre">EmbeddingGenerator.compute_similarity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.embeddings.EmbeddingGenerator.generate_embedding"><code class="docutils literal notranslate"><span class="pre">EmbeddingGenerator.generate_embedding()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="vectordb.src.html#module-vectordb.src.ranking">vectordb.src.ranking module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.src.html#vectordb.src.ranking.ResultRanker"><code class="docutils literal notranslate"><span class="pre">ResultRanker</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.ranking.ResultRanker.rank_results"><code class="docutils literal notranslate"><span class="pre">ResultRanker.rank_results()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="vectordb.src.html#module-vectordb.src.search">vectordb.src.search module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.DocumentSearchRequest"><code class="docutils literal notranslate"><span class="pre">DocumentSearchRequest</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.DocumentSearchRequest.top_k"><code class="docutils literal notranslate"><span class="pre">DocumentSearchRequest.top_k</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.DocumentSearchRequest.theme"><code class="docutils literal notranslate"><span class="pre">DocumentSearchRequest.theme</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.DocumentSearchRequest.document_type"><code class="docutils literal notranslate"><span class="pre">DocumentSearchRequest.document_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.DocumentSearchRequest.start_date"><code class="docutils literal notranslate"><span class="pre">DocumentSearchRequest.start_date</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.DocumentSearchRequest.end_date"><code class="docutils literal notranslate"><span class="pre">DocumentSearchRequest.end_date</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#id0"><code class="docutils literal notranslate"><span class="pre">DocumentSearchRequest.document_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#id1"><code class="docutils literal notranslate"><span class="pre">DocumentSearchRequest.end_date</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.DocumentSearchRequest.model_config"><code class="docutils literal notranslate"><span class="pre">DocumentSearchRequest.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.DocumentSearchRequest.query"><code class="docutils literal notranslate"><span class="pre">DocumentSearchRequest.query</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#id2"><code class="docutils literal notranslate"><span class="pre">DocumentSearchRequest.start_date</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#id3"><code class="docutils literal notranslate"><span class="pre">DocumentSearchRequest.theme</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#id4"><code class="docutils literal notranslate"><span class="pre">DocumentSearchRequest.top_k</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.DocumentSearchResponse"><code class="docutils literal notranslate"><span class="pre">DocumentSearchResponse</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.DocumentSearchResponse.content"><code class="docutils literal notranslate"><span class="pre">DocumentSearchResponse.content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.DocumentSearchResponse.document_type"><code class="docutils literal notranslate"><span class="pre">DocumentSearchResponse.document_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.DocumentSearchResponse.id"><code class="docutils literal notranslate"><span class="pre">DocumentSearchResponse.id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.DocumentSearchResponse.metadata"><code class="docutils literal notranslate"><span class="pre">DocumentSearchResponse.metadata</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.DocumentSearchResponse.model_config"><code class="docutils literal notranslate"><span class="pre">DocumentSearchResponse.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.DocumentSearchResponse.publish_date"><code class="docutils literal notranslate"><span class="pre">DocumentSearchResponse.publish_date</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.DocumentSearchResponse.theme"><code class="docutils literal notranslate"><span class="pre">DocumentSearchResponse.theme</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.DocumentSearchResponse.title"><code class="docutils literal notranslate"><span class="pre">DocumentSearchResponse.title</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.SearchEngine"><code class="docutils literal notranslate"><span class="pre">SearchEngine</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.SearchEngine.format_results"><code class="docutils literal notranslate"><span class="pre">SearchEngine.format_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.SearchEngine.hybrid_search"><code class="docutils literal notranslate"><span class="pre">SearchEngine.hybrid_search()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.SearchEngine.search"><code class="docutils literal notranslate"><span class="pre">SearchEngine.search()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.SearchResults"><code class="docutils literal notranslate"><span class="pre">SearchResults</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.SearchResults.filters"><code class="docutils literal notranslate"><span class="pre">SearchResults.filters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.SearchResults.total_results"><code class="docutils literal notranslate"><span class="pre">SearchResults.total_results</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.SearchResults.results"><code class="docutils literal notranslate"><span class="pre">SearchResults.results</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#id5"><code class="docutils literal notranslate"><span class="pre">SearchResults.filters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.SearchResults.model_config"><code class="docutils literal notranslate"><span class="pre">SearchResults.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.search.SearchResults.query"><code class="docutils literal notranslate"><span class="pre">SearchResults.query</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#id6"><code class="docutils literal notranslate"><span class="pre">SearchResults.results</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#id7"><code class="docutils literal notranslate"><span class="pre">SearchResults.total_results</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="vectordb.src.html#module-vectordb.src">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.src.html#vectordb.src.Document"><code class="docutils literal notranslate"><span class="pre">Document</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.Document.content"><code class="docutils literal notranslate"><span class="pre">Document.content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.Document.document_type"><code class="docutils literal notranslate"><span class="pre">Document.document_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.Document.embedding"><code class="docutils literal notranslate"><span class="pre">Document.embedding</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.Document.id"><code class="docutils literal notranslate"><span class="pre">Document.id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.Document.publish_date"><code class="docutils literal notranslate"><span class="pre">Document.publish_date</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.Document.theme"><code class="docutils literal notranslate"><span class="pre">Document.theme</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.Document.title"><code class="docutils literal notranslate"><span class="pre">Document.title</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.src.html#vectordb.src.DocumentCreate"><code class="docutils literal notranslate"><span class="pre">DocumentCreate</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.DocumentCreate.content"><code class="docutils literal notranslate"><span class="pre">DocumentCreate.content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.DocumentCreate.document_type"><code class="docutils literal notranslate"><span class="pre">DocumentCreate.document_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.DocumentCreate.model_config"><code class="docutils literal notranslate"><span class="pre">DocumentCreate.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.DocumentCreate.publish_date"><code class="docutils literal notranslate"><span class="pre">DocumentCreate.publish_date</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.DocumentCreate.theme"><code class="docutils literal notranslate"><span class="pre">DocumentCreate.theme</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.DocumentCreate.title"><code class="docutils literal notranslate"><span class="pre">DocumentCreate.title</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.src.html#vectordb.src.DocumentResponse"><code class="docutils literal notranslate"><span class="pre">DocumentResponse</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.DocumentResponse.content"><code class="docutils literal notranslate"><span class="pre">DocumentResponse.content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.DocumentResponse.document_type"><code class="docutils literal notranslate"><span class="pre">DocumentResponse.document_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.DocumentResponse.id"><code class="docutils literal notranslate"><span class="pre">DocumentResponse.id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.DocumentResponse.model_config"><code class="docutils literal notranslate"><span class="pre">DocumentResponse.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.DocumentResponse.publish_date"><code class="docutils literal notranslate"><span class="pre">DocumentResponse.publish_date</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.DocumentResponse.theme"><code class="docutils literal notranslate"><span class="pre">DocumentResponse.theme</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.DocumentResponse.title"><code class="docutils literal notranslate"><span class="pre">DocumentResponse.title</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.src.html#vectordb.src.DocumentUpdate"><code class="docutils literal notranslate"><span class="pre">DocumentUpdate</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.DocumentUpdate.content"><code class="docutils literal notranslate"><span class="pre">DocumentUpdate.content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.DocumentUpdate.document_id"><code class="docutils literal notranslate"><span class="pre">DocumentUpdate.document_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.DocumentUpdate.document_type"><code class="docutils literal notranslate"><span class="pre">DocumentUpdate.document_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.DocumentUpdate.model_config"><code class="docutils literal notranslate"><span class="pre">DocumentUpdate.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.DocumentUpdate.publish_date"><code class="docutils literal notranslate"><span class="pre">DocumentUpdate.publish_date</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.DocumentUpdate.theme"><code class="docutils literal notranslate"><span class="pre">DocumentUpdate.theme</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="vectordb.src.html#vectordb.src.DocumentUpdate.title"><code class="docutils literal notranslate"><span class="pre">DocumentUpdate.title</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.src.html#vectordb.src.add_documents"><code class="docutils literal notranslate"><span class="pre">add_documents()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.src.html#vectordb.src.delete_document"><code class="docutils literal notranslate"><span class="pre">delete_document()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.src.html#vectordb.src.get_db"><code class="docutils literal notranslate"><span class="pre">get_db()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.src.html#vectordb.src.init_db"><code class="docutils literal notranslate"><span class="pre">init_db()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="vectordb.src.html#vectordb.src.update_document"><code class="docutils literal notranslate"><span class="pre">update_document()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="module-vectordb">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-vectordb" title="Lien vers cette rubrique">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="vectordb.Document">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">vectordb.</span></span><span class="sig-name descname"><span class="pre">Document</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vectordb/src/database.html#Document"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vectordb.Document" title="Lien vers cette définition">¶</a></dt>
+<dd><p>Bases : <code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></p>
+<p>&#64;class Document
+&#64;brief Modèle SQLAlchemy représentant un document dans la base de données.
+&#64;structure:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>id (int): Identifiant unique du document.</p></li>
+<li><p>title (str): Titre du document.</p></li>
+<li><p>content (str): Contenu du document.</p></li>
+<li><p>theme (str): Thème du document.</p></li>
+<li><p>document_type (str): Type de document.</p></li>
+<li><p>publish_date (date): Date de publication du document.</p></li>
+<li><p>embedding (Text): Représentation vectorielle du contenu du document.</p></li>
+</ul>
+</div></blockquote>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.Document.content">
+<span class="sig-name descname"><span class="pre">content</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">Mapped</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><a class="headerlink" href="#vectordb.Document.content" title="Lien vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.Document.document_type">
+<span class="sig-name descname"><span class="pre">document_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">Mapped</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><a class="headerlink" href="#vectordb.Document.document_type" title="Lien vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.Document.embedding">
+<span class="sig-name descname"><span class="pre">embedding</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">Mapped</span></code><span class="pre">[</span><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]]</span></em><a class="headerlink" href="#vectordb.Document.embedding" title="Lien vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.Document.id">
+<span class="sig-name descname"><span class="pre">id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">Mapped</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code><span class="pre">]</span></em><a class="headerlink" href="#vectordb.Document.id" title="Lien vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.Document.publish_date">
+<span class="sig-name descname"><span class="pre">publish_date</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">Mapped</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code><span class="pre">]</span></em><a class="headerlink" href="#vectordb.Document.publish_date" title="Lien vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.Document.theme">
+<span class="sig-name descname"><span class="pre">theme</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">Mapped</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><a class="headerlink" href="#vectordb.Document.theme" title="Lien vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.Document.title">
+<span class="sig-name descname"><span class="pre">title</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">Mapped</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><a class="headerlink" href="#vectordb.Document.title" title="Lien vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="vectordb.DocumentCreate">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">vectordb.</span></span><span class="sig-name descname"><span class="pre">DocumentCreate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vectordb/src/database.html#DocumentCreate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vectordb.DocumentCreate" title="Lien vers cette définition">¶</a></dt>
+<dd><p>Bases : <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Classe représentant un document à créer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>title</strong> (<em>str</em>) – Titre du document.</p></li>
+<li><p><strong>content</strong> (<em>str</em>) – Contenu du document.</p></li>
+<li><p><strong>theme</strong> (<em>str</em>) – Thème du document.</p></li>
+<li><p><strong>document_type</strong> (<em>str</em>) – Type de document.</p></li>
+<li><p><strong>publish_date</strong> (<em>date</em>) – Date de publication du document.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.DocumentCreate.content">
+<span class="sig-name descname"><span class="pre">content</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#vectordb.DocumentCreate.content" title="Lien vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.DocumentCreate.document_type">
+<span class="sig-name descname"><span class="pre">document_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#vectordb.DocumentCreate.document_type" title="Lien vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.DocumentCreate.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#vectordb.DocumentCreate.model_config" title="Lien vers cette définition">¶</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.DocumentCreate.publish_date">
+<span class="sig-name descname"><span class="pre">publish_date</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code></em><a class="headerlink" href="#vectordb.DocumentCreate.publish_date" title="Lien vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.DocumentCreate.theme">
+<span class="sig-name descname"><span class="pre">theme</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#vectordb.DocumentCreate.theme" title="Lien vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.DocumentCreate.title">
+<span class="sig-name descname"><span class="pre">title</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#vectordb.DocumentCreate.title" title="Lien vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="vectordb.DocumentResponse">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">vectordb.</span></span><span class="sig-name descname"><span class="pre">DocumentResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vectordb/src/database.html#DocumentResponse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vectordb.DocumentResponse" title="Lien vers cette définition">¶</a></dt>
+<dd><p>Bases : <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>&#64;brief Classe représentant un document de réponse.
+&#64;details Contient les informations du document ainsi que son ID.
+&#64;structure:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>id (int): ID du document.</p></li>
+<li><p>title (str): Titre du document.</p></li>
+<li><p>content (str): Contenu du document.</p></li>
+<li><p>theme (str): Thème du document.</p></li>
+<li><p>document_type (str): Type de document.</p></li>
+<li><p>publish_date (date): Date de publication du document.</p></li>
+</ul>
+</div></blockquote>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.DocumentResponse.content">
+<span class="sig-name descname"><span class="pre">content</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#vectordb.DocumentResponse.content" title="Lien vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.DocumentResponse.document_type">
+<span class="sig-name descname"><span class="pre">document_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#vectordb.DocumentResponse.document_type" title="Lien vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.DocumentResponse.id">
+<span class="sig-name descname"><span class="pre">id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></em><a class="headerlink" href="#vectordb.DocumentResponse.id" title="Lien vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.DocumentResponse.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'from_attributes':</span> <span class="pre">True}</span></em><a class="headerlink" href="#vectordb.DocumentResponse.model_config" title="Lien vers cette définition">¶</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.DocumentResponse.publish_date">
+<span class="sig-name descname"><span class="pre">publish_date</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code></em><a class="headerlink" href="#vectordb.DocumentResponse.publish_date" title="Lien vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.DocumentResponse.theme">
+<span class="sig-name descname"><span class="pre">theme</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#vectordb.DocumentResponse.theme" title="Lien vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.DocumentResponse.title">
+<span class="sig-name descname"><span class="pre">title</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#vectordb.DocumentResponse.title" title="Lien vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="vectordb.DocumentUpdate">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">vectordb.</span></span><span class="sig-name descname"><span class="pre">DocumentUpdate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vectordb/src/database.html#DocumentUpdate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vectordb.DocumentUpdate" title="Lien vers cette définition">¶</a></dt>
+<dd><p>Bases : <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>&#64;brief Classe représentant un document à mettre à jour.
+&#64;details Contient les informations nécessaires pour mettre à jour un document.
+&#64;structure:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>document_id (int): ID du document à mettre à jour.</p></li>
+<li><p>title (str, optional): Nouveau titre.</p></li>
+<li><p>content (str, optional): Nouveau contenu.</p></li>
+<li><p>theme (str, optional): Nouveau thème.</p></li>
+<li><p>document_type (str, optional): Nouveau type de document.</p></li>
+<li><p>publish_date (str, optional): Nouvelle date de publication (format ISO).</p></li>
+</ul>
+</div></blockquote>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.DocumentUpdate.content">
+<span class="sig-name descname"><span class="pre">content</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><a class="headerlink" href="#vectordb.DocumentUpdate.content" title="Lien vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.DocumentUpdate.document_id">
+<span class="sig-name descname"><span class="pre">document_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></em><a class="headerlink" href="#vectordb.DocumentUpdate.document_id" title="Lien vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.DocumentUpdate.document_type">
+<span class="sig-name descname"><span class="pre">document_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><a class="headerlink" href="#vectordb.DocumentUpdate.document_type" title="Lien vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.DocumentUpdate.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#vectordb.DocumentUpdate.model_config" title="Lien vers cette définition">¶</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.DocumentUpdate.publish_date">
+<span class="sig-name descname"><span class="pre">publish_date</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code><span class="pre">]</span></em><a class="headerlink" href="#vectordb.DocumentUpdate.publish_date" title="Lien vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.DocumentUpdate.theme">
+<span class="sig-name descname"><span class="pre">theme</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><a class="headerlink" href="#vectordb.DocumentUpdate.theme" title="Lien vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="vectordb.DocumentUpdate.title">
+<span class="sig-name descname"><span class="pre">title</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><a class="headerlink" href="#vectordb.DocumentUpdate.title" title="Lien vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="vectordb.add_documents">
+<span class="sig-prename descclassname"><span class="pre">vectordb.</span></span><span class="sig-name descname"><span class="pre">add_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">documents</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vectordb/src/database.html#add_documents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vectordb.add_documents" title="Lien vers cette définition">¶</a></dt>
+<dd><p>Ajoute une liste de documents à la base de données et génère leurs embeddings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>documents</strong> (<em>List</em><em>[</em><a class="reference internal" href="#vectordb.DocumentCreate" title="vectordb.DocumentCreate"><em>DocumentCreate</em></a><em>]</em>) – Liste de documents à ajouter.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Résultat de l’opération avec les IDs des documents ajoutés ou les erreurs rencontrées.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="vectordb.delete_document">
+<span class="sig-prename descclassname"><span class="pre">vectordb.</span></span><span class="sig-name descname"><span class="pre">delete_document</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vectordb/src/database.html#delete_document"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vectordb.delete_document" title="Lien vers cette définition">¶</a></dt>
+<dd><p>Supprime un document de la base de données.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>document_id</strong> (<em>int</em>) – ID du document à supprimer.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Résultat de l’opération.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="vectordb.get_db">
+<span class="sig-prename descclassname"><span class="pre">vectordb.</span></span><span class="sig-name descname"><span class="pre">get_db</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vectordb/src/database.html#get_db"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vectordb.get_db" title="Lien vers cette définition">¶</a></dt>
+<dd><p>&#64;brief Fonction pour obtenir une session de base de données.
+&#64;return Générateur de session de base de données.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="vectordb.init_db">
+<span class="sig-prename descclassname"><span class="pre">vectordb.</span></span><span class="sig-name descname"><span class="pre">init_db</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vectordb/src/database.html#init_db"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vectordb.init_db" title="Lien vers cette définition">¶</a></dt>
+<dd><p>&#64;brief Fonction pour initialiser la base de données.
+Crée les tables définies dans les modèles SQLAlchemy.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="vectordb.update_document">
+<span class="sig-prename descclassname"><span class="pre">vectordb.</span></span><span class="sig-name descname"><span class="pre">update_document</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document_update</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vectordb/src/database.html#update_document"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vectordb.update_document" title="Lien vers cette définition">¶</a></dt>
+<dd><p>Met à jour un document existant dans la base de données.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>document_update</strong> (<a class="reference internal" href="#vectordb.DocumentUpdate" title="vectordb.DocumentUpdate"><em>DocumentUpdate</em></a>) – Objet contenant les champs à mettre à jour.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Résultat de l’opération.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Cléa-API</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, William Derue.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/source/vectordb.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -46,5 +46,11 @@ dependencies = [
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["clea_doc_loader", "clea_vectordb", "clea_pipeline"]
+include = ["doc_loader", "vectordb", "pipeline"]
 exclude = ["static", "test", "docs"]
+
+[project.scripts]
+clea-api = "main:run"
+
+[project.urls]
+Github = "https://github.com/WillIsback/clea-api"

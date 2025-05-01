@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html lang="fr" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>vectordb.api package &#8212; Documentation Cléa-API v0.1.0</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <script src="../_static/documentation_options.js?v=72cb410a"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/translations.js?v=e6b791cb"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="vectordb-api-package">
+<h1>vectordb.api package<a class="headerlink" href="#vectordb-api-package" title="Lien vers cette rubrique">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Lien vers cette rubrique">¶</a></h2>
+</section>
+<section id="module-vectordb.api.database_endpoint">
+<span id="vectordb-api-database-endpoint-module"></span><h2>vectordb.api.database_endpoint module<a class="headerlink" href="#module-vectordb.api.database_endpoint" title="Lien vers cette rubrique">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="vectordb.api.database_endpoint.add_documents_endpoint">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">vectordb.api.database_endpoint.</span></span><span class="sig-name descname"><span class="pre">add_documents_endpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">documents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Body(PydanticUndefined)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vectordb/api/database_endpoint.html#add_documents_endpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vectordb.api.database_endpoint.add_documents_endpoint" title="Lien vers cette définition">¶</a></dt>
+<dd><p>Ajoute une liste de documents à la base de données.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>documents</strong> (<em>List</em><em>[</em><a class="reference internal" href="vectordb.html#vectordb.DocumentCreate" title="vectordb.DocumentCreate"><em>DocumentCreate</em></a><em>]</em>) – Liste des documents à ajouter.</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Erreur lors de l’ajout des documents.</p>
+</dd>
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Liste des documents ajoutés avec leurs IDs.</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[<a class="reference internal" href="vectordb.html#vectordb.DocumentResponse" title="vectordb.DocumentResponse">DocumentResponse</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="vectordb.api.database_endpoint.delete_document_endpoint">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">vectordb.api.database_endpoint.</span></span><span class="sig-name descname"><span class="pre">delete_document_endpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vectordb/api/database_endpoint.html#delete_document_endpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vectordb.api.database_endpoint.delete_document_endpoint" title="Lien vers cette définition">¶</a></dt>
+<dd><p>Supprime un document de la base de données.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>document_id</strong> (<em>int</em>) – ID du document à supprimer.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Résultat de l’opération.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="vectordb.api.database_endpoint.list_documents_endpoint">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">vectordb.api.database_endpoint.</span></span><span class="sig-name descname"><span class="pre">list_documents_endpoint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vectordb/api/database_endpoint.html#list_documents_endpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vectordb.api.database_endpoint.list_documents_endpoint" title="Lien vers cette définition">¶</a></dt>
+<dd><p>Affiche la liste des documents dans la base de données.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Liste des documents dans la base de données.</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[<a class="reference internal" href="vectordb.html#vectordb.DocumentResponse" title="vectordb.DocumentResponse">DocumentResponse</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="vectordb.api.database_endpoint.update_document_endpoint">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">vectordb.api.database_endpoint.</span></span><span class="sig-name descname"><span class="pre">update_document_endpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">payload</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Body(PydanticUndefined)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vectordb/api/database_endpoint.html#update_document_endpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vectordb.api.database_endpoint.update_document_endpoint" title="Lien vers cette définition">¶</a></dt>
+<dd><p>Met à jour un document existant dans la base de données.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>payload</strong> (<a class="reference internal" href="vectordb.html#vectordb.DocumentUpdate" title="vectordb.DocumentUpdate"><em>DocumentUpdate</em></a>) – Données pour mettre à jour le document.</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>HTTPException</strong> – Erreur lors de la mise à jour du document.</p>
+</dd>
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Document mis à jour.</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="vectordb.html#vectordb.DocumentResponse" title="vectordb.DocumentResponse">DocumentResponse</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-vectordb.api.search_endpoint">
+<span id="vectordb-api-search-endpoint-module"></span><h2>vectordb.api.search_endpoint module<a class="headerlink" href="#module-vectordb.api.search_endpoint" title="Lien vers cette rubrique">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="vectordb.api.search_endpoint.search_documents">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">vectordb.api.search_endpoint.</span></span><span class="sig-name descname"><span class="pre">search_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">search_request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vectordb/api/search_endpoint.html#search_documents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vectordb.api.search_endpoint.search_documents" title="Lien vers cette définition">¶</a></dt>
+<dd><p>Recherche des documents en fonction d’une requête et de filtres optionnels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>search_request</strong> (<a class="reference internal" href="vectordb.src.html#vectordb.src.search.DocumentSearchRequest" title="vectordb.src.search.DocumentSearchRequest"><em>DocumentSearchRequest</em></a>) – Requête de recherche contenant les paramètres de recherche.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Résultats de la recherche.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="vectordb.src.html#vectordb.src.search.SearchResults" title="vectordb.src.search.SearchResults">SearchResults</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-vectordb.api">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-vectordb.api" title="Lien vers cette rubrique">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Cléa-API</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, William Derue.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/source/vectordb.api.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
