@@ -1,63 +1,61 @@
+# vectordb/src/ranking.py
+from typing import Sequence, List
 from sentence_transformers.cross_encoder import CrossEncoder
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
 
-class ResultRanker:
-    """Classe responsable du réordonnancement des résultats de recherche en fonction de leur pertinence.
-    """
 
-    def __init__(self):
-        """Initialise le modèle Cross-Encoder utilisé pour le ranking.
-        """
-        self.cross_encoder_model = os.getenv("CROSS_ENCODER_MODEL", 
-                                           "cross-encoder/ms-marco-MiniLM-L-6-v2")
-        self.model = CrossEncoder(self.cross_encoder_model)
-        print(f"Modèle de ranking chargé: {self.cross_encoder_model}")
-    
-    def rank_results(self, query, results):
-        """Réorganise les résultats de recherche par pertinence.
+class ResultRanker:
+    """Renvoie le score de similarité Cross-Encoder pour chaque texte."""
+
+    def __init__(self) -> None:
+        model_name = os.getenv(
+            "CROSS_ENCODER_MODEL",
+            "cross-encoder/ms-marco-MiniLM-L-6-v2",
+        )
+        self.model = CrossEncoder(model_name)
+        print(f"Modèle de ranking chargé : {model_name}")
+
+    # ------------------------------------------------------------------ #
+
+    @staticmethod
+    def _extract_text(obj) -> str | None:
+        """Petit helper pour extraire le texte d'un objet.
 
         Args:
-            query (str): La requête de recherche.
-            results (list[Document]): Liste de documents à classer.
-        
+            obj: L'objet à analyser, qui peut être une chaîne, un dictionnaire ou un objet avec un attribut `content`.
+
         Returns:
-            list[Document]: Liste des résultats triés par pertinence.
+            str | None: Le texte extrait ou None si aucun texte valide n'est trouvé.
         """
-        if not results:
-            return []
-        
-        print(f"Requête pour le Cross-Encoder : {query}")
-        
-        # Préparer les paires (query, document content) pour le Cross-Encoder
-        pairs = []
-        for result in results:
-            if not isinstance(result.content, str) or not result.content.strip():
-                print(f"Document avec un contenu invalide ignoré : {result.title}")
-                continue
-            pairs.append((query, result.content))
-        
-        if not pairs:
-            print("Aucun document valide pour le ranking.")
-            return []
+        if isinstance(obj, str):
+            return obj.strip() or None
+        if isinstance(obj, dict):
+            txt = obj.get("content")
+            if isinstance(txt, str):
+                return txt.strip() or None
+        if hasattr(obj, "content"):
+            content = getattr(obj, "content", None)
+            if isinstance(content, str):
+                return content.strip() or None
+        return None
 
-        # Log des paires pour débogage
-        print(f"Paires pour le Cross-Encoder : {pairs}")
+    # ------------------------------------------------------------------ #
 
-        # Calculer les scores de similarité
-        try:
-            scores = self.model.predict(pairs)
-        except Exception as e:
-            print(f"Erreur lors de la prédiction avec le Cross-Encoder : {e}")
-            raise
+    def rank_results(self, query: str, texts: Sequence[str]) -> List[float]:
+        """Retourne **les scores**, pas les documents triés."""
 
-        # Associer chaque document à son score
-        scored_results = list(zip(results, scores))
-        
-        # Trier par score décroissant (convert Tensor to float using .item())
-        sorted_results = sorted(scored_results, key=lambda x: x[1].item(), reverse=True)
-        
-        # Retourner seulement les documents, maintenant triés
-        return [result for result, _ in sorted_results]
+        # extraction + filtrage éventuel
+        pairs: list[tuple[str, str]] = []
+        for txt in texts:
+            cleaned = self._extract_text(txt)
+            if cleaned:
+                pairs.append((query, cleaned))
+            else:
+                pairs.append((query, ""))  # keep alignment, score sera faible
+
+        # prédiction Cross-Encoder
+        scores = self.model.predict(pairs, convert_to_numpy=True).tolist()
+        return scores  # <-- liste de float

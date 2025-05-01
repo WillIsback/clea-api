@@ -2,7 +2,7 @@ from pathlib import Path
 from datetime import date
 from typing import Iterator
 from bs4 import BeautifulSoup
-from .base import BaseExtractor, ExtractedDocument, stream_split_to_disk
+from .base import BaseExtractor, ExtractedDocument, stream_split_to_disk, adaptive_segmentation, choose_splitter
 
 
 class HtmlExtractor(BaseExtractor):
@@ -23,14 +23,21 @@ class HtmlExtractor(BaseExtractor):
         except Exception as e:
             raise ValueError(f"Erreur lors de la lecture du fichier HTML : {e}")
 
-    def extract_many(self, max_length: int = 1000) -> Iterator[ExtractedDocument]:
-        """Extrait le contenu du fichier HTML en chunks de taille maximale spécifiée.
-        
+    def extract_many(self, max_length: int = 1_000) -> Iterator[ExtractedDocument]:
+        """Génère des instances d'ExtractedDocument à partir d'un fichier HTML.
+
+        Choisit automatiquement entre deux méthodes d'extraction en fonction de la taille et de la structure du fichier:
+        * **stream_split_to_disk** - faible utilisation de la RAM avec des segments de longueur fixe
+        * **adaptive_segmentation** - découpage hiérarchique (Section ▶ Paragraphe ▶ Segment)
+
         Args:
-            max_length: Taille maximale d'un chunk. Par défaut 1000.
-            
+            max_length: Longueur cible pour les segments finaux (utilisée par les deux méthodes de découpage)
+
+        Yields:
+            ExtractedDocument: Segments du document avec métadonnées
+
         Returns:
-            Un itérateur sur les documents extraits.
+            None: Si le document ne contient aucun contenu textuel
         """
         content = self.soup.get_text(separator="\n").strip()
         if not content:
@@ -44,8 +51,41 @@ class HtmlExtractor(BaseExtractor):
             "embedding": None,
         }
 
-        def stream_segments():
-            for line in content.splitlines():
-                yield line + "\n"
+        # ------------------------------------------------------------------ #
+        # Choix du splitter                                                  #
+        # ------------------------------------------------------------------ #
+        file_size = self.file_path.stat().st_size
+        use_stream = choose_splitter(
+            file_size=file_size,
+            mime="text/html",
+        ) == "stream"
 
-        yield from stream_split_to_disk(meta, stream_segments(), max_length=max_length)
+        if use_stream:
+            # --- STREAM --------------------------------------------------- #
+            def stream_segments():
+                for line in content.splitlines():
+                    yield line + "\n"
+
+            yield from stream_split_to_disk(
+                meta, 
+                stream_segments(), 
+                chunk_size=max_length * 1_5,
+                overlap_size=int(max_length * 0.15),  # 15 %
+            )
+        else:
+            # --- ADAPTIVE ------------------------------------------------- #
+            chunks, _stats = adaptive_segmentation(
+                content,
+                max_length=max_length,
+                overlap=int(max_length * 0.2),
+            )
+            for ch in chunks:
+                # Assurer les types corrects pour l'instanciation d'ExtractedDocument
+                yield ExtractedDocument(
+                    title=f"{meta['title']} (lvl {ch['hierarchy_level']})",
+                    content=ch["content"],
+                    theme=str(meta["theme"]),
+                    document_type=str(meta["document_type"]),
+                    publish_date=meta["publish_date"],  # Déjà un objet date
+                    embedding=None,
+                )

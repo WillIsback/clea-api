@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "clea-api"
-version = "0.1.0"
+version = "0.1.1"
 description = "Cléa-API: A framework for document load and hybrid search engine combining vector and metadata-based search. CRUD operations are performed using FastAPI."
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.11"
@@ -48,3 +48,8 @@ dependencies = [
 where = ["."]
 include = ["clea_doc_loader", "clea_vectordb", "clea_pipeline"]
 exclude = ["static", "test", "docs"]
+
+[project.urls]
+Homepage = "https://willisback.github.io/clea-api/"
+Repository = "https://github.com/WillIsback/clea-api"
+Documentation = "https://willisback.github.io/clea-api/"

@@ -1,14 +1,29 @@
 site_name: Cléa-API Documentation
+
 nav:
   - Home: index.md
+
   - REST API:
-      - REST API: rest_api.md
+      - REST API (Swagger): rest_api.md
+
   - Python API:
-      - doc_loader: doc_loader.md
-      - vectordb: vectordb.md
-      - pipeline: pipeline.md
+      - doc_loader:
+          - Présentation: doc_loader.md
+          - Référence (auto): lib_doc_loader.md
+      - vectordb:
+          - Modèles & DB: database.md
+          - Recherche hybride: search.md
+          - Référence (auto): lib_vectordb.md
+      - pipeline:
+          - Pipeline end-to-end: pipeline.md
+          - Référence (auto): lib_pipeline.md
+
+  - Integrations:
+      - JavaScript / TypeScript: Integration/js-vectordb.md   # ← casse corrigée
+
 theme:
   name: readthedocs
+
 plugins:
   - search
   - mkdocstrings:
@@ -24,5 +39,6 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
+
 extra_css:
   - css/mkdocsoad.css

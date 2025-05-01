@@ -1,93 +1,183 @@
-import requests
+# tests/test_database_api.py
+"""
+Tests CRUD du module *database* (end-to-end FastAPI).
 
-BASE_URL = "http://localhost:8080/database"
+Le serveur n’est PAS lancé : on utilise TestClient pour appeler
+directement le routeur SQLAlchemy + dépendances.
+"""
 
-def add_document():
-    url = f"{BASE_URL}/add_document"
-    payload = [
-        {
-            "title": "Document de test",
-            "content": "Ceci est un document de test pour vérifier les fonctionnalités CRUD.",
-            "theme": "Test",
-            "document_type": "Exemple",
-            "publish_date": "2025-01-01"
-        }
-    ]
-    response = requests.post(url, json=payload)
-    assert response.status_code == 200, f"Erreur lors de l'ajout du document : {response.json()}"
-    
-    # La réponse est une liste de documents
-    added_documents = response.json()
-    print(f"length of added_documents: {len(added_documents)}")
-    assert len(added_documents) == len(payload), "Le nombre de documents ajoutés ne correspond pas à la demande."
-    return added_documents[0]["id"]  # Retourne l'ID du premier document ajouté
+from __future__ import annotations
 
-def list_documents():
-    url = f"{BASE_URL}/list_documents"
-    response = requests.get(url)
-    assert response.status_code == 200, f"Erreur lors de la récupération des documents : {response.json()}"
-    return response.json()  # Retourne la liste des documents
+import uuid
+from datetime import date
+from collections.abc import Iterator
+import pytest
+from fastapi.testclient import TestClient
 
-def update_document(document_id):
-    url = f"{BASE_URL}/update_document"
+# ------------------------------------------------- #
+#  ▶  L’application FastAPI “réelle” à importer
+# ------------------------------------------------- #
+from main import app  #  ⬅️  votre entry-point
+from vectordb.src.database import Base, engine  # pour reset la DB
+
+# ------------------------------------------------- #
+#  Paramètres globaux
+# ------------------------------------------------- #
+API_DB = "/database"
+
+# --------------------------------------------------------------------------- #
+# ---------------------------- FIXTURES ------------------------------------- #
+# --------------------------------------------------------------------------- #
+
+
+@pytest.fixture(scope="session")
+def client() -> Iterator[TestClient]:
+    """Client HTTP synchrone ↔️ l’app FastAPI."""
+    # Base “neuve” pour la session de test
+    Base.metadata.drop_all(bind=engine)
+    Base.metadata.create_all(bind=engine)
+    with TestClient(app) as c:
+        yield c
+    # On laisse la BDD telle qu’elle est à la fin de la session
+
+
+@pytest.fixture(scope="function")
+def test_doc(client: TestClient) -> Iterator[dict]:
+    """Insère un document minimal + 2 chunks, retourne la réponse JSON."""
+    corpus_id = str(uuid.uuid4())
+
     payload = {
-        "document_id": document_id,
-        "title": "Document de test (mis à jour)",
-        "content": "Contenu mis à jour pour vérifier la fonctionnalité de mise à jour.",
-        "theme": "Test - Mise à jour",
-        "document_type": "Exemple - Mise à jour",
-        "publish_date": "2025-02-01"
+        "document": {
+            "title": "Document de test (pytest)",
+            "theme": "Test",
+            "document_type": "TEST",
+            "publish_date": date.today().isoformat(),
+            "corpus_id": corpus_id,
+        },
+        "chunks": [
+            {
+                "content": "Premier chunk",
+                "hierarchy_level": 1,
+                "start_char": 0,
+                "end_char": 12,
+            },
+            {
+                "content": "Deuxième chunk",
+                "hierarchy_level": 1,
+                "start_char": 13,
+                "end_char": 27,
+            },
+        ],
     }
-    response = requests.put(url, json=payload)
-    assert response.status_code == 200, f"Erreur lors de la mise à jour du document : {response.json()}"
-    
-    # Vérifie que le document mis à jour est retourné
-    updated_document = response.json()
-    assert updated_document["id"] == document_id, "L'ID du document mis à jour ne correspond pas."
-    assert updated_document["title"] == payload["title"], "Le titre du document n'a pas été mis à jour correctement."
 
-def delete_document(document_id):
-    url = f"{BASE_URL}/delete_document"
-    params = {"document_id": document_id}
-    response = requests.delete(url, params=params)
-    assert response.status_code == 200, f"Erreur lors de la suppression du document : {response.json()}"
-    
-    # Vérifie que la suppression a réussi
-    result = response.json()
-    assert "success" in result, f"Le document n'a pas été supprimé avec succès : {result}"
+    r = client.post(f"{API_DB}/documents", json=payload)
+    assert r.status_code == 200, r.text
+    data = r.json()
 
-def cleanup_test_documents():
-    documents = list_documents()
-    for doc in documents:
-        if "test" in doc["title"].lower():
-            delete_document(doc["id"])
-            
-def delete_all_documents():
-    documents = list_documents()
-    for doc in documents:
-        delete_document(doc["id"])
-    print("Tous les documents ont été supprimés de la base de données.")
-    
-def test_crud_operations():
-    # Étape 0 : Nettoyer complètement la base de données
-    delete_all_documents()
-    
-    # Étape 1 : Ajouter un document
-    document_id = add_document()
+    # Nettoyer après le test
+    try:
+        yield data  # ⬅️  les tests utilisent « data »
+    finally:
+        # Teardown : suppression du document
+        client.delete(f"{API_DB}/documents/{data['document_id']}")
 
-    # Étape 2 : Vérifier que le document est présent dans la liste
-    documents = list_documents()
-    assert any(doc["id"] == document_id for doc in documents), "Le document ajouté n'est pas présent dans la liste."
 
-    # Étape 3 : Mettre à jour le document
-    update_document(document_id)
+# --------------------------------------------------------------------------- #
+# ------------------------------- TESTS ------------------------------------- #
+# --------------------------------------------------------------------------- #
 
-    # Étape 4 : Supprimer le document
-    delete_document(document_id)
 
-    # Étape 5 : Vérifier que le document a été supprimé
-    documents = list_documents()
-    assert not any(doc["id"] == document_id for doc in documents), "Le document n'a pas été supprimé."
+def test_create_document(test_doc: dict, client: TestClient) -> None:
+    """Le document et ses 2 chunks sont bien insérés."""
+    assert test_doc["chunks"] == 2
 
-    # Nettoyage des documents de test
-    cleanup_test_documents()
+    # Vérifier le titre en relisant le document
+    doc_id = test_doc["document_id"]
+    r = client.get(f"{API_DB}/documents/{doc_id}")
+    assert r.status_code == 200, r.text
+    assert r.json()["title"].endswith("(pytest)")
+
+
+def test_read_document(client: TestClient, test_doc: dict):
+    """Récupération du document & de ses chunks."""
+    doc_id = test_doc["document_id"]
+
+    # GET /documents/{id}
+    r_doc = client.get(f"{API_DB}/documents/{doc_id}")
+    assert r_doc.status_code == 200
+    assert r_doc.json()["id"] == doc_id
+
+    # GET /documents/{id}/chunks
+    r_chunks = client.get(f"{API_DB}/documents/{doc_id}/chunks")
+    assert r_chunks.status_code == 200
+    assert len(r_chunks.json()) == 2
+
+
+def test_update_add_chunk(client: TestClient, test_doc: dict):
+    """Mise à jour du titre + ajout d'un chunk supplémentaire."""
+    doc_id = test_doc["document_id"]
+
+    payload = {
+        "document_update": {
+            "document_id": doc_id,
+            "title": "Titre modifié (pytest)",
+        },
+        "new_chunks": [
+            {
+                "content": "Chunk ajouté",
+                "hierarchy_level": 2,
+                "start_char": 28,
+                "end_char": 40,
+            }
+        ],
+    }
+    r = client.put(f"{API_DB}/documents/{doc_id}", json=payload)
+    assert r.status_code == 200
+
+    # Vérifier les modifications
+    r_doc = client.get(f"{API_DB}/documents/{doc_id}")
+    assert r_doc.json()["title"] == "Titre modifié (pytest)"
+
+    r_chunks = client.get(f"{API_DB}/documents/{doc_id}/chunks")
+    assert len(r_chunks.json()) == 3
+
+
+def test_delete_chunks(client: TestClient, test_doc: dict):
+    """Suppression d'un chunk spécifique."""
+    doc_id = test_doc["document_id"]
+    all_chunks = client.get(f"{API_DB}/documents/{doc_id}/chunks").json()
+    chunk_to_delete = all_chunks[0]["id"]
+
+    r = client.delete(
+        f"{API_DB}/documents/{doc_id}/chunks",
+        params={"chunk_ids": chunk_to_delete},
+    )
+    assert r.status_code == 200
+    assert r.json()["chunks_deleted"] == 1
+
+    remaining = client.get(f"{API_DB}/documents/{doc_id}/chunks").json()
+    assert len(remaining) == len(all_chunks) - 1
+
+
+def test_delete_document(client: TestClient):
+    """Cycle complet : insertion ➜ suppression ➜ 404 attendu."""
+    # Insert rapide
+    payload = {
+        "document": {
+            "title": "Temp doc",
+            "theme": "Temp",
+            "document_type": "TMP",
+            "publish_date": date.today().isoformat(),
+            "corpus_id": str(uuid.uuid4()),
+        },
+        "chunks": [],
+    }
+    doc_id = client.post(f"{API_DB}/documents", json=payload).json()["document_id"]
+
+    # Suppression
+    r_del = client.delete(f"{API_DB}/documents/{doc_id}")
+    assert r_del.status_code == 200
+
+    # 404 attendu
+    r_get = client.get(f"{API_DB}/documents/{doc_id}")
+    assert r_get.status_code == 404

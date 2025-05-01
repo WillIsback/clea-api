@@ -1,95 +1,204 @@
-import requests
+"""
+Tests end-to-end du moteur de recherche.
 
-BASE_URL = "http://localhost:8080"
-DATABASE_URL = f"{BASE_URL}/database"
-SEARCH_URL = f"{BASE_URL}/search"
+• La fixture « test_docs » crée 3 documents (avec 1 chunk chacun)
+• Chaque test appelle l'endpoint /search/hybrid_search
+• En fin de session, les documents sont purgés.
+"""
 
-def list_documents():
-    url = f"{DATABASE_URL}/list_documents"
-    response = requests.get(url)
-    assert response.status_code == 200, f"Erreur lors de la récupération des documents : {response.json()}"
-    return response.json()
+from __future__ import annotations
+import uuid
+from collections.abc import Iterator
 
-def delete_all_documents():
-    documents = list_documents()
-    for doc in documents:
-        delete_document(doc["id"])
-    print("Tous les documents ont été supprimés de la base de données.")
-    
-def add_documents():
-    url = f"{DATABASE_URL}/add_document"
-    payload = [
+import pytest
+from fastapi.testclient import TestClient
+
+from main import app  # Point d'entrée FastAPI
+from vectordb.src.database import Base, engine
+
+# --------------------------------------------------------------------------- #
+# Constantes
+# --------------------------------------------------------------------------- #
+API_DB = "/database"
+API_SEARCH = "/search"
+
+
+# --------------------------------------------------------------------------- #
+# Fixtures
+# --------------------------------------------------------------------------- #
+@pytest.fixture(scope="session")
+def client() -> Iterator[TestClient]:
+    """
+    Crée un client HTTP synchrone branché sur l’application FastAPI.
+
+    Returns:
+        Iterator[TestClient]: Le client TestClient.
+    """
+    Base.metadata.drop_all(bind=engine)
+    Base.metadata.create_all(bind=engine)
+    with TestClient(app) as c:
+        yield c
+
+
+@pytest.fixture(scope="session")
+def corpus_id() -> str:
+    """
+    Fournit un identifiant de corpus commun aux documents de test.
+
+    Returns:
+        str: Un identifiant unique de corpus.
+    """
+    return str(uuid.uuid4())
+
+
+@pytest.fixture(scope="session")
+def test_docs(client: TestClient, corpus_id: str) -> Iterator[list[int]]:
+    """
+    Insère 3 documents (chacun avec un chunk) et retourne la liste de leurs identifiants.
+    En fin de session, purge les documents insérés.
+
+    Returns:
+        Iterator[list[int]]: Liste des identifiants des documents insérés.
+    """
+    docs_payload = [
         {
-            "title": "Guide de remboursement des frais professionnels (test unique)",
-            "content": "Les frais professionnels doivent être soumis dans le mois suivant leur engagement.",
+            "title": "Guide frais professionnels (TEST)",
+            "content": (
+                "Les frais professionnels doivent être soumis dans le mois "
+                "suivant leur engagement avec justificatifs."
+            ),
             "theme": "Finance",
             "document_type": "Guide",
-            "publish_date": "2025-01-01"
+            "publish_date": "2025-01-01",
         },
         {
-            "title": "Procédure de mutation interne (test unique)",
-            "content": "Les salariés souhaitant effectuer une mutation interne doivent avoir passé au moins 18 mois à leur poste actuel.",
+            "title": "Procédure mutation interne (TEST)",
+            "content": (
+                "Les salariés souhaitant effectuer une mutation interne "
+                "doivent avoir passé au moins 18 mois à leur poste actuel."
+            ),
             "theme": "RH",
             "document_type": "Procédure",
-            "publish_date": "2025-02-15"
+            "publish_date": "2025-02-15",
         },
         {
-            "title": "Introduction à la programmation Python (test unique)",
-            "content": "Ce document explique les bases de la programmation en Python, y compris les variables, les boucles et les fonctions.",
+            "title": "Introduction à la programmation Python (TEST)",
+            "content": (
+                "Ce document explique les bases de Python : variables, "
+                "boucles, fonctions…"
+            ),
             "theme": "Informatique",
             "document_type": "Tutoriel",
-            "publish_date": "2025-03-10"
-        }
+            "publish_date": "2025-03-10",
+        },
     ]
 
-    # Ajouter les nouveaux documents
-    response = requests.post(url, json=payload)
-    assert response.status_code == 200, f"Erreur lors de l'ajout des documents : {response.json()}"
-    added_documents = response.json()
-    assert len(added_documents) == len(payload), "Le nombre de documents ajoutés ne correspond pas à la demande."
-    print(f"Documents ajoutés : \n{added_documents}\n")
-    return [doc["id"] for doc in added_documents]
+    doc_ids: list[int] = []
 
-def search_document(query, top_k=10, theme=None, document_type=None):
-    url = f"{SEARCH_URL}/hybrid_search"
-    payload = {
-        "query": query,
-        "top_k": top_k,
-        "theme": theme,
-        "document_type": document_type
-    }
-    response = requests.post(url, json=payload)
-    assert response.status_code == 200, f"Erreur lors de la recherche : {response.json()}"
-    search_results = response.json()
-    print(f"Résultats bruts de la recherche : \n{search_results}\n")
-    return search_results
+    for doc in docs_payload:
+        body = {
+            "document": {
+                **doc,
+                "corpus_id": corpus_id,
+            },
+            "chunks": [
+                {
+                    "content": doc["content"],
+                    "hierarchy_level": 3,
+                    "start_char": 0,
+                    "end_char": len(doc["content"]),
+                }
+            ],
+        }
+        r = client.post(f"{API_DB}/documents", json=body)
+        assert r.status_code == 200, r.text
+        doc_ids.append(r.json()["document_id"])
 
-def delete_document(document_id):
-    url = f"{DATABASE_URL}/delete_document"
-    params = {"document_id": document_id}
-    response = requests.delete(url, params=params)
-    assert response.status_code == 200, f"Erreur lors de la suppression du document : {response.json()}"
-    assert response.json().get("success"), "Le document n'a pas été supprimé avec succès."
+    yield doc_ids
 
-def cleanup_test_documents(document_ids):
-    for document_id in document_ids:
-        delete_document(document_id)
+    for _id in doc_ids:
+        client.delete(f"{API_DB}/documents/{_id}")
 
-def test_search_endpoint():
-    # Étape 0 : Nettoyer complètement la base de données
-    delete_all_documents()
 
-    # Étape 1 : Ajouter des documents
-    document_ids = add_documents()
+# --------------------------------------------------------------------------- #
+# Helpers
+# --------------------------------------------------------------------------- #
+def hybrid_search(client: TestClient, **body):
+    """
+    Effectue un POST sur l’endpoint /search/hybrid_search et vérifie un statut 200.
 
-    # Étape 2 : Effectuer une recherche
-    query = "programmation Python"
-    search_results = search_document(query=query, top_k=1)
-    print(f"Résultats bruts de la recherche : {search_results}")
-    assert search_results["total_results"] > 0, "Aucun résultat trouvé pour la recherche."
-    top_result = search_results["results"][0]
-    print(f"\nRésultat de la recherche : \n{top_result}\n")
-    assert top_result["title"] == "Introduction à la programmation Python (test unique)", "Le document retourné n'est pas celui attendu."
+    Args:
+        client (TestClient): Le client FastAPI.
+        **body: Le corps de la requête.
 
-    # Étape 3 : Nettoyer la base de données
-    cleanup_test_documents(document_ids)
+    Returns:
+        dict[str, Any]: La réponse JSON de l’endpoint.
+    """
+    r = client.post(f"{API_SEARCH}/hybrid_search", json=body)
+    assert r.status_code == 200, r.text
+    return r.json()
+
+
+# --------------------------------------------------------------------------- #
+# Tests
+# --------------------------------------------------------------------------- #
+@pytest.mark.parametrize(
+    ("query", "expect"),
+    [
+        ("programmation Python", "python"),
+        ("frais professionnels", "frais"),
+    ],
+)
+def test_basic_search(client: TestClient, test_docs, corpus_id, query, expect):
+    """
+    Test de recherche basique.
+
+    Vérifie que la réponse contient au moins un résultat et
+    que le contenu du premier résultat contient la chaîne attendue.
+    """
+    res = hybrid_search(client, query=query, corpus_id=corpus_id, top_k=3)
+    assert res["totalResults"] >= 1
+    first = res["results"][0]["content"].lower()
+    assert expect in first
+
+
+def test_theme_filter(client: TestClient, test_docs, corpus_id):
+    """
+    Test du filtre sur le thème.
+
+    Vérifie que tous les résultats retournés correspondent au thème "RH".
+    """
+    res = hybrid_search(
+        client,
+        query="mutation",
+        corpus_id=corpus_id,
+        theme="RH",
+        top_k=5,
+    )
+    assert res["totalResults"] >= 1
+    assert all(r["theme"] == "RH" for r in res["results"])
+
+
+def test_hierarchical_context(client: TestClient, test_docs, corpus_id):
+    """
+    Test de la récupération du contexte hiérarchique.
+
+    Lorsqu'une recherche hiérarchique est demandée, vérifie que la clé
+    "context" est présente (même si vide) et, le cas échéant, qu'elle
+    contient au moins un niveau (ex: "level_0", "level_1", …).
+    """
+    res = hybrid_search(
+        client,
+        query="Python",
+        corpus_id=corpus_id,
+        hierarchical=True,
+        top_k=1,
+    )
+    first = res["results"][0]
+    # On s'assure que la clé "context" est présente (même si c'est un dict vide)
+    assert "context" in first, "Contexte hiérarchique manquant"
+    # Si un contexte est retourné, on vérifie qu'il contient au moins un niveau
+    if first["context"]:
+        assert any(k.startswith("level_") for k in first["context"]), (
+            "Aucun niveau hiérarchique trouvé dans le contexte"
+        )

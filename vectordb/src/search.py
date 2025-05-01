@@ -1,218 +1,291 @@
+"""search.py – Hybrid semantic / metadata search.
+
+Hybrid document-search framework for PostgreSQL + pgvector
+"""
+
+from __future__ import annotations
+from datetime import date
+from typing import Any, Optional, List, Tuple
+
+from pydantic import BaseModel, ConfigDict
+from sqlalchemy import text
 from sqlalchemy.orm import Session
-from .database import Document
+
+from .database import Chunk
 from .embeddings import EmbeddingGenerator
 from .ranking import ResultRanker
-from pydantic import BaseModel
-from typing import List, Optional
-from datetime import date
-import json 
 
 
-class DocumentSearchResponse(BaseModel):
-    """Classe représentant un document de recherche.
-    
-    Contient les informations du document ainsi que les métadonnées.
-    
+# ─────────────────────────────────────────────────────────────── #
+# Configuration Pydantic pour alias en camelCase                   #
+# ─────────────────────────────────────────────────────────────── #
+# ------------------------------------------------------------
+# Utilitaire snake_case ➜ camelCase
+# ------------------------------------------------------------
+def to_camel(s: str) -> str:
+    head, *tail = s.split("_")
+    return head + "".join(word.capitalize() for word in tail)
+
+
+# ------------------------------------------------------------
+# ConfigDict réutilisable
+# ------------------------------------------------------------
+CamelConfig: ConfigDict = {
+    "alias_generator": to_camel,
+    "populate_by_name": True,
+}
+
+
+# ─────────────────────────────────────────────────────────────── #
+# Modèles Pydantic                                               #
+# ─────────────────────────────────────────────────────────────── #
+class ChunkResult(BaseModel):
+    """Modèle pour un chunk classé renvoyé par le moteur de recherche.
+
     Args:
-        id (int): ID du document.
+        chunk_id (int): Identifiant du chunk.
+        document_id (int): Identifiant du document associé.
         title (str): Titre du document.
-        content (str): Contenu du document.
+        content (str): Contenu textuel du chunk.
         theme (str): Thème du document.
         document_type (str): Type de document.
         publish_date (date): Date de publication.
-        metadata (dict): Métadonnées associées au document.
+        score (float): Score de similarité.
+        hierarchy_level (int): Niveau hiérarchique du chunk.
+        context (Optional[HierarchicalContext]): Contexte hiérarchique (si applicable).
     """
-    id: int
+
+    chunk_id: int
+    document_id: int
     title: str
     content: str
     theme: str
     document_type: str
     publish_date: date
-    metadata: dict
-    
-class DocumentSearchRequest(BaseModel):
-    """Classe représentant une requête de recherche de documents.
-    
-    Contient la requête de recherche, le nombre de résultats souhaités et les filtres optionnels.
-    
-    Args:
-        query (str): La requête de recherche.
-        top_k (int): Nombre de résultats à retourner, par défaut 10.
-        theme (str, optional): Thème du document pour le filtrage.
-        document_type (str, optional): Type de document pour le filtrage.
-        start_date (date, optional): Date de début pour le filtrage.
-        end_date (date, optional): Date de fin pour le filtrage.
+    score: float
+    hierarchy_level: int
+    context: Optional[HierarchicalContext] = None
+
+    model_config = CamelConfig
+
+
+class HierarchicalContext(BaseModel):
+    """Modèle pour le contexte hiérarchique (chunks parents).
+
+    Attributes:
+        level_0 (Optional[dict]): Contexte de niveau 0 (section).
+        level_1 (Optional[dict]): Contexte de niveau 1 (sous-section).
+        level_2 (Optional[dict]): Contexte de niveau 2 (paragraphe).
     """
+
+    level_0: Optional[dict] = None
+    level_1: Optional[dict] = None
+    level_2: Optional[dict] = None
+
+    model_config = CamelConfig
+
+
+class SearchResponse(BaseModel):
+    """Modèle de réponse pour une recherche hybride.
+
+    Attributes:
+        query (str): La requête initiale.
+        topK (int): Le nombre de résultats demandés.
+        totalResults (int): Le nombre total de résultats trouvés.
+        results (List[ChunkResult]): Liste des résultats sous forme de ChunkResult.
+    """
+
+    query: str
+    topK: int
+    totalResults: int
+    results: List[ChunkResult]
+
+    model_config = CamelConfig
+
+
+class SearchRequest(BaseModel):
+    """Paramètres de la recherche hybride.
+
+    Attributes:
+        query (str): Requête en texte libre.
+        top_k (int): Nombre de résultats à renvoyer.
+        theme (Optional[str]): Filtre sur le thème du document.
+        document_type (Optional[str]): Filtre sur le type de document.
+        start_date (Optional[date]): Date de début pour le filtre.
+        end_date (Optional[date]): Date de fin pour le filtre.
+        corpus_id (Optional[str]): Identifiant du corpus.
+        hierarchical (bool): Si True, retourne également le contexte hiérarchique pour chaque chunk.
+        hierarchy_level (Optional[int]): Filtre sur le niveau hiérarchique (0 = section, 3 = chunk feuille).
+    """
+
     query: str
     top_k: int = 10
     theme: Optional[str] = None
     document_type: Optional[str] = None
     start_date: Optional[date] = None
     end_date: Optional[date] = None
+    corpus_id: Optional[str] = None
+    hierarchical: bool = False
+    hierarchy_level: Optional[int] = None
 
-class SearchResults(BaseModel):
-    """Classe représentant les résultats de recherche.
-    
-    Contient la requête, les filtres appliqués, le nombre total de résultats et les résultats eux-mêmes.
-    
-    Args:
-        query (str): La requête de recherche.
-        filters (dict, optional): Les filtres appliqués lors de la recherche.
-        total_results (int): Le nombre total de résultats trouvés.
-        results (List[DocumentSearchResponse]): Liste des résultats de recherche formatés.
-    """
-    query: str
-    filters: Optional[dict]
-    total_results: int
-    results: List[DocumentSearchResponse]
-       
+
+# ─────────────────────────────────────────────────────────────── #
+# Moteur de recherche                                            #
+# ─────────────────────────────────────────────────────────────── #
 class SearchEngine:
-    """Classe principale pour effectuer des recherches hybrides.
-    
-    Combine filtrage par métadonnées et recherche vectorielle.
+    """Moteur de recherche hybride (métadonnées + vecteur) avec rerank optionnel via Cross-Encoder.
+
+    Utilise à la fois une recherche par similarité vectorielle et un rerank avec un modèle Cross-Encoder.
     """
 
-    def __init__(self):
-        """Initialise les composants nécessaires pour la recherche.
-        """
-        self.embedding_generator = EmbeddingGenerator()
-        self.ranker = ResultRanker()
-    
-    def search(self, db: Session, query: str, filters=None, top_k=10) -> List[DocumentSearchResponse]:
-        """Recherche hybride combinant filtrage par métadonnées et recherche vectorielle.
-        
+    def __init__(self) -> None:
+        """Initialise le moteur de recherche avec son générateur d’embeddings et son ranker."""
+        self._embedder = EmbeddingGenerator()
+        self._ranker = ResultRanker()
+
+    def hybrid_search(self, db: Session, req: SearchRequest) -> SearchResponse:
+        """Exécute une recherche hybride et renvoie une réponse formatée selon le modèle SearchResponse.
+
         Args:
-            db (Session): Session de base de données.
-            query (str): Texte de la requête.
-            filters (dict, optional): Filtres sur les métadonnées.
-            top_k (int, optional): Nombre de résultats à retourner.
-            
+            db (Session): Session SQLAlchemy.
+            req (SearchRequest): Paramètres de la recherche.
+
         Returns:
-            List[DocumentSearchResponse]: Liste des résultats formatés.
+            SearchResponse: Réponse contenant la requête, le nombre de résultats demandés,
+            le nombre total de résultats et une liste de chunks exposés en camelCase.
         """
-        query_str = query
-        # Étape 1: Générer l'embedding de la requête
-        query_embedding = self.embedding_generator.generate_embedding(query)
-        print(f"length Embedding de la requête : {len(query_embedding)}")
+        # Génération de l'embedding pour la requête
+        q_emb = self._embedder.generate_embedding(req.query)
 
-        # Étape 2: Appliquer les filtres avec SQLAlchemy ORM
-        document_query = db.query(Document)
-        if filters:
-            if filters.get("theme"):
-                document_query = document_query.filter(Document.theme == filters["theme"])
-            if filters.get("document_type"):
-                document_query = document_query.filter(Document.document_type == filters["document_type"])
-            if filters.get("start_date") and filters.get("end_date"):
-                document_query = document_query.filter(Document.publish_date.between(filters["start_date"], filters["end_date"]))
-
-        filtered_results = document_query.all()
-        print(f"Documents filtrés : {[doc.title for doc in filtered_results]}")
-
-        filters = filters or {}
-        
-        # Étape 3: Récupérer les embeddings pour les résultats filtrés
-        document_ids = [doc.id for doc in filtered_results]
-        if not document_ids:
-            print("Aucun document filtré trouvé.")
-            return []
-
-        document_embeddings = {
-            str(doc.id): json.loads(doc.embedding) if doc.embedding else None
-            for doc in filtered_results
-        }
-        print(f"Length Embeddings des documents : {len(document_embeddings)}")
-
-        # Étape 4: Calculer les similitudes vectorielles
-        scored_documents = []
-        for doc in filtered_results:
-            doc_embedding = document_embeddings.get(str(doc.id))
-            if not doc_embedding:
-                print(f"Pas d'embedding pour le document {doc.title}")
-                continue
-
-            similarity = self.embedding_generator.compute_similarity(query_embedding, doc_embedding)
-            scored_documents.append((doc, similarity))
-            print(f"Similarité pour {doc.title} : {similarity}")
-            
-
-        # Ajouter les métadonnées aux documents
-        for doc, similarity in scored_documents:
-            if not hasattr(doc, "custom_metadata"):
-                doc.custom_metadata = {}
-            doc.custom_metadata["similarity_score"] = similarity
-            
-        # Trier par score de similarité
-        vector_results = sorted(scored_documents, key=lambda x: x[1], reverse=True)[:top_k * 2]
-        vector_documents = [doc for doc, _ in vector_results]
-        print(f"Documents triés par similarité --> Titre: \n{[doc.title for doc in vector_documents]}\n") 
-        valid_documents = []
-        for doc in vector_documents:
-            if not isinstance(doc.content, str) or not doc.content.strip():
-                print(f"Document avec un contenu invalide ignoré : {doc.title}")
-                continue
-            valid_documents.append(doc)
-
-        if not valid_documents:
-            print("Aucun document valide pour le reranking.")
-            return []
-
-        print(f"Documents valides pour le reranking : {[doc.title for doc in valid_documents]}")
-        # Étape 5: Reranking avec le Cross-Encoder  
-        ranked_results = self.ranker.rank_results(query_str, valid_documents)
-        print(f"Documents après reranking : {[doc.title for doc in ranked_results]}")
-        # Étape 6: Limiter le nombre de résultats
-        ranked_results = ranked_results[:top_k]
-        print(f"Résultats finaux : {[doc.title for doc in ranked_results]}")
-        # Étape 7: Formater les résultats
-        formatted_results = self.format_results(query_str, ranked_results, filters or {})
-        return formatted_results
-    
-    def hybrid_search(self, db: Session, query: str, filters=None, top_k=10) -> SearchResults:
-        """Méthode principale exposée pour la recherche hybride.
-        
-        Args:
-            db (Session): Session de base de données.
-            query (str): Texte de la requête.
-            filters (dict, optional): Filtres sur les métadonnées (date, thème, type).
-            top_k (int, optional): Nombre de résultats à retourner.
-            
-        Returns:
-            SearchResults: Résultats de recherche avec leurs métadonnées.
-        """
-        # Déléguer la recherche à la méthode interne
-        results = self.search(db, query, filters, top_k)
-
-        # Construire l'objet SearchResults
-        return SearchResults(
-            query=query,
-            filters=filters if filters else None,
-            total_results=len(results),
-            results=results
+        sql, params = self._build_sql(req)
+        params.update(
+            query_embedding=q_emb,
+            expanded_limit=req.top_k * 3,
+            top_k=req.top_k,
         )
 
-    def format_results(self, query: str, results: List[Document], filters: dict) -> List[DocumentSearchResponse]:
-        """Formate les résultats de recherche avant de les renvoyer au frontend.
+        raw_rows = db.execute(text(sql), params).fetchall()
+        if not raw_rows:
+            return SearchResponse(
+                query=req.query,
+                topK=req.top_k,
+                totalResults=0,
+                results=[],
+            )
+
+        # Rerank avec Cross-Encoder
+        contents = [r.chunk_content for r in raw_rows]
+        scores = self._ranker.rank_results(req.query, contents)
+
+        ranked = sorted(
+            zip(raw_rows, scores),
+            key=lambda t: t[1],
+            reverse=True,
+        )[: req.top_k]
+
+        # Création de la liste des résultats
+        results: List[ChunkResult] = []
+        for row, score in ranked:
+            context = self._get_context(db, row.chunk_id) if req.hierarchical else None
+            results.append(
+                ChunkResult(
+                    chunk_id=row.chunk_id,
+                    document_id=row.document_id,
+                    title=row.document_title,
+                    content=row.chunk_content,
+                    theme=row.theme,
+                    document_type=row.document_type,
+                    publish_date=row.publish_date,
+                    score=score,
+                    hierarchy_level=row.hierarchy_level,
+                    context=context,
+                )
+            )
+
+        return SearchResponse(
+            query=req.query,
+            topK=req.top_k,
+            totalResults=len(raw_rows),
+            results=results,
+        )
+
+    @staticmethod
+    def _build_sql(req: SearchRequest) -> Tuple[str, dict[str, Any]]:
+        """Assemble la requête SQL paramétrée et les paramètres associés.
 
         Args:
-            query (str): La requête de recherche.
-            results (List[Document]): Liste des résultats de recherche.
-            filters (dict): Filtres appliqués lors de la recherche.
+            req (SearchRequest): Paramètres de la recherche.
 
         Returns:
-            List[DocumentSearchResponse]: Résultats formatés avec le contexte de la recherche et les métadonnées.
+            Tuple[str, dict[str, Any]]: Chaîne SQL et dictionnaire des paramètres.
         """
-        return [
-            DocumentSearchResponse(
-                id=result.id,
-                title=result.title,
-                content=result.content[:200] + "..." if len(result.content) > 200 else result.content,
-                theme=result.theme,
-                document_type=result.document_type,
-                publish_date=result.publish_date,
-                metadata={
-                    "similarity_score": result.custom_metadata.get("similarity_score", "Non disponible") if hasattr(result, "custom_metadata") else "Non disponible",
-                    "rank": index + 1
-                }
-            )
-            for index, result in enumerate(results)
-        ]
+        sql = """
+        WITH ranked AS (
+            SELECT
+                c.id            AS chunk_id,
+                c.content       AS chunk_content,
+                c.hierarchy_level,
+                c.parent_chunk_id,
+                d.id            AS document_id,
+                d.title         AS document_title,
+                d.theme,
+                d.document_type,
+                d.publish_date,
+                d.corpus_id,
+                c.embedding <=> (:query_embedding)::vector AS distance
+            FROM chunks c
+            JOIN documents d ON d.id = c.document_id
+            WHERE 1 = 1
+        """
+        p: dict[str, Any] = {}
+
+        if req.theme:
+            sql += " AND d.theme = :theme"
+            p["theme"] = req.theme
+        if req.document_type:
+            sql += " AND d.document_type = :dtype"
+            p["dtype"] = req.document_type
+        if req.start_date and req.end_date:
+            sql += " AND d.publish_date BETWEEN :sd AND :ed"
+            p.update(sd=req.start_date, ed=req.end_date)
+        if req.corpus_id:
+            sql += " AND d.corpus_id = :cid"
+            p["cid"] = req.corpus_id
+        if req.hierarchy_level is not None:
+            sql += " AND c.hierarchy_level = :hlevel"
+            p["hlevel"] = req.hierarchy_level
+
+        sql += """
+            ORDER BY distance
+            LIMIT :expanded_limit
+        )
+        SELECT * FROM ranked
+        ORDER BY distance
+        LIMIT :top_k;
+        """
+        return sql, p
+
+    @staticmethod
+    def _get_context(db: Session, chunk_id: int) -> Optional[HierarchicalContext]:
+        """Récupère le contexte hiérarchique (chunks parents) pour un chunk donné.
+
+        Args:
+            db (Session): Session SQLAlchemy.
+            chunk_id (int): Identifiant du chunk.
+
+        Returns:
+            Optional[HierarchicalContext]: Contexte hiérarchique ou None si inexistant.
+        """
+        ctx: dict[str, Any] = {}
+        cur = db.get(Chunk, chunk_id)
+        while cur and cur.parent_chunk_id:
+            parent = db.get(Chunk, cur.parent_chunk_id)
+            if not parent:
+                break
+            ctx[f"level_{parent.hierarchy_level}"] = {
+                "id": parent.id,
+                "content": parent.content,
+                "hierarchy_level": parent.hierarchy_level,
+            }
+            cur = parent
+        return HierarchicalContext(**ctx) if ctx else None

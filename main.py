@@ -67,7 +67,7 @@ def start_postgres() -> bool:
 app = FastAPI(
     title="Clea API",
     description="API pour gérer les documents et effectuer des recherches.",
-    version="1.0.0",
+    version="0.1.1",
     docs_url="/docs",  # Swagger UI
     redoc_url="/redoc",  # ReDoc
 )

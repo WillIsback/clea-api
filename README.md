@@ -1,221 +1,151 @@
-# Cléa-API
+# Cléa-API 🚀  
 
-Cléa-API est un framework conçu pour le chargement de documents et la recherche hybride combinant la recherche vectorielle et basée sur les métadonnées. Il fournit des fonctionnalités CRUD pour gérer les documents et des endpoints pour effectuer des recherches avancées.
+*Hybrid document-search framework for PostgreSQL + pgvector*
+
+[![Licence MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Docs](https://img.shields.io/badge/docs-ReadTheDocs-green.svg)](https://<your-gh-user>.github.io/clea-api)
+
+Cléa-API charge des documents multi-formats, les segmente, les vectorise et
+fournit une **recherche hybride (vectorielle + filtres SQL)** prête à l’emploi.
+Il s’utilise :
+
+* via **endpoints REST** (FastAPI) ;
+* en **librairie Python** (extraction, pipeline, recherche) ;
+* avec une **base PostgreSQL + pgvector** auto-indexée par corpus.
 
 ---
 
-## **Caractéristiques principales**
+## Sommaire rapide
 
-- **Chargement de documents** : Extraction et traitement de documents dans divers formats (PDF, Word, JSON, etc.).
-- **Recherche hybride** : Combinaison de la recherche vectorielle et basée sur les métadonnées.
-- **Gestion des documents** : CRUD complet pour les documents.
-- **Extensibilité** : Architecture modulaire pour ajouter facilement de nouvelles fonctionnalités.
-- **Support de PostgreSQL avec pgvector** : Stockage et recherche vectorielle optimisés.
+| Sujet | Lien |
+|-------|------|
+| Docs HTML (MkDocs) | <https://WillIsback.github.io/clea-api> |
+| Structure & concepts | [`docs/index.md`](docs/index.md) |
+| Guide d’extraction | [`docs/doc_loader.md`](docs/doc_loader.md) |
+| Base de données & index | [`docs/database.md`](docs/database.md) |
+| Recherche hybride | [`docs/search.md`](docs/search.md) |
+| Pipeline end-to-end | [`docs/pipeline.md`](docs/pipeline.md) |
+
+> **Important :** le présent README n’est pas compilé par MkDocs ;  
+> il contient donc seulement les informations de démarrage.
+> La documentation complète vit dans le dossier `docs/`.
 
 ---
 
-## **Structure du projet**
+## Caractéristiques clés
 
-```shell
+- 🔄 **Chargement multi-formats** : PDF, DOCX, HTML, JSON, TXT, …  
+- 🧩 **Segmentation hiérarchique** : Section ▶ Paragraphe ▶ Chunk.  
+- 🔍 **Recherche hybride** : *ivfflat* ou *HNSW* + Cross-Encoder rerank.  
+- ⚡ **Pipeline “one-liner”** :  
+
+  ```python
+  from pipeline import process_and_store
+  process_and_store("rapport.pdf", theme="R&D")
+  ```
+
+- 📦 **Architecture modulaire** : ajoutez un extracteur ou un moteur en quelques lignes.  
+- 🐳 **Docker-ready** & **CI-friendly** (tests PyTest, docs MkDocs).
+
+---
+
+## Arborescence du dépôt
+
+```text
 .
-├── clea_doc_loader       # Module pour le chargement et l'extraction de documents
-│   ├── api               # Endpoints pour le chargement de documents
-│   ├── src               # Logique métier pour l'extraction de documents
-│   └── test              # Tests unitaires pour le module
-├── clea_pipeline         # Module pour le traitement des documents
-│   ├── api               # Endpoints pour le traitement des documents
-│   ├── src               # Logique métier pour le pipeline de traitement
-│   └── test              # Tests unitaires pour le module
-├── clea_vectordb         # Module pour la gestion des documents et la recherche
-│   ├── api               # Endpoints pour la gestion et la recherche
-│   ├── src               # Logique métier pour la base de données et la recherche
-│   └── test              # Tests unitaires pour le module
-├── demo                  # Fichiers de démonstration pour tester les fonctionnalités
-├── main.py               # Point d'entrée principal de l'application
-├── pyproject.toml        # Configuration du projet Python
-├── requirements.txt      # Liste des dépendances Python
-├── Dockerfile            # Fichier Docker pour le déploiement
-├── start.sh              # Script pour démarrer l'application
-└── README.md             # Documentation du projet
+├── doc_loader/   # Extraction & chargement
+├── vectordb/     # Modèles SQLAlchemy + recherche
+├── pipeline/     # Orchestrateur end-to-end
+├── docs/              # Documentation MkDocs
+├── demo/              # Fichiers d’exemple
+├── start.sh           # Script de démarrage API
+├── Dockerfile         # Build image
+└── ...
 ```
 
 ---
 
-## **Installation**
+## Installation
 
-### **Prérequis**
+### Prérequis
 
-- **Python 3.11 ou supérieur**
-- **PostgreSQL** avec l'extension `pgvector`
-- **WSL (Windows Subsystem for Linux)** avec OpenSUSE Tumbleweed (si applicable)
+* Python ≥ 3.11  
+* PostgreSQL ≥ 14 avec l’extension **pgvector**  
+* (Optionnel) WSL 2 + openSUSE Tumbleweed
 
-### **Étapes d'installation**
-
-1. **Cloner le dépôt**
-
-   ```bash
-   git clone https://github.com/votre-repo/clea-api.git
-   cd clea-api
-   ```
-
-2. **Installer les dépendances**
-
-   Utilisez le gestionnaire de paquets `uv` pour installer les dépendances :
-
-   ```bash
-   uv pip install -r requirements.txt
-   ```
-
-3. **Configurer les variables d'environnement**
-
-   Créez un fichier .env à la racine du projet et configurez les variables suivantes :
-
-   ```env
-   DB_USER=postgres
-   DB_PASSWORD=your_password
-   DB_NAME=clea_db
-   DB_HOST=localhost
-   DB_PORT=5432
-   API_HOST=localhost
-   API_PORT=8080
-   ```
-
-4. **Initialiser la base de données**
-
-   Lancez le script d'initialisation de la base de données :
-
-   ```bash
-   uv python main.py
-   ```
-
-5. **Démarrer l'application**
-
-   Utilisez le script start.sh pour démarrer l'API :
-
-   ```bash
-   ./start.sh
-   ```
-
-   L'API sera disponible à l'adresse suivante : [http://localhost:8080](http://localhost:8080).
-
----
-
-## **Utilisation**
-
-### **Endpoints principaux**
-
-#### **1. Chargement de documents**
-
-- **Endpoint** : `/doc_loader/upload-file`
-- **Méthode** : `POST`
-- **Description** : Charge un fichier et extrait son contenu.
-- **Exemple de requête** :
-
-  ```bash
-  curl -X POST "http://localhost:8080/doc_loader/upload-file" \
-       -F "file=@demo/demo.txt" \
-       -F "max_length=1000" \
-       -F "theme=Test"
-  ```
-
-#### **2. Traitement des documents**
-
-- **Endpoint** : `/pipeline/process-and-store`
-- **Méthode** : `POST`
-- **Description** : Traite un fichier et l'insère dans la base de données.
-- **Exemple de requête** :
-
-  ```bash
-  curl -X POST "http://localhost:8080/pipeline/process-and-store" \
-       -F "file=@demo/demo.txt" \
-       -F "max_length=1000" \
-       -F "theme=Test"
-  ```
-
-#### **3. Gestion des documents**
-
-- **Endpoint** : `/database/add_document`
-- **Méthode** : `POST`
-- **Description** : Ajoute un document à la base de données.
-- **Exemple de requête** :
-
-  ```bash
-  curl -X POST "http://localhost:8080/database/add_document" \
-       -H "Content-Type: application/json" \
-       -d '[
-             {
-               "title": "Document de test",
-               "content": "Ceci est un document de test.",
-               "theme": "Test",
-               "document_type": "TXT",
-               "publish_date": "2025-01-01"
-             }
-           ]'
-  ```
-
-#### **4. Recherche hybride**
-
-- **Endpoint** : `/search/hybrid_search`
-- **Méthode** : `POST`
-- **Description** : Recherche des documents en combinant la recherche vectorielle et basée sur les métadonnées.
-- **Exemple de requête** :
-
-  ```bash
-  curl -X POST "http://localhost:8080/search/hybrid_search" \
-       -H "Content-Type: application/json" \
-       -d '{
-             "query": "exemple",
-             "theme": "Test",
-             "top_k": 5
-           }'
-  ```
-
----
-
-## **Tests**
-
-### **Exécuter les tests**
-
-Pour exécuter les tests unitaires, utilisez la commande suivante :
+### Étapes
 
 ```bash
-uv run pytest
+# 1. Cloner
+git clone https://github.com/<your-gh-user>/clea-api.git
+cd clea-api
+
+# 2. Dépendances
+uv pip install -r requirements.txt   # ↳ gestionnaire 'uv'
+
+# 3. Variables d’environnement
+cp .env.sample .env   # puis éditez au besoin
+
+# 4. Initialisation DB
+uv python -m clea_vectordb.init_db
+
+# 5. Lancer l’API
+./start.sh            # ➜ http://localhost:8080
 ```
 
-Les tests sont organisés par module dans les répertoires test, test et test.
+---
+
+## Utilisation express
+
+### Chargement simple
+
+```bash
+curl -X POST http://localhost:8080/doc_loader/upload-file \
+     -F "file=@demo/devis.pdf" -F "theme=Achat"
+```
+
+### Pipeline complet (upload → segment → index)
+
+```bash
+curl -X POST http://localhost:8080/pipeline/process-and-store \
+     -F "file=@demo/devis.pdf" -F "theme=Achat" -F "max_length=800"
+```
+
+### Recherche hybride
+
+```bash
+curl -X POST http://localhost:8080/search/hybrid_search \
+     -H "Content-Type: application/json" \
+     -d '{"query":"analyse risques", "top_k":8}'
+```
 
 ---
 
-## **Déploiement**
+## Tests
 
-### **Docker**
-
-Un fichier Dockerfile est fourni pour déployer l'application dans un conteneur Docker.
-
-1. **Construire l'image Docker** :
-
-   ```bash
-   docker build -t clea-api .
-   ```
-
-2. **Lancer le conteneur** :
-
-   ```bash
-   docker run -p 8080:8080 clea-api
-   ```
+```bash
+uv run pytest           # tous les tests unitaires
+```
 
 ---
 
-## **Contribuer**
+## Déploiement Docker
 
-Les contributions sont les bienvenues ! Veuillez suivre les étapes suivantes pour contribuer :
-
-1. Forkez le dépôt.
-2. Créez une branche pour votre fonctionnalité ou correction de bug.
-3. Soumettez une pull request avec une description claire de vos modifications.
+```bash
+docker build -t clea-api .
+docker run -p 8080:8080 clea-api
+```
 
 ---
 
-## **Licence**
+## Contribuer 🤝
 
-Ce projet est sous licence MIT. Consultez le fichier LICENSE pour plus d'informations.
+1. **Fork** → branche (`feat/ma-feature`)  
+2. `uv run pytest && mkdocs build` doivent passer  
+3. Ouvrez une **Pull Request** claire et concise
+
+---
+
+## Licence
+
+Distribué sous licence **MIT** – voir [`LICENSE`](LICENSE).

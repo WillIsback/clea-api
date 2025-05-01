@@ -1,44 +1,69 @@
-from fastapi import APIRouter
-from vectordb.src.search import SearchEngine, DocumentSearchRequest, SearchResults
-from vectordb.src.database import get_db
+"""search_endpoint.py – Routes FastAPI pour la recherche."""
 
+from __future__ import annotations
+
+from typing import List
+
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+
+from vectordb.src.database import get_db
+from vectordb.src.search import SearchEngine, SearchRequest, SearchResponse
 
 router = APIRouter()
+_engine = SearchEngine()  # 1 instance partagée
 
 
 @router.post(
     "/hybrid_search",
-    summary="Rechercher des documents hybride",
-    response_model=SearchResults,
-    description="Recherche des documents en fonction de la similarité vectorielle et reranking d'une requête et de filtres optionnels.",
+    summary="Recherche hybride (vecteur + filtres)",
+    response_model=SearchResponse,
+    tags=["Search"],
 )
-async def search_documents(search_request: DocumentSearchRequest):
-    """Recherche des documents en fonction d'une requête et de filtres optionnels.
+def hybrid_search(
+    request: SearchRequest, db: Session = Depends(get_db)
+) -> SearchResponse:
+    """Retourne les *top k* chunks les plus pertinents.
 
-    Args:
-        search_request (DocumentSearchRequest): La requête de recherche avec ses paramètres.
+    Le moteur combine :
 
-    Returns:
-        SearchResults: Les résultats de la recherche hybride.
+    * **Filtres SQL** (theme, `document_type`, dates, `corpus_id`)
+    * **Index vectoriel pgvector** *(IVFFLAT ou HNSW)*
+    * **Rerank Cross-Encoder** sur un sous-ensemble élargi (*top k × 3*)
+
+    Parameters
+    ----------
+    request : SearchRequest
+        Paramètres de la requête (voir modèle pydantic).
+    db : Session
+        Session SQLAlchemy injectée par FastAPI.
+
+    Returns
+    -------
+    dict
+        Un JSON brut contenant les résultats de la recherche, structuré comme suit :
+        {
+            "query": str,
+            "topK": int,
+            "totalResults": int,
+            "results": [
+                {
+                    "chunkId": int,
+                    "documentId": int,
+                    "title": str,
+                    "content": str,
+                    "theme": str,
+                    "documentType": str,
+                    "publishDate": str,
+                    "score": float,
+                    "hierarchyLevel": int,
+                    "context": {
+                        "level0": { "id": int, "content": str } | None,
+                        "level1": { "id": int, "content": str } | None,
+                        "level2": { "id": int, "content": str } | None
+                    }
+                }
+            ]
+        }
     """
-    filters = {}
-    if search_request.theme:
-        filters["theme"] = search_request.theme
-    if search_request.document_type:
-        filters["document_type"] = search_request.document_type
-    if search_request.start_date:
-        filters["start_date"] = search_request.start_date
-    if search_request.end_date:
-        filters["end_date"] = search_request.end_date
-
-    print(
-        f"Recherche avec les paramètres : query={search_request.query}, filters={filters}, top_k={search_request.top_k}"
-    )
-
-    db = next(get_db())
-    search_engine = SearchEngine()
-    results = search_engine.hybrid_search(
-        db, search_request.query, filters=filters, top_k=search_request.top_k
-    )
-    print(f"Résultats bruts de la recherche : {results}")
-    return results
+    return _engine.hybrid_search(db, request)

@@ -1,11 +1,21 @@
-from vectordb.src.database import Document, add_documents, delete_document, update_document
-from vectordb.src.search import SearchEngine, SearchResults
+from vectordb.src.database import (
+    Document,
+    add_document_with_chunks,
+    delete_document_chunks,
+    update_document_with_chunks,
+    delete_document,
+    check_and_update_indexes,
+)
+from vectordb.src.search import (
+    SearchEngine,
+)
 
 __all__ = [
-    "add_documents",
-    "delete_document",
-    "update_document",
     "Document",
+    "add_document_with_chunks",
+    "delete_document_chunks",
+    "update_document_with_chunks",
+    "delete_document",
+    "check_and_update_indexes",
     "SearchEngine",
-    "SearchResults"
 ]
