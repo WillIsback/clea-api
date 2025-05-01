@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>vectordb - Cléa-API Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../css/mkdocsoad.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "vectordb";
+        var mkdocs_page_input_path = "vectordb.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Cléa-API Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">REST API</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../rest_api/">REST API</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Python API</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../doc_loader/">doc_loader</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">vectordb</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#vectordb">vectordb</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#vectordb.Document">Document</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#vectordb.SearchEngine">SearchEngine</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#vectordb.SearchEngine.__init__">__init__</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vectordb.SearchEngine.format_results">format_results</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vectordb.SearchEngine.hybrid_search">hybrid_search</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vectordb.SearchEngine.search">search</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#vectordb.SearchResults">SearchResults</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#vectordb.add_documents">add_documents</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#vectordb.delete_document">delete_document</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#vectordb.update_document">update_document</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../pipeline/">pipeline</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Cléa-API Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Python API</li>
+      <li class="breadcrumb-item active">vectordb</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="references">References</h1>
+<hr />
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="vectordb"></a>
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="vectordb.Document" class="doc doc-heading">
+            <code>Document</code>
+
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="vectordb.src.database.Base">Base</span></code></p>
+
+
+        <p>Modèle SQLAlchemy représentant un document dans la base de données.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Attributes:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>id</code></b>
+                  (<code><span title="sqlalchemy.orm.Mapped">Mapped</span>[<span title="int">int</span>]</code>)
+              –
+              <div class="doc-md-description">
+                <p>Identifiant unique du document.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>title</code></b>
+                  (<code><span title="sqlalchemy.orm.Mapped">Mapped</span>[<span title="str">str</span>]</code>)
+              –
+              <div class="doc-md-description">
+                <p>Titre du document.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>content</code></b>
+                  (<code><span title="sqlalchemy.orm.Mapped">Mapped</span>[<span title="str">str</span>]</code>)
+              –
+              <div class="doc-md-description">
+                <p>Contenu du document.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>theme</code></b>
+                  (<code><span title="sqlalchemy.orm.Mapped">Mapped</span>[<span title="str">str</span>]</code>)
+              –
+              <div class="doc-md-description">
+                <p>Thème du document.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>document_type</code></b>
+                  (<code><span title="sqlalchemy.orm.Mapped">Mapped</span>[<span title="str">str</span>]</code>)
+              –
+              <div class="doc-md-description">
+                <p>Type de document.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>publish_date</code></b>
+                  (<code><span title="sqlalchemy.orm.Mapped">Mapped</span>[<span title="datetime.date">date</span>]</code>)
+              –
+              <div class="doc-md-description">
+                <p>Date de publication du document.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>embedding</code></b>
+                  (<code><span title="sqlalchemy.orm.Mapped">Mapped</span>[<span title="typing.Optional">Optional</span>[<span title="str">str</span>]]</code>)
+              –
+              <div class="doc-md-description">
+                <p>Représentation vectorielle du contenu du document.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="vectordb.SearchEngine" class="doc doc-heading">
+            <code>SearchEngine</code>
+
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+
+        <p>Classe principale pour effectuer des recherches hybrides.</p>
+<p>Combine filtrage par métadonnées et recherche vectorielle.</p>
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="vectordb.SearchEngine.__init__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">()</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Initialise les composants nécessaires pour la recherche.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="vectordb.SearchEngine.format_results" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">format_results</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">results</span><span class="p">,</span> <span class="n">filters</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Formate les résultats de recherche avant de les renvoyer au frontend.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>query</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>La requête de recherche.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>results</code></b>
+                  (<code><span title="typing.List">List</span>[<a class="autorefs autorefs-internal" title="Document (vectordb.src.database.Document)" href="#vectordb.Document">Document</a>]</code>)
+              –
+              <div class="doc-md-description">
+                <p>Liste des résultats de recherche.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>filters</code></b>
+                  (<code><span title="dict">dict</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Filtres appliqués lors de la recherche.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="typing.List">List</span>[<span title="vectordb.src.search.DocumentSearchResponse">DocumentSearchResponse</span>]</code>
+              –
+              <div class="doc-md-description">
+                <p>List[DocumentSearchResponse]: Résultats formatés avec le contexte de la recherche et les métadonnées.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="vectordb.SearchEngine.hybrid_search" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">hybrid_search</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Méthode principale exposée pour la recherche hybride.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>db</code></b>
+                  (<code><span title="sqlalchemy.orm.Session">Session</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Session de base de données.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>query</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Texte de la requête.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>filters</code></b>
+                  (<code><span title="dict">dict</span></code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Filtres sur les métadonnées (date, thème, type).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>top_k</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>10</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Nombre de résultats à retourner.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>SearchResults</code></b>(                  <code><a class="autorefs autorefs-internal" title="SearchResults (vectordb.src.search.SearchResults)" href="#vectordb.SearchResults">SearchResults</a></code>
+)              –
+              <div class="doc-md-description">
+                <p>Résultats de recherche avec leurs métadonnées.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="vectordb.SearchEngine.search" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">search</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Recherche hybride combinant filtrage par métadonnées et recherche vectorielle.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>db</code></b>
+                  (<code><span title="sqlalchemy.orm.Session">Session</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Session de base de données.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>query</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Texte de la requête.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>filters</code></b>
+                  (<code><span title="dict">dict</span></code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Filtres sur les métadonnées.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>top_k</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>10</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Nombre de résultats à retourner.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="typing.List">List</span>[<span title="vectordb.src.search.DocumentSearchResponse">DocumentSearchResponse</span>]</code>
+              –
+              <div class="doc-md-description">
+                <p>List[DocumentSearchResponse]: Liste des résultats formatés.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="vectordb.SearchResults" class="doc doc-heading">
+            <code>SearchResults</code>
+
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
+
+
+        <p>Classe représentant les résultats de recherche.</p>
+<p>Contient la requête, les filtres appliqués, le nombre total de résultats et les résultats eux-mêmes.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>query</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>La requête de recherche.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>filters</code></b>
+                  (<code><span title="dict">dict</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Les filtres appliqués lors de la recherche.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>total_results</code></b>
+                  (<code><span title="int">int</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Le nombre total de résultats trouvés.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>results</code></b>
+                  (<code><span title="typing.List">List</span>[<span title="vectordb.src.search.DocumentSearchResponse">DocumentSearchResponse</span>]</code>)
+              –
+              <div class="doc-md-description">
+                <p>Liste des résultats de recherche formatés.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="vectordb.add_documents" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">add_documents</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ajoute une liste de documents à la base de données et génère leurs embeddings.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>documents</code></b>
+                  (<code><span title="typing.List">List</span>[<span title="vectordb.src.database.DocumentCreate">DocumentCreate</span>]</code>)
+              –
+              <div class="doc-md-description">
+                <p>Liste de documents à ajouter.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>Résultat de l'opération avec les IDs des documents ajoutés ou les erreurs rencontrées.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="vectordb.delete_document" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">delete_document</span><span class="p">(</span><span class="n">document_id</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Supprime un document de la base de données.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>document_id</code></b>
+                  (<code><span title="int">int</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>ID du document à supprimer.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>Résultat de l'opération.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="vectordb.update_document" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">update_document</span><span class="p">(</span><span class="n">document_update</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Met à jour un document existant dans la base de données.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>document_update</code></b>
+                  (<code><span title="vectordb.src.database.DocumentUpdate">DocumentUpdate</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Objet contenant les champs à mettre à jour.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>Résultat de l'opération.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><hr />
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../doc_loader/" class="btn btn-neutral float-left" title="doc_loader"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../pipeline/" class="btn btn-neutral float-right" title="pipeline">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../doc_loader/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../pipeline/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

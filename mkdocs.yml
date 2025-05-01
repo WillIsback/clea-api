@@ -7,6 +7,8 @@ nav:
       - doc_loader: doc_loader.md
       - vectordb: vectordb.md
       - pipeline: pipeline.md
+theme:
+  name: readthedocs
 plugins:
   - search
   - mkdocstrings:
@@ -16,6 +18,7 @@ plugins:
             show_source: false
   - neoteroi.mkdocsoad:
       use_pymdownx: true
+
 markdown_extensions:
   - pymdownx.details
   - pymdownx.superfences

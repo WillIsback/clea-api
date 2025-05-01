@@ -77,3 +77,4 @@ dmypy.json
 .uv/docs/build/
 docs/*
 .github
+mkdocs.yml
