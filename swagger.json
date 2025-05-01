@@ -1,0 +1,806 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+    "title": "Clea API",
+    "description": "API pour gérer les documents et effectuer des recherches.",
+    "version": "1.0.0"
+    },
+    "paths": {
+    "/database/add_document": {
+    "post": {
+    "tags": [
+    "Database"
+    ],
+    "summary": "Ajouter des documents",
+    "description": "Ajoute une liste de documents à la base de données.\n\nArgs:\n    documents: Liste des documents à ajouter.\n    \nReturns:\n    Liste des documents ajoutés avec leurs IDs.\n    \nRaises:\n    ValueError: Si une erreur survient lors de l'ajout des documents.",
+    "operationId": "add_documents_endpoint_database_add_document_post",
+    "requestBody": {
+    "content": {
+    "application/json": {
+    "schema": {
+    "items": {
+    "$ref": "#/components/schemas/DocumentCreate"
+    },
+    "type": "array",
+    "title": "Documents"
+    }
+    }
+    },
+    "required": true
+    },
+    "responses": {
+    "200": {
+    "description": "Successful Response",
+    "content": {
+    "application/json": {
+    "schema": {
+    "items": {
+    "$ref": "#/components/schemas/DocumentResponse"
+    },
+    "type": "array",
+    "title": "Response Add Documents Endpoint Database Add Document Post"
+    }
+    }
+    }
+    },
+    "422": {
+    "description": "Validation Error",
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/HTTPValidationError"
+    }
+    }
+    }
+    }
+    }
+    }
+    },
+    "/database/delete_document": {
+    "delete": {
+    "tags": [
+    "Database"
+    ],
+    "summary": "Supprimer un document",
+    "description": "Supprime un document de la base de données en fonction de son ID.",
+    "operationId": "delete_document_endpoint_database_delete_document_delete",
+    "parameters": [
+    {
+    "name": "document_id",
+    "in": "query",
+    "required": true,
+    "schema": {
+    "type": "integer",
+    "title": "Document Id"
+    }
+    }
+    ],
+    "responses": {
+    "200": {
+    "description": "Successful Response",
+    "content": {
+    "application/json": {
+    "schema": {}
+    }
+    }
+    },
+    "422": {
+    "description": "Validation Error",
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/HTTPValidationError"
+    }
+    }
+    }
+    }
+    }
+    }
+    },
+    "/database/update_document": {
+    "put": {
+    "tags": [
+    "Database"
+    ],
+    "summary": "Mettre à jour un document",
+    "description": "Met à jour un document existant dans la base de données.\n\nArgs:\n    payload: Données pour mettre à jour le document.\n    \nReturns:\n    Document mis à jour.\n    \nRaises:\n    HTTPException: Si le document n'existe pas ou si une erreur survient.",
+    "operationId": "update_document_endpoint_database_update_document_put",
+    "requestBody": {
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/DocumentUpdate"
+    }
+    }
+    },
+    "required": true
+    },
+    "responses": {
+    "200": {
+    "description": "Successful Response",
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/DocumentResponse"
+    }
+    }
+    }
+    },
+    "422": {
+    "description": "Validation Error",
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/HTTPValidationError"
+    }
+    }
+    }
+    }
+    }
+    }
+    },
+    "/database/list_documents": {
+    "get": {
+    "tags": [
+    "Database"
+    ],
+    "summary": "Lister les documents",
+    "description": "Affiche la liste des documents dans la base de données.\n\nReturns:\n    Liste de tous les documents dans la base de données.",
+    "operationId": "list_documents_endpoint_database_list_documents_get",
+    "responses": {
+    "200": {
+    "description": "Successful Response",
+    "content": {
+    "application/json": {
+    "schema": {
+    "items": {
+    "$ref": "#/components/schemas/DocumentResponse"
+    },
+    "type": "array",
+    "title": "Response List Documents Endpoint Database List Documents Get"
+    }
+    }
+    }
+    }
+    }
+    }
+    },
+    "/search/hybrid_search": {
+    "post": {
+    "tags": [
+    "Search"
+    ],
+    "summary": "Rechercher des documents hybride",
+    "description": "Recherche des documents en fonction de la similarité vectorielle et reranking d'une requête et de filtres optionnels.",
+    "operationId": "search_documents_search_hybrid_search_post",
+    "requestBody": {
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/DocumentSearchRequest"
+    }
+    }
+    },
+    "required": true
+    },
+    "responses": {
+    "200": {
+    "description": "Successful Response",
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/SearchResults"
+    }
+    }
+    }
+    },
+    "422": {
+    "description": "Validation Error",
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/HTTPValidationError"
+    }
+    }
+    }
+    }
+    }
+    }
+    },
+    "/doc_loader/upload-file": {
+    "post": {
+    "tags": [
+    "DocLoader"
+    ],
+    "summary": "Uploader un fichier et le traiter",
+    "description": "Uploade un fichier, l'extrait et le divise en chunks.\n\nArgs:\n    file: Fichier uploadé par l'utilisateur.\n    max_length: Taille maximale d'un chunk. Par défaut 1000.\n    theme: Thème du document. Par défaut \"Thème générique\".\n\nReturns:\n    Liste des documents extraits.\n    \nRaises:\n    HTTPException: Si une erreur survient lors du traitement ou si aucun contenu n'est extrait.",
+    "operationId": "upload_and_process_file_doc_loader_upload_file_post",
+    "parameters": [
+    {
+    "name": "max_length",
+    "in": "query",
+    "required": false,
+    "schema": {
+    "type": "integer",
+    "description": "Taille maximale d'un chunk",
+    "default": 1000,
+    "title": "Max Length"
+    },
+    "description": "Taille maximale d'un chunk"
+    },
+    {
+    "name": "theme",
+    "in": "query",
+    "required": false,
+    "schema": {
+    "type": "string",
+    "description": "Thème du document",
+    "default": "Thème générique",
+    "title": "Theme"
+    },
+    "description": "Thème du document"
+    }
+    ],
+    "requestBody": {
+    "required": true,
+    "content": {
+    "multipart/form-data": {
+    "schema": {
+    "$ref": "#/components/schemas/Body_upload_and_process_file_doc_loader_upload_file_post"
+    }
+    }
+    }
+    },
+    "responses": {
+    "200": {
+    "description": "Successful Response",
+    "content": {
+    "application/json": {
+    "schema": {
+    "type": "array",
+    "items": {
+    "$ref": "#/components/schemas/ExtractedDocument"
+    },
+    "title": "Response Upload And Process File Doc Loader Upload File Post"
+    }
+    }
+    }
+    },
+    "422": {
+    "description": "Validation Error",
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/HTTPValidationError"
+    }
+    }
+    }
+    }
+    }
+    }
+    },
+    "/pipeline/process-and-store": {
+    "post": {
+    "tags": [
+    "Pipeline"
+    ],
+    "summary": "Charger un fichier, l'extraire et l'insérer dans la base de données",
+    "description": "Charge un fichier, extrait les documents et les insère dans la base de données.\n\nArgs:\n    file (UploadFile): Fichier uploadé par l'utilisateur.\n    max_length (int): Taille maximale d'un chunk.\n    theme (str): Thème à appliquer aux documents.\n\nReturns:\n    List[Dict]: Liste des documents ajoutés avec leurs IDs.",
+    "operationId": "process_and_store_endpoint_pipeline_process_and_store_post",
+    "parameters": [
+    {
+    "name": "max_length",
+    "in": "query",
+    "required": false,
+    "schema": {
+    "type": "integer",
+    "description": "Taille maximale d'un chunk",
+    "default": 1000,
+    "title": "Max Length"
+    },
+    "description": "Taille maximale d'un chunk"
+    },
+    {
+    "name": "theme",
+    "in": "query",
+    "required": false,
+    "schema": {
+    "type": "string",
+    "description": "Thème du document",
+    "default": "Thème générique",
+    "title": "Theme"
+    },
+    "description": "Thème du document"
+    }
+    ],
+    "requestBody": {
+    "required": true,
+    "content": {
+    "multipart/form-data": {
+    "schema": {
+    "$ref": "#/components/schemas/Body_process_and_store_endpoint_pipeline_process_and_store_post"
+    }
+    }
+    }
+    },
+    "responses": {
+    "200": {
+    "description": "Successful Response",
+    "content": {
+    "application/json": {
+    "schema": {
+    "type": "array",
+    "items": {
+    "type": "object",
+    "additionalProperties": true
+    },
+    "title": "Response Process And Store Endpoint Pipeline Process And Store Post"
+    }
+    }
+    }
+    },
+    "422": {
+    "description": "Validation Error",
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/HTTPValidationError"
+    }
+    }
+    }
+    }
+    }
+    }
+    },
+    "/": {
+    "get": {
+    "summary": "Root",
+    "operationId": "root__get",
+    "responses": {
+    "200": {
+    "description": "Successful Response",
+    "content": {
+    "application/json": {
+    "schema": {}
+    }
+    }
+    }
+    }
+    }
+    }
+    },
+    "components": {
+    "schemas": {
+    "Body_process_and_store_endpoint_pipeline_process_and_store_post": {
+    "properties": {
+    "file": {
+    "type": "string",
+    "format": "binary",
+    "title": "File",
+    "description": "Fichier à traiter"
+    }
+    },
+    "type": "object",
+    "required": [
+    "file"
+    ],
+    "title": "Body_process_and_store_endpoint_pipeline_process_and_store_post"
+    },
+    "Body_upload_and_process_file_doc_loader_upload_file_post": {
+    "properties": {
+    "file": {
+    "type": "string",
+    "format": "binary",
+    "title": "File",
+    "description": "Fichier à traiter"
+    }
+    },
+    "type": "object",
+    "required": [
+    "file"
+    ],
+    "title": "Body_upload_and_process_file_doc_loader_upload_file_post"
+    },
+    "DocumentCreate": {
+    "properties": {
+    "title": {
+    "type": "string",
+    "title": "Title"
+    },
+    "content": {
+    "type": "string",
+    "title": "Content"
+    },
+    "theme": {
+    "type": "string",
+    "title": "Theme"
+    },
+    "document_type": {
+    "type": "string",
+    "title": "Document Type"
+    },
+    "publish_date": {
+    "type": "string",
+    "format": "date",
+    "title": "Publish Date"
+    }
+    },
+    "type": "object",
+    "required": [
+    "title",
+    "content",
+    "theme",
+    "document_type",
+    "publish_date"
+    ],
+    "title": "DocumentCreate",
+    "description": "Classe représentant un document à créer.\n\nArgs:\n    title: Titre du document.\n    content: Contenu du document.\n    theme: Thème du document.\n    document_type: Type de document.\n    publish_date: Date de publication du document."
+    },
+    "DocumentResponse": {
+    "properties": {
+    "id": {
+    "type": "integer",
+    "title": "Id"
+    },
+    "title": {
+    "type": "string",
+    "title": "Title"
+    },
+    "content": {
+    "type": "string",
+    "title": "Content"
+    },
+    "theme": {
+    "type": "string",
+    "title": "Theme"
+    },
+    "document_type": {
+    "type": "string",
+    "title": "Document Type"
+    },
+    "publish_date": {
+    "type": "string",
+    "format": "date",
+    "title": "Publish Date"
+    }
+    },
+    "type": "object",
+    "required": [
+    "id",
+    "title",
+    "content",
+    "theme",
+    "document_type",
+    "publish_date"
+    ],
+    "title": "DocumentResponse",
+    "description": "Classe représentant un document de réponse.\n\nArgs:\n    id: ID du document.\n    title: Titre du document.\n    content: Contenu du document.\n    theme: Thème du document.\n    document_type: Type de document.\n    publish_date: Date de publication du document."
+    },
+    "DocumentSearchRequest": {
+    "properties": {
+    "query": {
+    "type": "string",
+    "title": "Query"
+    },
+    "top_k": {
+    "type": "integer",
+    "title": "Top K",
+    "default": 10
+    },
+    "theme": {
+    "anyOf": [
+    {
+    "type": "string"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Theme"
+    },
+    "document_type": {
+    "anyOf": [
+    {
+    "type": "string"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Document Type"
+    },
+    "start_date": {
+    "anyOf": [
+    {
+    "type": "string",
+    "format": "date"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Start Date"
+    },
+    "end_date": {
+    "anyOf": [
+    {
+    "type": "string",
+    "format": "date"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "End Date"
+    }
+    },
+    "type": "object",
+    "required": [
+    "query"
+    ],
+    "title": "DocumentSearchRequest",
+    "description": "Classe représentant une requête de recherche de documents.\n\nContient la requête de recherche, le nombre de résultats souhaités et les filtres optionnels.\n\nArgs:\n    query (str): La requête de recherche.\n    top_k (int): Nombre de résultats à retourner, par défaut 10.\n    theme (str, optional): Thème du document pour le filtrage.\n    document_type (str, optional): Type de document pour le filtrage.\n    start_date (date, optional): Date de début pour le filtrage.\n    end_date (date, optional): Date de fin pour le filtrage."
+    },
+    "DocumentSearchResponse": {
+    "properties": {
+    "id": {
+    "type": "integer",
+    "title": "Id"
+    },
+    "title": {
+    "type": "string",
+    "title": "Title"
+    },
+    "content": {
+    "type": "string",
+    "title": "Content"
+    },
+    "theme": {
+    "type": "string",
+    "title": "Theme"
+    },
+    "document_type": {
+    "type": "string",
+    "title": "Document Type"
+    },
+    "publish_date": {
+    "type": "string",
+    "format": "date",
+    "title": "Publish Date"
+    },
+    "metadata": {
+    "additionalProperties": true,
+    "type": "object",
+    "title": "Metadata"
+    }
+    },
+    "type": "object",
+    "required": [
+    "id",
+    "title",
+    "content",
+    "theme",
+    "document_type",
+    "publish_date",
+    "metadata"
+    ],
+    "title": "DocumentSearchResponse",
+    "description": "Classe représentant un document de recherche.\n\nContient les informations du document ainsi que les métadonnées.\n\nArgs:\n    id (int): ID du document.\n    title (str): Titre du document.\n    content (str): Contenu du document.\n    theme (str): Thème du document.\n    document_type (str): Type de document.\n    publish_date (date): Date de publication.\n    metadata (dict): Métadonnées associées au document."
+    },
+    "DocumentUpdate": {
+    "properties": {
+    "document_id": {
+    "type": "integer",
+    "title": "Document Id",
+    "description": "Identifiant unique du document à mettre à jour"
+    },
+    "title": {
+    "anyOf": [
+    {
+    "type": "string"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Title",
+    "description": "Titre mis à jour du document"
+    },
+    "content": {
+    "anyOf": [
+    {
+    "type": "string"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Content",
+    "description": "Contenu mis à jour du document"
+    },
+    "theme": {
+    "anyOf": [
+    {
+    "type": "string"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Theme",
+    "description": "Thème mis à jour du document"
+    },
+    "document_type": {
+    "anyOf": [
+    {
+    "type": "string"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Document Type",
+    "description": "Type mis à jour du document"
+    },
+    "publish_date": {
+    "anyOf": [
+    {
+    "type": "string",
+    "format": "date"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Publish Date",
+    "description": "Date de publication mise à jour (format ISO)"
+    }
+    },
+    "type": "object",
+    "required": [
+    "document_id"
+    ],
+    "title": "DocumentUpdate",
+    "description": "Classe représentant un document à mettre à jour.\n\nArgs:\n    document_id: ID du document à mettre à jour.\n    title: Nouveau titre.\n    content: Nouveau contenu.\n    theme: Nouveau thème.\n    document_type: Nouveau type de document.\n    publish_date: Nouvelle date de publication."
+    },
+    "ExtractedDocument": {
+    "properties": {
+    "title": {
+    "type": "string",
+    "title": "Title",
+    "description": "Titre du document"
+    },
+    "content": {
+    "type": "string",
+    "title": "Content",
+    "description": "Contenu brut extrait"
+    },
+    "theme": {
+    "type": "string",
+    "title": "Theme",
+    "description": "Thème du document"
+    },
+    "document_type": {
+    "type": "string",
+    "title": "Document Type",
+    "description": "Type (PDF, DOCX, etc.)"
+    },
+    "publish_date": {
+    "type": "string",
+    "format": "date",
+    "title": "Publish Date",
+    "description": "Date de publication"
+    },
+    "embedding": {
+    "anyOf": [
+    {
+    "type": "string"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Embedding",
+    "description": "Représentation vectorielle (optionnelle)"
+    }
+    },
+    "type": "object",
+    "required": [
+    "title",
+    "content",
+    "theme",
+    "document_type",
+    "publish_date"
+    ],
+    "title": "ExtractedDocument",
+    "description": "Schéma commun de sortie pour tous les extracteurs de documents."
+    },
+    "HTTPValidationError": {
+    "properties": {
+    "detail": {
+    "items": {
+    "$ref": "#/components/schemas/ValidationError"
+    },
+    "type": "array",
+    "title": "Detail"
+    }
+    },
+    "type": "object",
+    "title": "HTTPValidationError"
+    },
+    "SearchResults": {
+    "properties": {
+    "query": {
+    "type": "string",
+    "title": "Query"
+    },
+    "filters": {
+    "anyOf": [
+    {
+    "additionalProperties": true,
+    "type": "object"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Filters"
+    },
+    "total_results": {
+    "type": "integer",
+    "title": "Total Results"
+    },
+    "results": {
+    "items": {
+    "$ref": "#/components/schemas/DocumentSearchResponse"
+    },
+    "type": "array",
+    "title": "Results"
+    }
+    },
+    "type": "object",
+    "required": [
+    "query",
+    "filters",
+    "total_results",
+    "results"
+    ],
+    "title": "SearchResults",
+    "description": "Classe représentant les résultats de recherche.\n\nContient la requête, les filtres appliqués, le nombre total de résultats et les résultats eux-mêmes.\n\nArgs:\n    query (str): La requête de recherche.\n    filters (dict, optional): Les filtres appliqués lors de la recherche.\n    total_results (int): Le nombre total de résultats trouvés.\n    results (List[DocumentSearchResponse]): Liste des résultats de recherche formatés."
+    },
+    "ValidationError": {
+    "properties": {
+    "loc": {
+    "items": {
+    "anyOf": [
+    {
+    "type": "string"
+    },
+    {
+    "type": "integer"
+    }
+    ]
+    },
+    "type": "array",
+    "title": "Location"
+    },
+    "msg": {
+    "type": "string",
+    "title": "Message"
+    },
+    "type": {
+    "type": "string",
+    "title": "Error Type"
+    }
+    },
+    "type": "object",
+    "required": [
+    "loc",
+    "msg",
+    "type"
+    ],
+    "title": "ValidationError"
+    }
+    }
+    }
+    }
