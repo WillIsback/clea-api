@@ -7,15 +7,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class EmbeddingGenerator:
-    """
-    @class EmbeddingGenerator
-    @brief Classe responsable de la génération d'embeddings vectoriels et du calcul de similarité cosinus.
+    """Classe responsable de la génération d'embeddings vectoriels et du calcul de similarité cosinus.
     """
 
     def __init__(self):
-        """
-        @brief Constructeur de la classe EmbeddingGenerator.
-        Initialise le modèle CamemBERT pour la génération d'embeddings.
+        """Initialise le modèle CamemBERT pour la génération d'embeddings.
         """
         self.model_name = os.getenv("MODEL_NAME", "camembert-base")
         self.tokenizer = CamembertTokenizer.from_pretrained(self.model_name)
@@ -25,10 +21,13 @@ class EmbeddingGenerator:
         print(f"Modèle d'embedding chargé: {self.model_name} sur {self.device}")
     
     def generate_embedding(self, text):
-        """
-        @brief Génère un embedding vectoriel à partir d'un texte.
-        @param text Texte à encoder.
-        @return Liste représentant l'embedding vectoriel.
+        """Génère un embedding vectoriel à partir d'un texte.
+        
+        Args:
+            text (str): Texte à encoder.
+            
+        Returns:
+            list: Liste représentant l'embedding vectoriel.
         """
         print(f"Génération d'un embedding pour le texte : {text}")
         inputs = self.tokenizer(text, return_tensors="pt", 
@@ -42,11 +41,14 @@ class EmbeddingGenerator:
         return embedding.tolist()
     
     def compute_similarity(self, embedding1, embedding2):
-        """
-        @brief Calcule la similarité cosinus entre deux embeddings vectoriels.
-        @param embedding1 Premier vecteur d'embedding.
-        @param embedding2 Second vecteur d'embedding.
-        @return Score de similarité cosinus entre 0 et 1.
+        """Calcule la similarité cosinus entre deux embeddings vectoriels.
+        
+        Args:
+            embedding1 (list): Premier vecteur d'embedding.
+            embedding2 (list): Second vecteur d'embedding.
+            
+        Returns:
+            float: Score de similarité cosinus entre 0 et 1.
         """
         # Vérification des types
         if not all(isinstance(x, (int, float)) for x in embedding1):

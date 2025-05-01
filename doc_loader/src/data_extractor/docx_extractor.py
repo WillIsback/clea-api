@@ -10,11 +10,21 @@ from pathlib import Path
 
 class DocxExtractor(BaseExtractor):
     def __init__(self, file_path: str):
+        """Initialise un extracteur pour les fichiers DOCX.
+        
+        Args:
+            file_path: Chemin vers le fichier DOCX à traiter.
+        """
         super().__init__(file_path)
         self.file_path = Path(file_path)
         self.document = Document(file_path)
 
     def extract_metadata(self) -> dict:
+        """Extrait les métadonnées du fichier DOCX.
+        
+        Returns:
+            Dictionnaire contenant les métadonnées extraites.
+        """
         metadata = {}
         try:
             with ZipFile(self.file_path) as docx_zip:
@@ -28,9 +38,16 @@ class DocxExtractor(BaseExtractor):
         return metadata
 
     def extract_many(self, max_length: int = 1000) -> Iterator[ExtractedDocument]:
-        """
+        """Extrait le contenu du fichier DOCX en chunks de taille maximale spécifiée.
+        
         Itère paragraphe par paragraphe et bufferise en chunks RAM-safe
         via stream_split_to_disk.
+        
+        Args:
+            max_length: Taille maximale d'un chunk. Par défaut 1000.
+            
+        Returns:
+            Un itérateur sur les documents extraits.
         """
         if not self.document.paragraphs:
             return

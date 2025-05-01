@@ -5,15 +5,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class ResultRanker:
-    """
-    @class ResultRanker
-    @brief Classe responsable du réordonnancement des résultats de recherche en fonction de leur pertinence.
+    """Classe responsable du réordonnancement des résultats de recherche en fonction de leur pertinence.
     """
 
     def __init__(self):
-        """
-        @brief Constructeur de la classe ResultRanker.
-        Initialise le modèle Cross-Encoder utilisé pour le ranking.
+        """Initialise le modèle Cross-Encoder utilisé pour le ranking.
         """
         self.cross_encoder_model = os.getenv("CROSS_ENCODER_MODEL", 
                                            "cross-encoder/ms-marco-MiniLM-L-6-v2")
@@ -21,11 +17,14 @@ class ResultRanker:
         print(f"Modèle de ranking chargé: {self.cross_encoder_model}")
     
     def rank_results(self, query, results):
-        """
-        @brief Réorganise les résultats de recherche par pertinence.
-        @param query La requête de recherche.
-        @param results Liste de documents à classer.
-        @return Liste des résultats triés par pertinence.
+        """Réorganise les résultats de recherche par pertinence.
+
+        Args:
+            query (str): La requête de recherche.
+            results (list[Document]): Liste de documents à classer.
+        
+        Returns:
+            list[Document]: Liste des résultats triés par pertinence.
         """
         if not results:
             return []
@@ -57,8 +56,8 @@ class ResultRanker:
         # Associer chaque document à son score
         scored_results = list(zip(results, scores))
         
-        # Trier par score décroissant
-        sorted_results = sorted(scored_results, key=lambda x: x[1], reverse=True)
+        # Trier par score décroissant (convert Tensor to float using .item())
+        sorted_results = sorted(scored_results, key=lambda x: x[1].item(), reverse=True)
         
         # Retourner seulement les documents, maintenant triés
         return [result for result, _ in sorted_results]

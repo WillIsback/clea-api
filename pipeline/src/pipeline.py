@@ -1,5 +1,5 @@
-from clea_doc_loader.src import DocsLoader, ExtractedDocument
-from clea_vectordb.src.database import DocumentCreate, add_documents
+from doc_loader.src import DocsLoader, ExtractedDocument
+from vectordb.src.database import DocumentCreate, add_documents
 from typing import List
 
 

@@ -3,7 +3,7 @@ from typing import List
 import os
 import tempfile
 import shutil
-from clea_doc_loader.src import DocsLoader, ExtractedDocument
+from doc_loader.src import DocsLoader, ExtractedDocument
 
 router = APIRouter()
 
@@ -18,16 +18,18 @@ async def upload_and_process_file(
     max_length: int = Query(1000, description="Taille maximale d'un chunk"),
     theme: str = Query("Thème générique", description="Thème du document"),
 ):
-    """
-    Uploade un fichier, l'extrait et le divise en chunks.
-
+    """Uploade un fichier, l'extrait et le divise en chunks.
+    
     Args:
-        file (UploadFile): Fichier uploadé par l'utilisateur.
-        max_length (int): Taille maximale d'un chunk.
-        theme (str): Thème du document.
-
+        file: Fichier uploadé par l'utilisateur.
+        max_length: Taille maximale d'un chunk. Par défaut 1000.
+        theme: Thème du document. Par défaut "Thème générique".
+    
     Returns:
-        ExtractionResult: Résultat de l'extraction.
+        Liste des documents extraits.
+        
+    Raises:
+        HTTPException: Si une erreur survient lors du traitement ou si aucun contenu n'est extrait.
     """
     # Création d'un fichier temporaire pour sauvegarder le fichier uploadé
     temp_dir = tempfile.mkdtemp()

@@ -9,17 +9,18 @@ import json
 
 
 class DocumentSearchResponse(BaseModel):
-    """
-    @brief Classe représentant un document de recherche.
-    @details Contient les informations du document ainsi que les métadonnées.
-    @structure:
-        - id (int): ID du document.
-        - title (str): Titre du document.
-        - content (str): Contenu du document.
-        - theme (str): Thème du document.
-        - document_type (str): Type de document.
-        - publish_date (date): Date de publication.
-        - metadata (dict): Métadonnées associées au document.
+    """Classe représentant un document de recherche.
+    
+    Contient les informations du document ainsi que les métadonnées.
+    
+    Args:
+        id (int): ID du document.
+        title (str): Titre du document.
+        content (str): Contenu du document.
+        theme (str): Thème du document.
+        document_type (str): Type de document.
+        publish_date (date): Date de publication.
+        metadata (dict): Métadonnées associées au document.
     """
     id: int
     title: str
@@ -30,16 +31,17 @@ class DocumentSearchResponse(BaseModel):
     metadata: dict
     
 class DocumentSearchRequest(BaseModel):
-    """
-    @brief Classe représentant une requête de recherche.
-    @details Contient la requête de recherche, le nombre de résultats souhaités et les filtres optionnels.
-    @structure:
-        - query (str): La requête de recherche.
-        - top_k (int): Nombre de résultats à retourner.
-        - theme (str, optional): Thème du document.
-        - document_type (str, optional): Type de document.
-        - start_date (date, optional): Date de début pour le filtrage.
-        - end_date (date, optional): Date de fin pour le filtrage.
+    """Classe représentant une requête de recherche de documents.
+    
+    Contient la requête de recherche, le nombre de résultats souhaités et les filtres optionnels.
+    
+    Args:
+        query (str): La requête de recherche.
+        top_k (int): Nombre de résultats à retourner, par défaut 10.
+        theme (str, optional): Thème du document pour le filtrage.
+        document_type (str, optional): Type de document pour le filtrage.
+        start_date (date, optional): Date de début pour le filtrage.
+        end_date (date, optional): Date de fin pour le filtrage.
     """
     query: str
     top_k: int = 10
@@ -49,14 +51,15 @@ class DocumentSearchRequest(BaseModel):
     end_date: Optional[date] = None
 
 class SearchResults(BaseModel):
-    """_summary_
-    @brief Classe représentant les résultats de recherche.
-    @details Contient la requête, les filtres appliqués, le nombre total de résultats et les résultats eux-mêmes.
-    @structure:
-        - query (str): La requête de recherche.
-        - filters (dict): Les filtres appliqués lors de la recherche.
-        - total_results (int): Le nombre total de résultats trouvés.
-        - results (List[DocumentSearchResponse]): Liste des résultats de recherche formatés.
+    """Classe représentant les résultats de recherche.
+    
+    Contient la requête, les filtres appliqués, le nombre total de résultats et les résultats eux-mêmes.
+    
+    Args:
+        query (str): La requête de recherche.
+        filters (dict, optional): Les filtres appliqués lors de la recherche.
+        total_results (int): Le nombre total de résultats trouvés.
+        results (List[DocumentSearchResponse]): Liste des résultats de recherche formatés.
     """
     query: str
     filters: Optional[dict]
@@ -64,22 +67,28 @@ class SearchResults(BaseModel):
     results: List[DocumentSearchResponse]
        
 class SearchEngine:
-    """
-    @class SearchEngine
-    @brief Classe principale pour effectuer des recherches hybrides combinant filtrage par métadonnées et recherche vectorielle.
+    """Classe principale pour effectuer des recherches hybrides.
+    
+    Combine filtrage par métadonnées et recherche vectorielle.
     """
 
     def __init__(self):
-        """
-        @brief Constructeur de la classe SearchEngine.
-        Initialise les composants nécessaires pour la recherche.
+        """Initialise les composants nécessaires pour la recherche.
         """
         self.embedding_generator = EmbeddingGenerator()
         self.ranker = ResultRanker()
     
     def search(self, db: Session, query: str, filters=None, top_k=10) -> List[DocumentSearchResponse]:
-        """
-        Recherche hybride combinant filtrage par métadonnées et recherche vectorielle.
+        """Recherche hybride combinant filtrage par métadonnées et recherche vectorielle.
+        
+        Args:
+            db (Session): Session de base de données.
+            query (str): Texte de la requête.
+            filters (dict, optional): Filtres sur les métadonnées.
+            top_k (int, optional): Nombre de résultats à retourner.
+            
+        Returns:
+            List[DocumentSearchResponse]: Liste des résultats formatés.
         """
         query_str = query
         # Étape 1: Générer l'embedding de la requête
@@ -87,18 +96,20 @@ class SearchEngine:
         print(f"length Embedding de la requête : {len(query_embedding)}")
 
         # Étape 2: Appliquer les filtres avec SQLAlchemy ORM
-        query = db.query(Document)
+        document_query = db.query(Document)
         if filters:
             if filters.get("theme"):
-                query = query.filter(Document.theme == filters["theme"])
+                document_query = document_query.filter(Document.theme == filters["theme"])
             if filters.get("document_type"):
-                query = query.filter(Document.document_type == filters["document_type"])
+                document_query = document_query.filter(Document.document_type == filters["document_type"])
             if filters.get("start_date") and filters.get("end_date"):
-                query = query.filter(Document.publish_date.between(filters["start_date"], filters["end_date"]))
+                document_query = document_query.filter(Document.publish_date.between(filters["start_date"], filters["end_date"]))
 
-        filtered_results = query.all()
+        filtered_results = document_query.all()
         print(f"Documents filtrés : {[doc.title for doc in filtered_results]}")
 
+        filters = filters or {}
+        
         # Étape 3: Récupérer les embeddings pour les résultats filtrés
         document_ids = [doc.id for doc in filtered_results]
         if not document_ids:
@@ -153,17 +164,20 @@ class SearchEngine:
         ranked_results = ranked_results[:top_k]
         print(f"Résultats finaux : {[doc.title for doc in ranked_results]}")
         # Étape 7: Formater les résultats
-        formatted_results = self.format_results(query_str, ranked_results, filters)
+        formatted_results = self.format_results(query_str, ranked_results, filters or {})
         return formatted_results
     
     def hybrid_search(self, db: Session, query: str, filters=None, top_k=10) -> SearchResults:
-        """
-        @brief Méthode principale exposée pour la recherche hybride.
-        @param db Session de base de données.
-        @param query Texte de la requête.
-        @param filters Filtres sur les métadonnées (date, thème, type).
-        @param top_k Nombre de résultats à retourner.
-        @return Liste des documents les plus pertinents avec leurs métadonnées.
+        """Méthode principale exposée pour la recherche hybride.
+        
+        Args:
+            db (Session): Session de base de données.
+            query (str): Texte de la requête.
+            filters (dict, optional): Filtres sur les métadonnées (date, thème, type).
+            top_k (int, optional): Nombre de résultats à retourner.
+            
+        Returns:
+            SearchResults: Résultats de recherche avec leurs métadonnées.
         """
         # Déléguer la recherche à la méthode interne
         results = self.search(db, query, filters, top_k)
@@ -176,14 +190,13 @@ class SearchEngine:
             results=results
         )
 
-    def format_results(self, query: str, results: List[Document], filters: dict = None) -> List[DocumentSearchResponse]:
-        """
-        Formate les résultats de recherche avant de les renvoyer au frontend.
+    def format_results(self, query: str, results: List[Document], filters: dict) -> List[DocumentSearchResponse]:
+        """Formate les résultats de recherche avant de les renvoyer au frontend.
 
         Args:
             query (str): La requête de recherche.
-            results (list[Document]): Liste des résultats de recherche.
-            filters (dict, optional): Filtres appliqués lors de la recherche.
+            results (List[Document]): Liste des résultats de recherche.
+            filters (dict): Filtres appliqués lors de la recherche.
 
         Returns:
             List[DocumentSearchResponse]: Résultats formatés avec le contexte de la recherche et les métadonnées.

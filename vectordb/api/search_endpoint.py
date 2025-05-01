@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from clea_vectordb.src.search import SearchEngine, DocumentSearchRequest, SearchResults
-from clea_vectordb.src.database import get_db
+from vectordb.src.search import SearchEngine, DocumentSearchRequest, SearchResults
+from vectordb.src.database import get_db
 
 
 router = APIRouter()
@@ -13,8 +13,13 @@ router = APIRouter()
     description="Recherche des documents en fonction de la similarité vectorielle et reranking d'une requête et de filtres optionnels.",
 )
 async def search_documents(search_request: DocumentSearchRequest):
-    """
-    Endpoint pour rechercher des documents en fonction d'une requête et de filtres optionnels.
+    """Recherche des documents en fonction d'une requête et de filtres optionnels.
+
+    Args:
+        search_request (DocumentSearchRequest): La requête de recherche avec ses paramètres.
+
+    Returns:
+        SearchResults: Les résultats de la recherche hybride.
     """
     filters = {}
     if search_request.theme:

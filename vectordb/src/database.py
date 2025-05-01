@@ -27,15 +27,14 @@ Base = declarative_base()
 
 
 class DocumentCreate(BaseModel):
-    """
-    @brief Classe représentant un document à créer.
-    @details Contient les informations nécessaires pour créer un document.
-    @structure:
-        - title (str): Titre du document.
-        - content (str): Contenu du document.
-        - theme (str): Thème du document.
-        - document_type (str): Type de document.
-        - publish_date (date): Date de publication du document.
+    """Classe représentant un document à créer.
+    
+    Args:
+        title: Titre du document.
+        content: Contenu du document.
+        theme: Thème du document.
+        document_type: Type de document.
+        publish_date: Date de publication du document.
     """
 
     title: str
@@ -46,16 +45,15 @@ class DocumentCreate(BaseModel):
 
 
 class DocumentResponse(BaseModel):
-    """
-    @brief Classe représentant un document de réponse.
-    @details Contient les informations du document ainsi que son ID.
-    @structure:
-        - id (int): ID du document.
-        - title (str): Titre du document.
-        - content (str): Contenu du document.
-        - theme (str): Thème du document.
-        - document_type (str): Type de document.
-        - publish_date (date): Date de publication du document.
+    """Classe représentant un document de réponse.
+    
+    Args:
+        id: ID du document.
+        title: Titre du document.
+        content: Contenu du document.
+        theme: Thème du document.
+        document_type: Type de document.
+        publish_date: Date de publication du document.
     """
 
     id: int
@@ -69,16 +67,15 @@ class DocumentResponse(BaseModel):
 
 
 class DocumentUpdate(BaseModel):
-    """
-    @brief Classe représentant un document à mettre à jour.
-    @details Contient les informations nécessaires pour mettre à jour un document.
-    @structure:
-        - document_id (int): ID du document à mettre à jour.
-        - title (str, optional): Nouveau titre.
-        - content (str, optional): Nouveau contenu.
-        - theme (str, optional): Nouveau thème.
-        - document_type (str, optional): Nouveau type de document.
-        - publish_date (str, optional): Nouvelle date de publication (format ISO).
+    """Classe représentant un document à mettre à jour.
+    
+    Args:
+        document_id: ID du document à mettre à jour.
+        title: Nouveau titre.
+        content: Nouveau contenu.
+        theme: Nouveau thème.
+        document_type: Nouveau type de document.
+        publish_date: Nouvelle date de publication.
     """
 
     document_id: int = Field(
@@ -97,17 +94,16 @@ class DocumentUpdate(BaseModel):
 
 # Modèle pour les documents
 class Document(Base):
-    """
-    @class Document
-    @brief Modèle SQLAlchemy représentant un document dans la base de données.
-    @structure:
-        - id (int): Identifiant unique du document.
-        - title (str): Titre du document.
-        - content (str): Contenu du document.
-        - theme (str): Thème du document.
-        - document_type (str): Type de document.
-        - publish_date (date): Date de publication du document.
-        - embedding (Text): Représentation vectorielle du contenu du document.
+    """Modèle SQLAlchemy représentant un document dans la base de données.
+    
+    Attributes:
+        id: Identifiant unique du document.
+        title: Titre du document.
+        content: Contenu du document.
+        theme: Thème du document.
+        document_type: Type de document.
+        publish_date: Date de publication du document.
+        embedding: Représentation vectorielle du contenu du document.
     """
 
     __tablename__ = "documents"
@@ -123,9 +119,10 @@ class Document(Base):
 
 # Fonction pour obtenir une session de base de données
 def get_db():
-    """
-    @brief Fonction pour obtenir une session de base de données.
-    @return Générateur de session de base de données.
+    """Fonction pour obtenir une session de base de données.
+    
+    Yields:
+        Session de base de données SQLAlchemy.
     """
     db = SessionLocal()
     try:
@@ -136,8 +133,8 @@ def get_db():
 
 # Fonction pour initialiser la base de données
 def init_db():
-    """
-    @brief Fonction pour initialiser la base de données.
+    """Fonction pour initialiser la base de données.
+    
     Crée les tables définies dans les modèles SQLAlchemy.
     """
     Base.metadata.create_all(bind=engine)
@@ -150,14 +147,13 @@ def init_db():
 
 
 def add_documents(documents: List[DocumentCreate]):
-    """
-    Ajoute une liste de documents à la base de données et génère leurs embeddings.
+    """Ajoute une liste de documents à la base de données et génère leurs embeddings.
 
     Args:
-        documents (List[DocumentCreate]): Liste de documents à ajouter.
+        documents: Liste de documents à ajouter.
 
     Returns:
-        dict: Résultat de l'opération avec les IDs des documents ajoutés ou les erreurs rencontrées.
+        Résultat de l'opération avec les IDs des documents ajoutés ou les erreurs rencontrées.
     """
     embedding_generator = EmbeddingGenerator()
     db = next(get_db())
@@ -228,14 +224,13 @@ def add_documents(documents: List[DocumentCreate]):
 
 
 def delete_document(document_id: int):
-    """
-    Supprime un document de la base de données.
+    """Supprime un document de la base de données.
 
     Args:
-        document_id (int): ID du document à supprimer.
+        document_id: ID du document à supprimer.
 
     Returns:
-        dict: Résultat de l'opération.
+        Résultat de l'opération.
     """
     db = next(get_db())
     try:
@@ -254,14 +249,13 @@ def delete_document(document_id: int):
 
 
 def update_document(document_update: DocumentUpdate):
-    """
-    Met à jour un document existant dans la base de données.
+    """Met à jour un document existant dans la base de données.
 
     Args:
-        document_update (DocumentUpdate): Objet contenant les champs à mettre à jour.
+        document_update: Objet contenant les champs à mettre à jour.
 
     Returns:
-        dict: Résultat de l'opération.
+        Résultat de l'opération.
     """
     db = next(get_db())
     try:

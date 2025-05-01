@@ -3,6 +3,16 @@ from docx import Document
 from fpdf import FPDF
 import json
 
+"""
+Generate demonstration files in various formats (TXT, JSON, DOCX, PDF, HTML).
+
+:param output_dir: Directory where the demo files will be created.
+:type output_dir: Path
+:raises IOError: If there is an issue writing to the output directory.
+:return: None
+:rtype: None
+"""
+
 # Répertoire de sortie
 output_dir = Path(".")
 output_dir.mkdir(parents=True, exist_ok=True)

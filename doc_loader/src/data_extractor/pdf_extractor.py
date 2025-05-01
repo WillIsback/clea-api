@@ -7,6 +7,11 @@ from .base import BaseExtractor, ExtractedDocument, stream_split_to_disk
 
 class PdfExtractor(BaseExtractor):
     def __init__(self, file_path: str):
+        """Initialise un extracteur pour les fichiers PDF.
+        
+        Args:
+            file_path: Chemin vers le fichier PDF à traiter.
+        """
         super().__init__(file_path)
         self.file_path = Path(file_path)
         self.reader = PdfReader(self.file_path)
@@ -32,5 +37,13 @@ class PdfExtractor(BaseExtractor):
         }
 
     def extract_many(self, max_length: int = 1000) -> Iterator[ExtractedDocument]:
+        """Extrait le contenu du fichier PDF en chunks de taille maximale spécifiée.
+        
+        Args:
+            max_length: Taille maximale d'un chunk. Par défaut 1000.
+            
+        Returns:
+            Un itérateur sur les documents extraits.
+        """
         page_texts = (page.extract_text() or "" for page in self.reader.pages)
         yield from stream_split_to_disk(self.meta, page_texts, max_length)

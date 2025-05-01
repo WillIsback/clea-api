@@ -2,7 +2,7 @@ import os
 import json
 import pytest
 from datetime import date
-from clea_doc_loader.src import DocsLoader, ExtractedDocument, UnsupportedFileTypeError
+from doc_loader.src import DocsLoader, ExtractedDocument, UnsupportedFileTypeError
 
 
 # Crée un répertoire temporaire pour les tests

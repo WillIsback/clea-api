@@ -75,3 +75,5 @@ dmypy.json
 
 # Local uv package cache
 .uv/docs/build/
+docs/*
+.github

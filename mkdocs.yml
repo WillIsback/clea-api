@@ -1,0 +1,25 @@
+site_name: Cléa-API Documentation
+nav:
+  - Home: index.md
+  - REST API:
+      - REST API: rest_api.md
+  - Python API:
+      - doc_loader: doc_loader.md
+      - vectordb: vectordb.md
+      - pipeline: pipeline.md
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: false
+  - neoteroi.mkdocsoad:
+      use_pymdownx: true
+markdown_extensions:
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+extra_css:
+  - css/mkdocsoad.css

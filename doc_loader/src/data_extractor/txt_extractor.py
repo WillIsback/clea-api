@@ -6,6 +6,11 @@ from .base import BaseExtractor, ExtractedDocument, stream_split_to_disk
 
 class TxtExtractor(BaseExtractor):
     def __init__(self, file_path: str):
+        """Initialise un extracteur pour les fichiers texte.
+        
+        Args:
+            file_path: Chemin vers le fichier texte à traiter.
+        """
         super().__init__(file_path)
         self.file_path = Path(file_path)
         self.meta = {
@@ -17,5 +22,13 @@ class TxtExtractor(BaseExtractor):
         }
 
     def extract_many(self, max_length: int = 1000) -> Iterator[ExtractedDocument]:
+        """Extrait le contenu du fichier texte en chunks de taille maximale spécifiée.
+        
+        Args:
+            max_length: Taille maximale d'un chunk. Par défaut 1000.
+            
+        Returns:
+            Un itérateur sur les documents extraits.
+        """
         lines = self.file_path.read_text(encoding="utf-8").splitlines(keepends=True)
         yield from stream_split_to_disk(self.meta, iter(lines), max_length)

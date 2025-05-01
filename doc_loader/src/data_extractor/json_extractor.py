@@ -7,6 +7,14 @@ from .base import BaseExtractor, ExtractedDocument, stream_split_to_disk
 
 class JsonExtractor(BaseExtractor):
     def __init__(self, file_path: str):
+        """Initialise un extracteur pour les fichiers JSON.
+        
+        Args:
+            file_path: Chemin vers le fichier JSON à traiter.
+            
+        Raises:
+            ValueError: Si le fichier JSON est invalide.
+        """
         super().__init__(file_path)
         self.file_path = Path(file_path)
 
@@ -24,6 +32,14 @@ class JsonExtractor(BaseExtractor):
         }
 
     def extract_many(self, max_length: int = 1000) -> Iterator[ExtractedDocument]:
+        """Extrait le contenu du fichier JSON en chunks de taille maximale spécifiée.
+        
+        Args:
+            max_length: Taille maximale d'un chunk. Par défaut 1000.
+            
+        Returns:
+            Un itérateur sur les documents extraits.
+        """
         for entry in self.entries:
             meta = {
                 **self.default_meta,

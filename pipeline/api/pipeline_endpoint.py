@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, UploadFile, File, Query
-from clea_pipeline.src.pipeline import process_and_store
+from pipeline.src.pipeline import process_and_store
 from typing import List, Dict
 import tempfile
 import shutil

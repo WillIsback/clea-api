@@ -24,6 +24,15 @@ EXTENSION_TO_EXTRACTOR: dict[str, Type[BaseExtractor]] = {
 
 
 def get_extractor(file_path: str) -> BaseExtractor:
+    """
+    Retrieve the appropriate extractor for a given file based on its extension.
+
+    :param file_path: Path to the file to be processed.
+    :type file_path: str
+    :raises UnsupportedFileTypeError: If the file type is not supported.
+    :return: An instance of the extractor class for the file type.
+    :rtype: BaseExtractor
+    """
     extension = Path(file_path).suffix.lower()
     extractor_cls = EXTENSION_TO_EXTRACTOR.get(extension)
 
