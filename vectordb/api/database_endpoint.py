@@ -1,369 +1,335 @@
-from fastapi import APIRouter, HTTPException, Body, Query, Path, Depends
+# api/database_endpoint.py
+"""
+CRUD routes for documents / chunks.
+
+All request and response bodies are defined in vectordb.src.schemas
+(the SQL-Alchemy models stay in database.py).
+"""
+
+from __future__ import annotations
+
+from typing import List, Optional
+
+from fastapi import APIRouter, Depends, HTTPException, Path, Query
 from sqlalchemy.orm import Session
+
 from vectordb.src.database import (
-    get_db,
-    Document,
     Chunk,
-    DocumentCreate,
-    DocumentResponse,
-    DocumentUpdate,
+    Document,
+    create_index_for_corpus,
+    get_db,
+)
+
+from vectordb.src.crud import (
     add_document_with_chunks,
+    delete_document_chunks,
     update_document_with_chunks,
     delete_document,
-    delete_document_chunks,
-    create_index_for_corpus,
 )
-from typing import List, Dict, Any, Optional
 
+from vectordb.src.schemas import (
+    DocumentResponse,
+    DocumentWithChunks,
+    UpdateWithChunks,
+)
 
 router = APIRouter()
 
 
+# --------------------------------------------------------------------------- #
+#  POST /documents – create one document + chunks
+# --------------------------------------------------------------------------- #
 @router.post(
     "/documents",
     summary="Ajouter un document avec ses chunks",
-    response_model=Dict[str, Any],
-    description="Ajoute un document et ses chunks hiérarchiques à la base de données.",
+    response_model=DocumentResponse,
 )
-async def add_document_endpoint(
-    document: DocumentCreate = Body(...),
-    chunks: List[Dict[str, Any]] = Body(...),
-    db: Session = Depends(get_db),
-):
-    """Ajoute un document et ses chunks hiérarchiques à la base de données.
+def add_document(
+    payload: DocumentWithChunks, db: Session = Depends(get_db)
+) -> DocumentResponse:
+    """Insère le document puis ses chunks dans une transaction unique.
 
     Args:
-        document: Données du document à créer.
-        chunks: Liste des chunks avec leur contenu et métadonnées hiérarchiques.
-        db: Session de base de données.
+        payload: Objet contenant les données du document et ses chunks.
+        db: Session de base de données injectée par dépendance.
 
     Returns:
-        Dict[str, Any]: Résultat de l'opération avec l'ID du document et des informations sur les chunks.
+        DocumentResponse: Document créé avec le nombre de chunks associés.
 
     Raises:
-        HTTPException: Si une erreur survient lors de l'ajout du document ou des chunks.
+        HTTPException: Si une erreur survient pendant l'insertion.
     """
     try:
-        result = add_document_with_chunks(db, document, chunks)
-
-        # Si l'index doit être créé, proposer sa création
-        if result.get("create_index"):
-            corpus_id = result.get("corpus_id")
-            # Création asynchrone de l'index peut être lancée ici
-            # Ou simplement suggérer la création via l'API
-            result["index_message"] = (
-                f"Un nouvel index pour le corpus {corpus_id} devrait être créé. "
-                f"Utilisez l'endpoint /indexes/{corpus_id}/create pour créer l'index."
-            )
-
-        return result
-    except Exception as e:
-        raise HTTPException(
-            status_code=400, detail=f"Erreur lors de l'ajout du document: {str(e)}"
+        payload_dict = payload.to_dict()
+        add_document = add_document_with_chunks(
+            db, payload.document, payload_dict["chunks"]
         )
+        # Utiliser Session.get() au lieu de Query.get()
+        doc = db.get(Document, add_document["document_id"])
+        if not doc:
+            raise HTTPException(404, "Document introuvable")
+
+        return DocumentResponse(
+            id=doc.id,
+            title=doc.title,
+            theme=doc.theme,
+            document_type=doc.document_type,
+            publish_date=doc.publish_date,
+            corpus_id=doc.corpus_id,
+            chunk_count=add_document["chunks"],
+        )
+    except Exception as exc:  # pragma: no cover
+        raise HTTPException(400, f"Erreur lors de l'ajout du document: {exc}")
 
 
 @router.put(
     "/documents/{document_id}",
-    summary="Mettre à jour un document existant",
-    response_model=Dict[str, Any],
-    description="Met à jour un document existant et peut ajouter de nouveaux chunks.",
+    summary="Mettre à jour un document (et/ou ajouter des chunks)",
+    response_model=DocumentResponse,
+    tags=["Database"],
 )
-async def update_document_endpoint(
-    document_id: int = Path(..., description="ID du document à mettre à jour"),
-    document_update: DocumentUpdate = Body(...),
-    new_chunks: Optional[List[Dict[str, Any]]] = Body(None),
-):
-    """Met à jour un document existant et peut ajouter de nouveaux chunks.
+def update_document(
+    payload: UpdateWithChunks,
+    document_id: int = Path(
+        ..., ge=1, description="Identifiant du document à mettre à jour (>= 1)."
+    ),
+    db: Session = Depends(get_db),  # Ajout de la dépendance à la session DB
+) -> DocumentResponse:
+    """Met à jour les métadonnées d'un document et peut ajouter de nouveaux chunks.
+
+    Cette fonction permet de modifier les informations d'un document existant et d'y
+    ajouter de nouveaux fragments de texte (chunks) en une seule opération.
 
     Args:
-        document_id: ID du document à mettre à jour.
-        document_update: Données de mise à jour du document.
-        new_chunks: Nouveaux chunks à ajouter (optionnel).
+        payload: Objet de mise à jour contenant le document et éventuellement des nouveaux chunks.
+        document_id: Identifiant numérique du document à mettre à jour (≥ 1).
+        db: Session de base de données injectée par dépendance.
 
     Returns:
-        Dict[str, Any]: Résultat de l'opération avec les informations sur le document et les chunks.
+        DocumentResponse: Document mis à jour avec le nombre total de chunks associés.
 
     Raises:
-        HTTPException: Si le document n'existe pas ou si une erreur survient.
+        HTTPException:
+            - 404: Si le document n'existe pas dans la base
     """
-    # S'assurer que l'ID dans le chemin et l'ID dans le payload correspondent
-    document_update.document_id = document_id
+    # aligne le body avec l’URL
+    payload.document.id = document_id
 
-    try:
-        result = update_document_with_chunks(document_update, new_chunks)
-        if "error" in result:
-            raise HTTPException(status_code=404, detail=result["error"])
-        return result
-    except Exception as e:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Erreur lors de la mise à jour du document: {str(e)}",
-        )
+    # liste de dict prêts pour la fonction helper
+    new_chunks_data = [c.model_dump() for c in (payload.new_chunks or [])]
+
+    result = update_document_with_chunks(payload.document, new_chunks_data)
+    if "error" in result:
+        raise HTTPException(404, result["error"])
+
+    # -- nombre total de chunks après maj -------------
+    chunk_count = (
+        result["chunks"]["total"]
+        if isinstance(result.get("chunks"), dict)
+        else result.get("chunks", 0)
+    )
+
+    return DocumentResponse(
+        id=result["id"],
+        title=result["title"],
+        theme=result["theme"],
+        document_type=result["document_type"],
+        publish_date=result["publish_date"],
+        corpus_id=result["corpus_id"],
+        chunk_count=chunk_count,
+    )
 
 
+# --------------------------------------------------------------------------- #
+#  DELETE /documents/{id}
+# --------------------------------------------------------------------------- #
 @router.delete(
     "/documents/{document_id}",
-    summary="Supprimer un document",
-    response_model=Dict[str, Any],
-    description="Supprime un document de la base de données avec tous ses chunks associés.",
+    summary="Supprimer un document et tous ses chunks",
+    response_model=dict,
 )
-async def delete_document_endpoint(
-    document_id: int = Path(..., description="ID du document à supprimer"),
-):
-    """Supprime un document de la base de données avec tous ses chunks associés.
-
-    Args:
-        document_id: ID du document à supprimer.
-
-    Returns:
-        Dict[str, Any]: Résultat de l'opération.
-
-    Raises:
-        HTTPException: Si le document n'existe pas ou si une erreur survient.
-    """
-    result = delete_document(document_id)
-    if "error" in result:
-        raise HTTPException(status_code=404, detail=result["error"])
-    return result
+def remove_document(document_id: int = Path(..., ge=1)) -> dict:
+    deleted = delete_document(document_id)
+    if "error" in deleted:
+        raise HTTPException(404, deleted["error"])
+    return deleted
 
 
+# --------------------------------------------------------------------------- #
+#  DELETE /documents/{id}/chunks
+# --------------------------------------------------------------------------- #
 @router.delete(
     "/documents/{document_id}/chunks",
     summary="Supprimer des chunks d'un document",
-    response_model=Dict[str, Any],
-    description="Supprime des chunks spécifiques d'un document ou tous les chunks si aucun ID n'est spécifié.",
+    response_model=dict,
 )
-async def delete_chunks_endpoint(
-    document_id: int = Path(..., description="ID du document"),
+def remove_chunks(
+    *,
+    document_id: int = Path(..., ge=1),
     chunk_ids: Optional[List[int]] = Query(
         None,
-        description="Liste des IDs des chunks à supprimer (si vide, supprime tous les chunks)",
+        description="IDs à supprimer ; vide ⇒ tous les chunks du document",
     ),
-):
-    """Supprime des chunks spécifiques d'un document ou tous les chunks si aucun ID n'est spécifié.
-
-    Args:
-        document_id: ID du document.
-        chunk_ids: Liste des IDs des chunks à supprimer (si None, supprime tous les chunks).
-
-    Returns:
-        Dict[str, Any]: Résultat de l'opération avec le nombre de chunks supprimés.
-
-    Raises:
-        HTTPException: Si le document n'existe pas ou si une erreur survient.
-    """
-    result = delete_document_chunks(document_id, chunk_ids)
-    if "error" in result:
-        raise HTTPException(status_code=404, detail=result["error"])
-    return result
+) -> dict:
+    deleted = delete_document_chunks(document_id, chunk_ids)
+    if "error" in deleted:
+        raise HTTPException(404, deleted["error"])
+    return deleted
 
 
+# --------------------------------------------------------------------------- #
+#  GET /documents – collection
+# --------------------------------------------------------------------------- #
 @router.get(
     "/documents",
     summary="Lister les documents",
     response_model=List[DocumentResponse],
-    description="Récupère la liste des documents avec filtrage optionnel par thème, type ou corpus.",
 )
-async def list_documents_endpoint(
-    theme: Optional[str] = Query(None, description="Filtrer par thème"),
-    document_type: Optional[str] = Query(
-        None, description="Filtrer par type de document"
-    ),
-    corpus_id: Optional[str] = Query(None, description="Filtrer par corpus"),
-    skip: int = Query(0, description="Nombre de documents à sauter (pagination)"),
-    limit: int = Query(100, description="Nombre maximum de documents à retourner"),
+def list_documents(
+    *,
+    theme: Optional[str] = Query(None),
+    document_type: Optional[str] = Query(None, alias="documentType"),
+    corpus_id: Optional[str] = Query(None, alias="corpusId"),
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, gt=0),
     db: Session = Depends(get_db),
-):
-    """Récupère la liste des documents avec filtrage optionnel.
+) -> List[DocumentResponse]:
+    """Liste l'ensemble des documents de la base de données en y associant le nombre de chunks.
 
     Args:
-        theme: Filtrer par thème.
-        document_type: Filtrer par type de document.
-        corpus_id: Filtrer par corpus.
-        skip: Nombre de documents à sauter (pagination).
-        limit: Nombre maximum de documents à retourner.
-        db: Session de base de données.
+        theme (Optional[str]): Filtre optionnel pour le thème du document.
+        document_type (Optional[str]): Filtre optionnel pour le type du document.
+        corpus_id (Optional[str]): Filtre optionnel sur l'identifiant du corpus.
+        skip (int): Nombre de documents à ignorer (pour la pagination).
+        limit (int): Nombre maximal de documents à retourner.
+        db (Session): Session de base de données fournie par Depends.
 
     Returns:
-        List[DocumentResponse]: Liste des documents correspondant aux critères.
+        List[DocumentResponse]: Liste des documents formatés avec leur compte de chunks.
     """
-    # Construire la requête de base
-    query = db.query(Document)
-
-    # Appliquer les filtres si spécifiés
+    q = db.query(Document)
     if theme:
-        query = query.filter(Document.theme == theme)
+        q = q.filter(Document.theme == theme)
     if document_type:
-        query = query.filter(Document.document_type == document_type)
+        q = q.filter(Document.document_type == document_type)
     if corpus_id:
-        query = query.filter(Document.corpus_id == corpus_id)
+        q = q.filter(Document.corpus_id == corpus_id)
 
-    # Récupérer les documents avec pagination
-    documents = query.offset(skip).limit(limit).all()
-
-    # Pour chaque document, compter le nombre de chunks associés
-    result = []
-    for doc in documents:
-        chunk_count = db.query(Chunk).filter(Chunk.document_id == doc.id).count()
-        doc_dict = {
-            "id": doc.id,
-            "title": doc.title,
-            "theme": doc.theme,
-            "document_type": doc.document_type,
-            "publish_date": doc.publish_date,
-            "corpus_id": doc.corpus_id,
-            "chunk_count": chunk_count,
-        }
-        result.append(doc_dict)
-
-    return result
+    docs = q.offset(skip).limit(limit).all()
+    return [DocumentResponse.model_validate(doc) for doc in docs]
 
 
+# --------------------------------------------------------------------------- #
+#  GET /documents/{id}
+# --------------------------------------------------------------------------- #
 @router.get(
     "/documents/{document_id}",
     summary="Récupérer un document",
     response_model=DocumentResponse,
-    description="Récupère les détails d'un document spécifique.",
 )
-async def get_document_endpoint(
-    document_id: int = Path(..., description="ID du document à récupérer"),
+def get_document(
+    document_id: int = Path(..., ge=1),
     db: Session = Depends(get_db),
-):
-    """Récupère les détails d'un document spécifique.
+) -> DocumentResponse:
+    """Récupère un document à partir de son identifiant et le formate en DocumentResponse.
 
     Args:
-        document_id: ID du document à récupérer.
-        db: Session de base de données.
+        document_id (int): Identifiant du document à récupérer.
+        db (Session): Session de base de données fournie par dépendance.
 
     Returns:
-        DocumentResponse: Détails du document.
+        DocumentResponse: Document formaté avec le nombre de chunks associés.
 
     Raises:
-        HTTPException: Si le document n'existe pas.
+        HTTPException: Si le document n'existe pas dans la base.
     """
-    document = db.query(Document).filter(Document.id == document_id).first()
-    if not document:
-        raise HTTPException(
-            status_code=404, detail=f"Document avec ID {document_id} introuvable"
-        )
+    doc = db.query(Document).filter(Document.id == document_id).first()
+    if not doc:
+        raise HTTPException(404, f"Document {document_id} introuvable")
 
-    # Compter le nombre de chunks associés
+    # Compter les chunks associés à ce document
     chunk_count = db.query(Chunk).filter(Chunk.document_id == document_id).count()
 
-    doc_response = {
-        "id": document.id,
-        "title": document.title,
-        "theme": document.theme,
-        "document_type": document.document_type,
-        "publish_date": document.publish_date,
-        "corpus_id": document.corpus_id,
-        "chunk_count": chunk_count,
-    }
-
-    return doc_response
+    return DocumentResponse(
+        id=doc.id,
+        title=doc.title,
+        theme=doc.theme,
+        document_type=doc.document_type,
+        publish_date=doc.publish_date,
+        corpus_id=doc.corpus_id,
+        chunk_count=chunk_count,
+    )
 
 
+# --------------------------------------------------------------------------- #
+#  GET /documents/{id}/chunks
+# --------------------------------------------------------------------------- #
 @router.get(
     "/documents/{document_id}/chunks",
     summary="Récupérer les chunks d'un document",
-    response_model=List[Dict[str, Any]],
-    description="Récupère les chunks d'un document avec filtrage hiérarchique optionnel.",
+    response_model=list,  # keep the raw list for brevity
 )
-async def get_document_chunks_endpoint(
-    document_id: int = Path(..., description="ID du document"),
-    hierarchy_level: Optional[int] = Query(
-        None, description="Filtrer par niveau hiérarchique (0-3)"
-    ),
-    parent_chunk_id: Optional[int] = Query(
-        None, description="Filtrer par chunk parent"
-    ),
-    skip: int = Query(0, description="Nombre de chunks à sauter"),
-    limit: int = Query(100, description="Nombre maximum de chunks à retourner"),
+def get_chunks(
+    *,
+    document_id: int = Path(..., ge=1),
+    hierarchy_level: Optional[int] = Query(None, alias="hierarchyLevel"),
+    parent_chunk_id: Optional[int] = Query(None, alias="parentChunkId"),
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, gt=0),
     db: Session = Depends(get_db),
 ):
-    """Récupère les chunks d'un document avec filtrage hiérarchique optionnel.
+    if not db.query(Document.id).filter_by(id=document_id).first():
+        raise HTTPException(404, f"Document {document_id} introuvable")
 
-    Args:
-        document_id: ID du document.
-        hierarchy_level: Filtrer par niveau hiérarchique (0: document, 1: section, 2: paragraphe, 3: chunk).
-        parent_chunk_id: Filtrer par chunk parent.
-        skip: Nombre de chunks à sauter (pagination).
-        limit: Nombre maximum de chunks à retourner.
-        db: Session de base de données.
-
-    Returns:
-        List[Dict[str, Any]]: Liste des chunks correspondant aux critères.
-
-    Raises:
-        HTTPException: Si le document n'existe pas.
-    """
-    # Vérifier que le document existe
-    document = db.query(Document).filter(Document.id == document_id).first()
-    if not document:
-        raise HTTPException(
-            status_code=404, detail=f"Document avec ID {document_id} introuvable"
-        )
-
-    # Construire la requête de base
-    query = db.query(Chunk).filter(Chunk.document_id == document_id)
-
-    # Appliquer les filtres si spécifiés
+    q = db.query(Chunk).filter_by(document_id=document_id)
     if hierarchy_level is not None:
-        query = query.filter(Chunk.hierarchy_level == hierarchy_level)
-
+        q = q.filter(Chunk.hierarchy_level == hierarchy_level)
     if parent_chunk_id is not None:
-        query = query.filter(Chunk.parent_chunk_id == parent_chunk_id)
+        q = q.filter(Chunk.parent_chunk_id == parent_chunk_id)
 
-    # Récupérer les chunks avec pagination
-    chunks = query.offset(skip).limit(limit).all()
-
-    # Formater les résultats (sans inclure les embeddings pour alléger la réponse)
-    result = []
-    for chunk in chunks:
-        chunk_dict = {
-            "id": chunk.id,
-            "document_id": chunk.document_id,
-            "content": chunk.content,
-            "start_char": chunk.start_char,
-            "end_char": chunk.end_char,
-            "hierarchy_level": chunk.hierarchy_level,
-            "parent_chunk_id": chunk.parent_chunk_id,
+    chunks = q.offset(skip).limit(limit).all()
+    return [
+        {
+            "id": c.id,
+            "documentId": c.document_id,
+            "content": c.content,
+            "startChar": c.start_char,
+            "endChar": c.end_char,
+            "hierarchyLevel": c.hierarchy_level,
+            "parentChunkId": c.parent_chunk_id,
         }
-        result.append(chunk_dict)
+        for c in chunks
+    ]
 
-    return result
 
-
+# --------------------------------------------------------------------------- #
+#  POST /indexes/{corpus_id}/create
+# --------------------------------------------------------------------------- #
 @router.post(
     "/indexes/{corpus_id}/create",
     summary="Créer un index vectoriel pour un corpus",
-    response_model=Dict[str, Any],
-    description="Crée un index vectoriel pour un corpus spécifique.",
+    response_model=dict,
 )
-async def create_index_endpoint(
-    corpus_id: str = Path(..., description="ID du corpus"),
-    index_type: str = Query(
-        "auto", description="Type d'index ('ivfflat', 'hnsw' ou 'auto')"
-    ),
-    force: bool = Query(
-        False, description="Forcer la recréation de l'index s'il existe déjà"
-    ),
-):
-    """Crée un index vectoriel pour un corpus spécifique.
+def create_index(
+    *,
+    corpus_id: str = Path(..., alias="corpusId"),
+    index_type: str = Query("auto", pattern="^(auto|ivfflat|hnsw)$"),
+    force: bool = Query(False),
+) -> dict:
+    """Crée un index vectoriel pour un corpus donné.
 
     Args:
-        corpus_id: ID du corpus pour lequel créer l'index.
-        index_type: Type d'index ('ivfflat', 'hnsw' ou 'auto').
-        force: Si True, recréera l'index même s'il existe déjà.
+        corpus_id (str): Identifiant du corpus pour lequel créer l'index.
+        index_type (str): Type d'index à créer (auto, ivfflat, hnsw).
+        force (bool): Indique si l'index doit être recréé même s'il existe déjà.
 
     Returns:
-        Dict[str, Any]: Résultat de l'opération.
+        dict: Résultat de l'opération, incluant un message de succès ou une erreur.
 
     Raises:
         HTTPException: Si une erreur survient lors de la création de l'index.
     """
     result = create_index_for_corpus(corpus_id, index_type, force)
     if "error" in result:
-        raise HTTPException(status_code=400, detail=result["error"])
+        raise HTTPException(400, result["error"])
     return result

@@ -1,92 +1,80 @@
+from __future__ import annotations
+
+import re
+from datetime import date, datetime
 from pathlib import Path
-from datetime import datetime, date
 from typing import Iterator
+
 from pypdf import PdfReader
-from .base import BaseExtractor, ExtractedDocument, stream_split_to_disk, adaptive_segmentation, choose_splitter
+
+from ..base import (  # helpers mutualisés
+    BaseExtractor,
+    build_document_with_chunks,
+    DocumentWithChunks,
+)
+
+
+_DATE_RX = re.compile(r"D:(\d{4})(\d{2})(\d{2})")  # -> YYYY MM DD
+
 
 class PdfExtractor(BaseExtractor):
-    def __init__(self, file_path: str):
-        """Initialise un extracteur pour les fichiers PDF.
-        
-        Args:
-            file_path: Chemin vers le fichier PDF à traiter.
-        """
+    """
+    Convertit un fichier **.pdf** en un unique payload
+    `DocumentWithChunks`, prêt à être inséré via `/database/documents`.
+    """
+
+    # ------------------------------------------------------------------ #
+    #  Boiler-plate
+    # ------------------------------------------------------------------ #
+    def __init__(self, file_path: str) -> None:
         super().__init__(file_path)
         self.file_path = Path(file_path)
+
         self.reader = PdfReader(self.file_path)
-        info = self.reader.metadata or {}
+        self._publish_date = self._parse_creation_date()
 
-        creation_date = info.get("/CreationDate")
-        if creation_date and creation_date.startswith("D:"):
-            try:
-                creation_date = (
-                    datetime.strptime(creation_date[2:10], "%Y%m%d").date().isoformat()
-                )
-            except Exception:
-                creation_date = datetime.today().isoformat()
-        else:
-            creation_date = datetime.today().isoformat()
+    # ------------------------------------------------------------------ #
+    #  Helpers
+    # ------------------------------------------------------------------ #
+    def _parse_creation_date(self) -> date:
+        """Extrait la date de création si disponible, sinon *today()*."""
+        raw = (self.reader.metadata or {}).get("/CreationDate", "")
+        m = _DATE_RX.match(raw)
+        try:
+            return (
+                datetime.strptime("".join(m.groups()), "%Y%m%d").date()
+                if m
+                else date.today()
+            )
+        except Exception:
+            return date.today()
 
-        self.meta = {
-            "title": info.get("/Title", self.file_path.name),
-            "theme": info.get("/Subject", "Thème générique"),
-            "document_type": "PDF",
-            "publish_date": creation_date,
-            "embedding": None,
-        }
+    # ------------------------------------------------------------------ #
 
-    def extract_many(self, max_length: int = 1_000) -> Iterator[ExtractedDocument]:
-        """Génère des instances d'ExtractedDocument à partir d'un fichier PDF.
-
-        Choisit automatiquement entre deux méthodes d'extraction en fonction de la taille du fichier:
-        * **stream_split_to_disk** - faible utilisation de la RAM avec des segments de longueur fixe
-        * **adaptive_segmentation** - découpage hiérarchique (Section ▶ Paragraphe ▶ Segment)
+    def extract_one(self, max_length: int = 1_000) -> DocumentWithChunks:
+        """
+        Extrait un seul objet `DocumentWithChunks` à partir du fichier PDF.
 
         Args:
-            max_length: Longueur cible pour les segments finaux (utilisée par les deux méthodes de découpage)
-
-        Yields:
-            ExtractedDocument: Segments du document avec métadonnées
+            max_length (int): Longueur cible pour les segments finaux.
 
         Returns:
-            None: Si le document ne contient aucune page
+            DocumentWithChunks: Objet contenant les chunks et métadonnées.
         """
-        if not self.reader.pages:
-            return
-
-        # ------------------------------------------------------------------ #
-        # Choix du splitter                                                  #
-        # ------------------------------------------------------------------ #
-        file_size = self.file_path.stat().st_size
-        use_stream = choose_splitter(
-            file_size=file_size,
-            mime="application/pdf",
-        ) == "stream"
-
-        if use_stream:
-            # --- STREAM --------------------------------------------------- #
-            page_texts = (page.extract_text() or "" for page in self.reader.pages)
-            yield from stream_split_to_disk(
-                self.meta,
-                page_texts,
-                chunk_size=max_length * 1_5,
-                overlap_size=int(max_length * 0.15),  # 15 %
+        if not self.reader.pages:  # PDF vide ➜ rien à faire
+            raise ValueError(
+                f"Le fichier {self.file_path} ne contient pas de pages PDF."
             )
-        else:
-            # --- ADAPTIVE ------------------------------------------------- #
-            full_text = "\n".join(page.extract_text() or "" for page in self.reader.pages)
-            chunks, _stats = adaptive_segmentation(
-                full_text,
-                max_length=max_length,
-                overlap=int(max_length * 0.2),
-            )
-            for ch in chunks:
-                # Assurer les types corrects pour l'instanciation d'ExtractedDocument
-                yield ExtractedDocument(
-                    title=f"{self.meta['title']} (lvl {ch['hierarchy_level']})",
-                    content=ch["content"],
-                    theme=str(self.meta["theme"]),
-                    document_type=str(self.meta["document_type"]),
-                    publish_date=self.meta["publish_date"] if isinstance(self.meta["publish_date"], date) else date.today(),
-                    embedding=None,
-                )
+
+        full_text = "\n".join(
+            page.extract_text() or "" for page in self.reader.pages
+        ).strip()
+
+        return build_document_with_chunks(
+            title=(self.reader.metadata or {}).get("/Title", self.file_path.stem),
+            theme=(self.reader.metadata or {}).get("/Subject", "Générique"),
+            document_type="PDF",
+            publish_date=self._publish_date,
+            max_length=max_length,
+            full_text=full_text,
+        )

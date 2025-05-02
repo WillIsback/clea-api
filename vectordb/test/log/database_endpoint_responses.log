@@ -1,0 +1,403 @@
+=== Log des réponses d'endpoint database de la session de test ===
+
+{
+  "request": {
+    "method": "POST",
+    "url": "/database/documents",
+    "body": {
+      "document": {
+        "title": "Document de test (pytest)",
+        "theme": "Test",
+        "document_type": "TEST",
+        "publish_date": "2025-05-02",
+        "corpus_id": "e0428ce9-4a0a-445d-8f35-f5c9bed89c67"
+      },
+      "chunks": [
+        {
+          "content": "Premier chunk",
+          "hierarchy_level": 1,
+          "start_char": 0,
+          "end_char": 12
+        },
+        {
+          "content": "Deuxième chunk",
+          "hierarchy_level": 1,
+          "start_char": 13,
+          "end_char": 27
+        }
+      ]
+    }
+  },
+  "response": {
+    "id": 1,
+    "title": "Document de test (pytest)",
+    "theme": "Test",
+    "documentType": "TEST",
+    "publishDate": "2025-05-02",
+    "corpusId": "e0428ce9-4a0a-445d-8f35-f5c9bed89c67",
+    "chunkCount": 2
+  }
+}
+
+{
+  "request": {
+    "method": "POST",
+    "url": "/database/documents",
+    "body": {
+      "document": {
+        "title": "Document de test (pytest)",
+        "theme": "Test",
+        "document_type": "TEST",
+        "publish_date": "2025-05-02",
+        "corpus_id": "a577de8a-d3e8-4f36-8e60-069ac4a305c6"
+      },
+      "chunks": [
+        {
+          "content": "Premier chunk",
+          "hierarchy_level": 1,
+          "start_char": 0,
+          "end_char": 12
+        },
+        {
+          "content": "Deuxième chunk",
+          "hierarchy_level": 1,
+          "start_char": 13,
+          "end_char": 27
+        }
+      ]
+    }
+  },
+  "response": {
+    "id": 2,
+    "title": "Document de test (pytest)",
+    "theme": "Test",
+    "documentType": "TEST",
+    "publishDate": "2025-05-02",
+    "corpusId": "a577de8a-d3e8-4f36-8e60-069ac4a305c6",
+    "chunkCount": 2
+  }
+}
+
+{
+  "request": {
+    "method": "GET",
+    "url": "/database/documents/2",
+    "body": null
+  },
+  "response": {
+    "id": 2,
+    "title": "Document de test (pytest)",
+    "theme": "Test",
+    "documentType": "TEST",
+    "publishDate": "2025-05-02",
+    "corpusId": "a577de8a-d3e8-4f36-8e60-069ac4a305c6",
+    "chunkCount": 2
+  }
+}
+
+{
+  "request": {
+    "method": "GET",
+    "url": "/database/documents/2",
+    "body": null
+  },
+  "response": [
+    {
+      "id": 3,
+      "documentId": 2,
+      "content": "Premier chunk",
+      "startChar": 0,
+      "endChar": 12,
+      "hierarchyLevel": 1,
+      "parentChunkId": null
+    },
+    {
+      "id": 4,
+      "documentId": 2,
+      "content": "Deuxième chunk",
+      "startChar": 13,
+      "endChar": 27,
+      "hierarchyLevel": 1,
+      "parentChunkId": null
+    }
+  ]
+}
+
+{
+  "request": {
+    "method": "POST",
+    "url": "/database/documents",
+    "body": {
+      "document": {
+        "title": "Document de test (pytest)",
+        "theme": "Test",
+        "document_type": "TEST",
+        "publish_date": "2025-05-02",
+        "corpus_id": "a42b5757-0d47-462b-a7ab-578693460436"
+      },
+      "chunks": [
+        {
+          "content": "Premier chunk",
+          "hierarchy_level": 1,
+          "start_char": 0,
+          "end_char": 12
+        },
+        {
+          "content": "Deuxième chunk",
+          "hierarchy_level": 1,
+          "start_char": 13,
+          "end_char": 27
+        }
+      ]
+    }
+  },
+  "response": {
+    "id": 3,
+    "title": "Document de test (pytest)",
+    "theme": "Test",
+    "documentType": "TEST",
+    "publishDate": "2025-05-02",
+    "corpusId": "a42b5757-0d47-462b-a7ab-578693460436",
+    "chunkCount": 2
+  }
+}
+
+{
+  "request": {
+    "method": "PUT",
+    "url": "/database/documents/3",
+    "body": {
+      "document": {
+        "id": 3,
+        "title": "Titre modifié (pytest)"
+      },
+      "newChunks": [
+        {
+          "content": "Chunk ajouté",
+          "hierarchyLevel": 2,
+          "startChar": 28,
+          "endChar": 40
+        }
+      ]
+    }
+  },
+  "response": {
+    "id": 3,
+    "title": "Titre modifié (pytest)",
+    "theme": "Test",
+    "documentType": "TEST",
+    "publishDate": "2025-05-02",
+    "corpusId": "a42b5757-0d47-462b-a7ab-578693460436",
+    "chunkCount": 3
+  }
+}
+
+{
+  "request": {
+    "method": "POST",
+    "url": "/database/documents",
+    "body": {
+      "document": {
+        "title": "Document de test (pytest)",
+        "theme": "Test",
+        "document_type": "TEST",
+        "publish_date": "2025-05-02",
+        "corpus_id": "48d7e910-d804-4f18-8a16-767350487ae4"
+      },
+      "chunks": [
+        {
+          "content": "Premier chunk",
+          "hierarchy_level": 1,
+          "start_char": 0,
+          "end_char": 12
+        },
+        {
+          "content": "Deuxième chunk",
+          "hierarchy_level": 1,
+          "start_char": 13,
+          "end_char": 27
+        }
+      ]
+    }
+  },
+  "response": {
+    "id": 4,
+    "title": "Document de test (pytest)",
+    "theme": "Test",
+    "documentType": "TEST",
+    "publishDate": "2025-05-02",
+    "corpusId": "48d7e910-d804-4f18-8a16-767350487ae4",
+    "chunkCount": 2
+  }
+}
+
+{
+  "request": {
+    "method": "DELETE",
+    "url": "/database/documents/4/chunks",
+    "body": {
+      "chunk_ids": 8
+    }
+  },
+  "response": {
+    "document_id": 4,
+    "chunks_deleted": 1,
+    "remaining_chunks": 1
+  }
+}
+
+{
+  "request": {
+    "method": "POST",
+    "url": "/database/documents",
+    "body": {
+      "document": {
+        "title": "Temp doc",
+        "theme": "Temp",
+        "document_type": "TMP",
+        "publish_date": "2025-05-02",
+        "corpus_id": "1292be40-14e3-475c-8511-165c9a2a8460"
+      },
+      "chunks": []
+    }
+  },
+  "response": {
+    "id": 5,
+    "title": "Temp doc",
+    "theme": "Temp",
+    "documentType": "TMP",
+    "publishDate": "2025-05-02",
+    "corpusId": "1292be40-14e3-475c-8511-165c9a2a8460",
+    "chunkCount": 0
+  }
+}
+
+{
+  "request": {
+    "method": "POST",
+    "url": "/database/documents",
+    "body": {
+      "document": {
+        "title": "Guide frais professionnels (TEST)",
+        "content": "Les frais professionnels doivent être soumis dans le mois suivant leur engagement avec justificatifs.",
+        "theme": "Finance",
+        "document_type": "Guide",
+        "publish_date": "2025-01-01",
+        "corpus_id": "85242144-920f-4522-856c-86b6bea9ea25"
+      },
+      "chunks": [
+        {
+          "content": "Les frais professionnels doivent être soumis dans le mois suivant leur engagement avec justificatifs.",
+          "hierarchy_level": 3,
+          "start_char": 0,
+          "end_char": 101
+        }
+      ]
+    }
+  },
+  "response": {
+    "id": 1,
+    "title": "Guide frais professionnels (TEST)",
+    "theme": "Finance",
+    "documentType": "Guide",
+    "publishDate": "2025-01-01",
+    "corpusId": "85242144-920f-4522-856c-86b6bea9ea25",
+    "chunkCount": 1
+  }
+}
+
+{
+  "request": {
+    "method": "POST",
+    "url": "/database/documents",
+    "body": {
+      "document": {
+        "title": "Procédure mutation interne (TEST)",
+        "content": "Les salariés souhaitant effectuer une mutation interne doivent avoir passé au moins 18 mois à leur poste actuel.",
+        "theme": "RH",
+        "document_type": "Procédure",
+        "publish_date": "2025-02-15",
+        "corpus_id": "85242144-920f-4522-856c-86b6bea9ea25"
+      },
+      "chunks": [
+        {
+          "content": "Les salariés souhaitant effectuer une mutation interne doivent avoir passé au moins 18 mois à leur poste actuel.",
+          "hierarchy_level": 3,
+          "start_char": 0,
+          "end_char": 112
+        }
+      ]
+    }
+  },
+  "response": {
+    "id": 2,
+    "title": "Procédure mutation interne (TEST)",
+    "theme": "RH",
+    "documentType": "Procédure",
+    "publishDate": "2025-02-15",
+    "corpusId": "85242144-920f-4522-856c-86b6bea9ea25",
+    "chunkCount": 1
+  }
+}
+
+{
+  "request": {
+    "method": "POST",
+    "url": "/database/documents",
+    "body": {
+      "document": {
+        "title": "Introduction à la programmation Python (TEST)",
+        "content": "Ce document explique les bases de Python : variables, boucles, fonctions…",
+        "theme": "Informatique",
+        "document_type": "Tutoriel",
+        "publish_date": "2025-03-10",
+        "corpus_id": "85242144-920f-4522-856c-86b6bea9ea25"
+      },
+      "chunks": [
+        {
+          "content": "Ce document explique les bases de Python : variables, boucles, fonctions…",
+          "hierarchy_level": 3,
+          "start_char": 0,
+          "end_char": 73
+        }
+      ]
+    }
+  },
+  "response": {
+    "id": 3,
+    "title": "Introduction à la programmation Python (TEST)",
+    "theme": "Informatique",
+    "documentType": "Tutoriel",
+    "publishDate": "2025-03-10",
+    "corpusId": "85242144-920f-4522-856c-86b6bea9ea25",
+    "chunkCount": 1
+  }
+}
+
+{
+  "request": {
+    "method": "DELETE",
+    "url": "/database/documents/1",
+    "body": null
+  },
+  "response": {}
+}
+
+{
+  "request": {
+    "method": "DELETE",
+    "url": "/database/documents/2",
+    "body": null
+  },
+  "response": {}
+}
+
+{
+  "request": {
+    "method": "DELETE",
+    "url": "/database/documents/3",
+    "body": null
+  },
+  "response": {}
+}
+

@@ -19,7 +19,8 @@ nav:
           - Référence (auto): lib_pipeline.md
 
   - Integrations:
-      - JavaScript / TypeScript: Integration/js-vectordb.md   # ← casse corrigée
+      - JavaScript / TypeScript: 
+        - vectordb: Integration/vectordb.md  
 
 theme:
   name: readthedocs

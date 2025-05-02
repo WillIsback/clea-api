@@ -4,10 +4,8 @@ Hybrid document-search framework for PostgreSQL + pgvector
 """
 
 from __future__ import annotations
-from datetime import date
 from typing import Any, Optional, List, Tuple
 
-from pydantic import BaseModel, ConfigDict
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
@@ -15,118 +13,12 @@ from .database import Chunk
 from .embeddings import EmbeddingGenerator
 from .ranking import ResultRanker
 
-
-# ─────────────────────────────────────────────────────────────── #
-# Configuration Pydantic pour alias en camelCase                   #
-# ─────────────────────────────────────────────────────────────── #
-# ------------------------------------------------------------
-# Utilitaire snake_case ➜ camelCase
-# ------------------------------------------------------------
-def to_camel(s: str) -> str:
-    head, *tail = s.split("_")
-    return head + "".join(word.capitalize() for word in tail)
-
-
-# ------------------------------------------------------------
-# ConfigDict réutilisable
-# ------------------------------------------------------------
-CamelConfig: ConfigDict = {
-    "alias_generator": to_camel,
-    "populate_by_name": True,
-}
-
-
-# ─────────────────────────────────────────────────────────────── #
-# Modèles Pydantic                                               #
-# ─────────────────────────────────────────────────────────────── #
-class ChunkResult(BaseModel):
-    """Modèle pour un chunk classé renvoyé par le moteur de recherche.
-
-    Args:
-        chunk_id (int): Identifiant du chunk.
-        document_id (int): Identifiant du document associé.
-        title (str): Titre du document.
-        content (str): Contenu textuel du chunk.
-        theme (str): Thème du document.
-        document_type (str): Type de document.
-        publish_date (date): Date de publication.
-        score (float): Score de similarité.
-        hierarchy_level (int): Niveau hiérarchique du chunk.
-        context (Optional[HierarchicalContext]): Contexte hiérarchique (si applicable).
-    """
-
-    chunk_id: int
-    document_id: int
-    title: str
-    content: str
-    theme: str
-    document_type: str
-    publish_date: date
-    score: float
-    hierarchy_level: int
-    context: Optional[HierarchicalContext] = None
-
-    model_config = CamelConfig
-
-
-class HierarchicalContext(BaseModel):
-    """Modèle pour le contexte hiérarchique (chunks parents).
-
-    Attributes:
-        level_0 (Optional[dict]): Contexte de niveau 0 (section).
-        level_1 (Optional[dict]): Contexte de niveau 1 (sous-section).
-        level_2 (Optional[dict]): Contexte de niveau 2 (paragraphe).
-    """
-
-    level_0: Optional[dict] = None
-    level_1: Optional[dict] = None
-    level_2: Optional[dict] = None
-
-    model_config = CamelConfig
-
-
-class SearchResponse(BaseModel):
-    """Modèle de réponse pour une recherche hybride.
-
-    Attributes:
-        query (str): La requête initiale.
-        topK (int): Le nombre de résultats demandés.
-        totalResults (int): Le nombre total de résultats trouvés.
-        results (List[ChunkResult]): Liste des résultats sous forme de ChunkResult.
-    """
-
-    query: str
-    topK: int
-    totalResults: int
-    results: List[ChunkResult]
-
-    model_config = CamelConfig
-
-
-class SearchRequest(BaseModel):
-    """Paramètres de la recherche hybride.
-
-    Attributes:
-        query (str): Requête en texte libre.
-        top_k (int): Nombre de résultats à renvoyer.
-        theme (Optional[str]): Filtre sur le thème du document.
-        document_type (Optional[str]): Filtre sur le type de document.
-        start_date (Optional[date]): Date de début pour le filtre.
-        end_date (Optional[date]): Date de fin pour le filtre.
-        corpus_id (Optional[str]): Identifiant du corpus.
-        hierarchical (bool): Si True, retourne également le contexte hiérarchique pour chaque chunk.
-        hierarchy_level (Optional[int]): Filtre sur le niveau hiérarchique (0 = section, 3 = chunk feuille).
-    """
-
-    query: str
-    top_k: int = 10
-    theme: Optional[str] = None
-    document_type: Optional[str] = None
-    start_date: Optional[date] = None
-    end_date: Optional[date] = None
-    corpus_id: Optional[str] = None
-    hierarchical: bool = False
-    hierarchy_level: Optional[int] = None
+from .schemas import (
+    SearchRequest,
+    SearchResponse,
+    ChunkResult,
+    HierarchicalContext,
+)
 
 
 # ─────────────────────────────────────────────────────────────── #

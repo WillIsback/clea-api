@@ -1,91 +1,139 @@
-from pathlib import Path
+from __future__ import annotations
+
 from datetime import date
+from pathlib import Path
 from typing import Iterator
-from bs4 import BeautifulSoup
-from .base import BaseExtractor, ExtractedDocument, stream_split_to_disk, adaptive_segmentation, choose_splitter
+
+from bs4 import BeautifulSoup, Tag
+
+from ..base import (  # helpers communs
+    BaseExtractor,
+    build_document_with_chunks,
+    DocumentWithChunks,
+)
 
 
+# --------------------------------------------------------------------------- #
+#  Extracteur HTML
+# --------------------------------------------------------------------------- #
 class HtmlExtractor(BaseExtractor):
-    def __init__(self, file_path: str):
-        """Initialise un extracteur pour les fichiers HTML.
-        
+    """
+    Convertit n’importe quel document **HTML** en un ou plusieurs
+    payloads `DocumentWithChunks` prêts pour l’endpoint
+    `POST /database/documents`.
+
+    Le titre du `<title>` ou du nom de fichier est utilisé comme
+    `document.title`.
+    Tout le texte visible (sans balises) est extrait.
+    """
+
+    def __init__(self, file_path: str) -> None:
+        """
+        Initialise l'extracteur HTML avec les métadonnées par défaut.
+
         Args:
-            file_path: Chemin vers le fichier HTML à traiter.
-            
+            file_path (str): Chemin vers le fichier HTML.
+
         Raises:
-            ValueError: Si une erreur survient lors de la lecture du fichier HTML.
+            ValueError: Si le fichier HTML ne peut pas être lu.
         """
         super().__init__(file_path)
-        self.file_path = Path(file_path)
         try:
-            with open(self.file_path, "r", encoding="utf-8") as f:
-                self.soup = BeautifulSoup(f, "html.parser")
-        except Exception as e:
-            raise ValueError(f"Erreur lors de la lecture du fichier HTML : {e}")
+            self._html = Path(file_path).read_text(encoding="utf-8")
+            self._soup = BeautifulSoup(self._html, "html.parser")
+        except Exception as err:
+            raise ValueError(f"Impossible de lire le fichier HTML : {err}") from err
 
-    def extract_many(self, max_length: int = 1_000) -> Iterator[ExtractedDocument]:
-        """Génère des instances d'ExtractedDocument à partir d'un fichier HTML.
+        # Extraction des métadonnées ou utilisation des valeurs par défaut
+        self.default_meta = self._extract_metadata()
 
-        Choisit automatiquement entre deux méthodes d'extraction en fonction de la taille et de la structure du fichier:
-        * **stream_split_to_disk** - faible utilisation de la RAM avec des segments de longueur fixe
-        * **adaptive_segmentation** - découpage hiérarchique (Section ▶ Paragraphe ▶ Segment)
-
-        Args:
-            max_length: Longueur cible pour les segments finaux (utilisée par les deux méthodes de découpage)
-
-        Yields:
-            ExtractedDocument: Segments du document avec métadonnées
+    def iter_text(self) -> Iterator[str]:
+        """
+        Renvoie le texte brut, ligne par ligne (utile pour le *stream*).
 
         Returns:
-            None: Si le document ne contient aucun contenu textuel
+            Iterator[str]: Texte brut extrait du document HTML.
         """
-        content = self.soup.get_text(separator="\n").strip()
-        if not content:
-            return
+        for line in self._soup.get_text(separator="\n").splitlines():
+            line = line.strip()
+            if line:
+                yield line + "\n"
 
-        meta = {
-            "title": self.file_path.name,
-            "theme": "Thème générique",
-            "document_type": "HTML",
-            "publish_date": date.today(),
-            "embedding": None,
+    def extract_one(self, max_length: int = 1_000) -> DocumentWithChunks:
+        """
+        Extrait un seul objet `DocumentWithChunks` à partir du fichier HTML.
+
+        Args:
+            max_length (int): Longueur cible pour les segments finaux.
+
+        Returns:
+            DocumentWithChunks: Objet contenant les chunks et métadonnées.
+
+        Raises:
+            ValueError: Si aucun contenu n'est extrait du document HTML.
+        """
+        full_text = "\n".join(self.iter_text()).strip()
+        if not full_text:
+            raise ValueError("Aucun contenu extrait du document HTML.")
+
+        return build_document_with_chunks(
+            title=self.default_meta["title"],
+            theme=self.default_meta["theme"],
+            document_type=self.default_meta["document_type"],
+            publish_date=self.default_meta["publish_date"],
+            max_length=max_length,
+            full_text=full_text,
+        )
+
+    def _extract_metadata(self) -> dict:
+        """
+        Extrait les métadonnées à partir des balises HTML standard.
+
+        Returns:
+            dict: Métadonnées extraites ou valeurs par défaut.
+        """
+        title = self._guess_title()
+        theme = self._extract_meta_tag("theme") or "Générique"
+        document_type = self._extract_meta_tag("document_type") or "HTML"
+        publish_date = self._extract_meta_tag("publish_date")
+        try:
+            publish_date = (
+                date.fromisoformat(publish_date) if publish_date else date.today()
+            )
+        except ValueError:
+            publish_date = date.today()
+
+        return {
+            "title": title,
+            "theme": theme,
+            "document_type": document_type,
+            "publish_date": publish_date,
         }
 
-        # ------------------------------------------------------------------ #
-        # Choix du splitter                                                  #
-        # ------------------------------------------------------------------ #
-        file_size = self.file_path.stat().st_size
-        use_stream = choose_splitter(
-            file_size=file_size,
-            mime="text/html",
-        ) == "stream"
+    def _guess_title(self) -> str:
+        """
+        Devine le titre du document à partir de la balise <title>.
 
-        if use_stream:
-            # --- STREAM --------------------------------------------------- #
-            def stream_segments():
-                for line in content.splitlines():
-                    yield line + "\n"
+        Returns:
+            str: Titre extrait ou nom du fichier.
+        """
+        if title_tag := self._soup.title:
+            return title_tag.get_text(strip=True) or self.file_path.stem
+        return self.file_path.stem
 
-            yield from stream_split_to_disk(
-                meta, 
-                stream_segments(), 
-                chunk_size=max_length * 1_5,
-                overlap_size=int(max_length * 0.15),  # 15 %
-            )
-        else:
-            # --- ADAPTIVE ------------------------------------------------- #
-            chunks, _stats = adaptive_segmentation(
-                content,
-                max_length=max_length,
-                overlap=int(max_length * 0.2),
-            )
-            for ch in chunks:
-                # Assurer les types corrects pour l'instanciation d'ExtractedDocument
-                yield ExtractedDocument(
-                    title=f"{meta['title']} (lvl {ch['hierarchy_level']})",
-                    content=ch["content"],
-                    theme=str(meta["theme"]),
-                    document_type=str(meta["document_type"]),
-                    publish_date=meta["publish_date"],  # Déjà un objet date
-                    embedding=None,
-                )
+    def _extract_meta_tag(self, name: str) -> str | None:
+        """
+        Extrait le contenu d'une balise <meta> spécifique.
+
+        Args:
+            name (str): Nom de l'attribut `name` ou `property` de la balise <meta>.
+
+        Returns:
+            str | None: Contenu de la balise <meta> ou None si non trouvé.
+        """
+        meta_tag = self._soup.find("meta", attrs={"name": name}) or self._soup.find(
+            "meta", attrs={"property": name}
+        )
+        if isinstance(meta_tag, Tag) and "content" in meta_tag.attrs:
+            return str(meta_tag["content"]).strip()
+        return None

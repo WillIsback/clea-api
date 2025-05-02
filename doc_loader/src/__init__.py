@@ -1,5 +1,4 @@
 from .data_extractor import (
-    ExtractedDocument,
     BaseExtractor,
     DocxExtractor,
     PdfExtractor,
@@ -9,9 +8,12 @@ from .data_extractor import (
 )
 from .extractor_factory import get_extractor, UnsupportedFileTypeError
 from .docs_loader import DocsLoader
+from .splitter import (
+    _semantic_segmentation,
+    _fallback_segmentation,
+)
 
 __all__ = [
-    "ExtractedDocument",
     "BaseExtractor",
     "DocxExtractor",
     "PdfExtractor",
@@ -21,4 +23,6 @@ __all__ = [
     "get_extractor",
     "UnsupportedFileTypeError",
     "DocsLoader",
+    "_semantic_segmentation",
+    "_fallback_segmentation",
 ]

@@ -8,10 +8,12 @@ directement le routeur SQLAlchemy + dépendances.
 
 from __future__ import annotations
 
+import json
 import uuid
 from datetime import date
 from collections.abc import Iterator
 import pytest
+from typing import Any
 from fastapi.testclient import TestClient
 
 # ------------------------------------------------- #
@@ -24,6 +26,26 @@ from vectordb.src.database import Base, engine  # pour reset la DB
 #  Paramètres globaux
 # ------------------------------------------------- #
 API_DB = "/database"
+
+
+# --------------------------------------------------------------------------- #
+# Fixture pour le fichier de log (écrase à chaque session de test)
+# --------------------------------------------------------------------------- #
+@pytest.fixture(scope="session", autouse=True)
+def log_file() -> str:
+    """
+    Crée (ou écrase) le fichier de log pour les réponses d'endpoint.
+
+    Returns:
+        str: Le chemin vers le fichier de log.
+    """
+    log_path = "vectordb/test/log/database_endpoint_responses.log"
+    with open(log_path, "w") as f:
+        f.write(
+            "=== Log des réponses d'endpoint database de la session de test ===\n\n"
+        )
+    return log_path
+
 
 # --------------------------------------------------------------------------- #
 # ---------------------------- FIXTURES ------------------------------------- #
@@ -73,13 +95,50 @@ def test_doc(client: TestClient) -> Iterator[dict]:
     r = client.post(f"{API_DB}/documents", json=payload)
     assert r.status_code == 200, r.text
     data = r.json()
+    log_request_response(
+        "POST",
+        f"{API_DB}/documents",
+        payload,
+        r,
+        "vectordb/test/log/database_endpoint_responses.log",
+    )
 
     # Nettoyer après le test
     try:
         yield data  # ⬅️  les tests utilisent « data »
     finally:
         # Teardown : suppression du document
-        client.delete(f"{API_DB}/documents/{data['document_id']}")
+        client.delete(f"{API_DB}/documents/{data['id']}")
+
+
+def log_request_response(
+    method: str, url: str, req_body: Any, response, log_file: str
+) -> None:
+    """Enregistre dans le fichier de log la requête HTTP et la réponse correspondante.
+
+    Args:
+        method (str): La méthode HTTP utilisée (GET, POST, PUT, DELETE, etc.).
+        url (str): L'URL de la requête.
+        req_body (Any): Le corps de la requête envoyé. Peut être None.
+        response: Réponse de l'endpoint (objet Response ou directement des données JSON).
+        log_file (str): Chemin vers le fichier de log.
+    """
+    log_entry = {
+        "request": {
+            "method": method,
+            "url": url,
+            "body": req_body,
+        },
+    }
+    # Récupération de la réponse
+    try:
+        resp_content = response.json()
+    except Exception:
+        resp_content = getattr(response, "text", response)
+    log_entry["response"] = resp_content
+
+    with open(log_file, "a") as f:
+        f.write(json.dumps(log_entry, indent=2, ensure_ascii=False) + "\n\n")
 
 
 # --------------------------------------------------------------------------- #
@@ -87,54 +146,82 @@ def test_doc(client: TestClient) -> Iterator[dict]:
 # --------------------------------------------------------------------------- #
 
 
-def test_create_document(test_doc: dict, client: TestClient) -> None:
-    """Le document et ses 2 chunks sont bien insérés."""
-    assert test_doc["chunks"] == 2
+def test_create_document(test_doc: dict, client: TestClient, log_file: str) -> None:
+    """
+    Vérifie que le document et ses 2 chunks sont bien insérés.
 
-    # Vérifier le titre en relisant le document
-    doc_id = test_doc["document_id"]
+    Le titre doit se terminer par "(pytest)".
+    """
+    assert test_doc["chunkCount"] == 2
+    doc_id = test_doc["id"]
     r = client.get(f"{API_DB}/documents/{doc_id}")
     assert r.status_code == 200, r.text
     assert r.json()["title"].endswith("(pytest)")
 
 
-def test_read_document(client: TestClient, test_doc: dict):
-    """Récupération du document & de ses chunks."""
-    doc_id = test_doc["document_id"]
+def test_read_document(client: TestClient, test_doc: dict, log_file: str):
+    """
+    Récupère le document et ses chunks.
 
-    # GET /documents/{id}
+    Vérifie que l’identifiant du document lu correspond et
+    que le nombre de chunks est correct.
+    """
+    doc_id = test_doc["id"]
     r_doc = client.get(f"{API_DB}/documents/{doc_id}")
+    log_request_response(
+        "GET",
+        f"{API_DB}/documents/{doc_id}",
+        None,
+        r_doc,
+        log_file,
+    )
     assert r_doc.status_code == 200
     assert r_doc.json()["id"] == doc_id
 
-    # GET /documents/{id}/chunks
     r_chunks = client.get(f"{API_DB}/documents/{doc_id}/chunks")
+    log_request_response(
+        "GET",
+        f"{API_DB}/documents/{doc_id}",
+        None,
+        r_chunks,
+        log_file,
+    )
     assert r_chunks.status_code == 200
     assert len(r_chunks.json()) == 2
 
 
-def test_update_add_chunk(client: TestClient, test_doc: dict):
-    """Mise à jour du titre + ajout d'un chunk supplémentaire."""
-    doc_id = test_doc["document_id"]
+def test_update_add_chunk(client: TestClient, test_doc: dict, log_file: str):
+    """
+    Met à jour le titre du document et ajoute un chunk supplémentaire.
 
+    Vérifie ensuite que le titre a été modifié et que le nombre total
+    de chunks devient 3.
+    """
+    doc_id = test_doc["id"]
     payload = {
-        "document_update": {
-            "document_id": doc_id,
+        "document": {
+            "id": doc_id,
             "title": "Titre modifié (pytest)",
         },
-        "new_chunks": [
+        "newChunks": [
             {
                 "content": "Chunk ajouté",
-                "hierarchy_level": 2,
-                "start_char": 28,
-                "end_char": 40,
+                "hierarchyLevel": 2,
+                "startChar": 28,
+                "endChar": 40,
             }
         ],
     }
     r = client.put(f"{API_DB}/documents/{doc_id}", json=payload)
+    log_request_response(
+        "PUT",
+        f"{API_DB}/documents/{doc_id}",
+        payload,
+        r,
+        log_file,
+    )
     assert r.status_code == 200
 
-    # Vérifier les modifications
     r_doc = client.get(f"{API_DB}/documents/{doc_id}")
     assert r_doc.json()["title"] == "Titre modifié (pytest)"
 
@@ -142,15 +229,26 @@ def test_update_add_chunk(client: TestClient, test_doc: dict):
     assert len(r_chunks.json()) == 3
 
 
-def test_delete_chunks(client: TestClient, test_doc: dict):
-    """Suppression d'un chunk spécifique."""
-    doc_id = test_doc["document_id"]
+def test_delete_chunks(client: TestClient, test_doc: dict, log_file: str):
+    """
+    Supprime un chunk spécifique d’un document.
+
+    Vérifie que le nombre de chunks est décrémenté d’un.
+    """
+    doc_id = test_doc["id"]
     all_chunks = client.get(f"{API_DB}/documents/{doc_id}/chunks").json()
     chunk_to_delete = all_chunks[0]["id"]
 
     r = client.delete(
         f"{API_DB}/documents/{doc_id}/chunks",
         params={"chunk_ids": chunk_to_delete},
+    )
+    log_request_response(
+        "DELETE",
+        f"{API_DB}/documents/{doc_id}/chunks",
+        {"chunk_ids": chunk_to_delete},
+        r,
+        log_file,
     )
     assert r.status_code == 200
     assert r.json()["chunks_deleted"] == 1
@@ -159,9 +257,12 @@ def test_delete_chunks(client: TestClient, test_doc: dict):
     assert len(remaining) == len(all_chunks) - 1
 
 
-def test_delete_document(client: TestClient):
-    """Cycle complet : insertion ➜ suppression ➜ 404 attendu."""
-    # Insert rapide
+def test_delete_document(client: TestClient, log_file: str):
+    """
+    Cycle complet : insertion d’un document puis suppression.
+
+    Après suppression, une tentative de lecture doit renvoyer un 404.
+    """
     payload = {
         "document": {
             "title": "Temp doc",
@@ -172,12 +273,18 @@ def test_delete_document(client: TestClient):
         },
         "chunks": [],
     }
-    doc_id = client.post(f"{API_DB}/documents", json=payload).json()["document_id"]
+    r_post = client.post(f"{API_DB}/documents", json=payload)
+    log_request_response(
+        "POST",
+        f"{API_DB}/documents",
+        payload,
+        r_post,
+        log_file,
+    )
+    doc_id = r_post.json()["id"]
 
-    # Suppression
     r_del = client.delete(f"{API_DB}/documents/{doc_id}")
     assert r_del.status_code == 200
 
-    # 404 attendu
     r_get = client.get(f"{API_DB}/documents/{doc_id}")
     assert r_get.status_code == 404

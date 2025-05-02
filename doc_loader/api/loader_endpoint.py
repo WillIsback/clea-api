@@ -1,9 +1,10 @@
 from fastapi import APIRouter, HTTPException, UploadFile, File, Query
-from typing import List
 import os
 import tempfile
 import shutil
-from doc_loader.src import DocsLoader, ExtractedDocument
+
+from doc_loader.src import DocsLoader
+from vectordb.src.schemas import DocumentWithChunks
 
 router = APIRouter()
 
@@ -11,27 +12,27 @@ router = APIRouter()
 @router.post(
     "/upload-file",
     summary="Uploader un fichier et le traiter",
-    response_model=List[ExtractedDocument],
+    response_model=DocumentWithChunks,
 )
 async def upload_and_process_file(
     file: UploadFile = File(..., description="Fichier à traiter"),
     max_length: int = Query(1000, description="Taille maximale d'un chunk"),
     theme: str = Query("Thème générique", description="Thème du document"),
 ):
-    """Uploade un fichier, l'extrait et le divise en chunks.
-    
+    """
+    Uploade un fichier, l'extrait et le divise en chunks.
+
     Args:
-        file: Fichier uploadé par l'utilisateur.
-        max_length: Taille maximale d'un chunk. Par défaut 1000.
-        theme: Thème du document. Par défaut "Thème générique".
-    
+        file (UploadFile): Fichier uploadé par l'utilisateur.
+        max_length (int): Taille maximale d'un chunk. Par défaut 1000.
+        theme (str): Thème du document. Par défaut "Thème générique".
+
     Returns:
-        Liste des documents extraits.
-        
+        List[DocumentWithChunks]: Liste des documents extraits.
+
     Raises:
         HTTPException: Si une erreur survient lors du traitement ou si aucun contenu n'est extrait.
     """
-    # Création d'un fichier temporaire pour sauvegarder le fichier uploadé
     temp_dir = tempfile.mkdtemp()
     temp_file_path = os.path.join(temp_dir, file.filename or "uploaded_file")
 
@@ -42,7 +43,7 @@ async def upload_and_process_file(
 
         # Chargement et extraction
         loader = DocsLoader(str(temp_file_path))
-        docs = list(loader.extract_documents(max_length=max_length))
+        docs = loader.extract_documents(max_length=max_length)
 
         if not docs:
             raise HTTPException(
@@ -50,9 +51,8 @@ async def upload_and_process_file(
             )
 
         # Appliquer le thème spécifié
-        if theme != "Thème générique":
-            for doc in docs:
-                doc.theme = theme
+        docs.document.theme = theme
+
         return docs
 
     except Exception as e:

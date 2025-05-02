@@ -1,0 +1,207 @@
+=== Log des réponses d'endpoint search de la session de test ===
+
+{
+  "request": {
+    "method": "POST",
+    "url": "/search/hybrid_search",
+    "body": {
+      "query": "programmation Python",
+      "corpus_id": "85242144-920f-4522-856c-86b6bea9ea25",
+      "top_k": 3
+    }
+  },
+  "response": {
+    "query": "programmation Python",
+    "topK": 3,
+    "totalResults": 3,
+    "results": [
+      {
+        "chunkId": 3,
+        "documentId": 3,
+        "title": "Introduction à la programmation Python (TEST)",
+        "content": "Ce document explique les bases de Python : variables, boucles, fonctions…",
+        "theme": "Informatique",
+        "documentType": "Tutoriel",
+        "publishDate": "2025-03-10",
+        "score": -7.914381980895996,
+        "hierarchyLevel": 3,
+        "context": null
+      },
+      {
+        "chunkId": 1,
+        "documentId": 1,
+        "title": "Guide frais professionnels (TEST)",
+        "content": "Les frais professionnels doivent être soumis dans le mois suivant leur engagement avec justificatifs.",
+        "theme": "Finance",
+        "documentType": "Guide",
+        "publishDate": "2025-01-01",
+        "score": -11.308938980102539,
+        "hierarchyLevel": 3,
+        "context": null
+      },
+      {
+        "chunkId": 2,
+        "documentId": 2,
+        "title": "Procédure mutation interne (TEST)",
+        "content": "Les salariés souhaitant effectuer une mutation interne doivent avoir passé au moins 18 mois à leur poste actuel.",
+        "theme": "RH",
+        "documentType": "Procédure",
+        "publishDate": "2025-02-15",
+        "score": -11.372514724731445,
+        "hierarchyLevel": 3,
+        "context": null
+      }
+    ]
+  }
+}
+
+{
+  "request": {
+    "method": "POST",
+    "url": "/search/hybrid_search",
+    "body": {
+      "query": "frais professionnels",
+      "corpus_id": "85242144-920f-4522-856c-86b6bea9ea25",
+      "top_k": 3
+    }
+  },
+  "response": {
+    "query": "frais professionnels",
+    "topK": 3,
+    "totalResults": 3,
+    "results": [
+      {
+        "chunkId": 1,
+        "documentId": 1,
+        "title": "Guide frais professionnels (TEST)",
+        "content": "Les frais professionnels doivent être soumis dans le mois suivant leur engagement avec justificatifs.",
+        "theme": "Finance",
+        "documentType": "Guide",
+        "publishDate": "2025-01-01",
+        "score": 6.833121299743652,
+        "hierarchyLevel": 3,
+        "context": null
+      },
+      {
+        "chunkId": 3,
+        "documentId": 3,
+        "title": "Introduction à la programmation Python (TEST)",
+        "content": "Ce document explique les bases de Python : variables, boucles, fonctions…",
+        "theme": "Informatique",
+        "documentType": "Tutoriel",
+        "publishDate": "2025-03-10",
+        "score": -11.44897174835205,
+        "hierarchyLevel": 3,
+        "context": null
+      },
+      {
+        "chunkId": 2,
+        "documentId": 2,
+        "title": "Procédure mutation interne (TEST)",
+        "content": "Les salariés souhaitant effectuer une mutation interne doivent avoir passé au moins 18 mois à leur poste actuel.",
+        "theme": "RH",
+        "documentType": "Procédure",
+        "publishDate": "2025-02-15",
+        "score": -11.460511207580566,
+        "hierarchyLevel": 3,
+        "context": null
+      }
+    ]
+  }
+}
+
+{
+  "request": {
+    "method": "POST",
+    "url": "/search/hybrid_search",
+    "body": {
+      "query": "mutation",
+      "corpus_id": "85242144-920f-4522-856c-86b6bea9ea25",
+      "theme": "RH",
+      "top_k": 5
+    }
+  },
+  "response": {
+    "query": "mutation",
+    "topK": 5,
+    "totalResults": 1,
+    "results": [
+      {
+        "chunkId": 2,
+        "documentId": 2,
+        "title": "Procédure mutation interne (TEST)",
+        "content": "Les salariés souhaitant effectuer une mutation interne doivent avoir passé au moins 18 mois à leur poste actuel.",
+        "theme": "RH",
+        "documentType": "Procédure",
+        "publishDate": "2025-02-15",
+        "score": -1.5305886268615723,
+        "hierarchyLevel": 3,
+        "context": null
+      }
+    ]
+  }
+}
+
+{
+  "request": {
+    "method": "POST",
+    "url": "/search/hybrid_search",
+    "body": {
+      "query": "Python",
+      "corpus_id": "85242144-920f-4522-856c-86b6bea9ea25",
+      "hierarchical": true,
+      "top_k": 1
+    }
+  },
+  "response": {
+    "query": "Python",
+    "topK": 1,
+    "totalResults": 1,
+    "results": [
+      {
+        "chunkId": 3,
+        "documentId": 3,
+        "title": "Introduction à la programmation Python (TEST)",
+        "content": "Ce document explique les bases de Python : variables, boucles, fonctions…",
+        "theme": "Informatique",
+        "documentType": "Tutoriel",
+        "publishDate": "2025-03-10",
+        "score": 0.8333435654640198,
+        "hierarchyLevel": 3,
+        "context": null
+      }
+    ]
+  }
+}
+
+{
+  "request": {
+    "method": "POST",
+    "url": "/search/hybrid_search",
+    "body": {
+      "query": "Python",
+      "corpus_id": "85242144-920f-4522-856c-86b6bea9ea25",
+      "hierarchical": true
+    }
+  },
+  "response": {
+    "query": "Python",
+    "topK": 1,
+    "totalResults": 1,
+    "results": [
+      {
+        "chunkId": 3,
+        "documentId": 3,
+        "title": "Introduction à la programmation Python (TEST)",
+        "content": "Ce document explique les bases de Python : variables, boucles, fonctions…",
+        "theme": "Informatique",
+        "documentType": "Tutoriel",
+        "publishDate": "2025-03-10",
+        "score": 0.8333435654640198,
+        "hierarchyLevel": 3,
+        "context": null
+      }
+    ]
+  }
+}
+
