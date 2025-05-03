@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>Extracteurs - Cléa-API Documentation</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../../css/mkdocsoad.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Extracteurs";
+        var mkdocs_page_input_path = "lib/doc_loader/extractor_lib.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Cléa-API Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../home/">Accueil</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../main/">Introduction</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../database/">Base de données</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../schemas/">Schémas</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Documentation des librairies</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" >doc_loader</a>
+    <ul class="current">
+                <li class="toctree-l2 current"><a class="reference internal current" href="#">Extracteurs</a>
+    <ul class="current">
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../splitter_lib/">Segmentation</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../pipeline/pipeline_lib/">Pipeline end-to-end</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../vectordb/crud_lib/">Opérations CRUD</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../vectordb/index_lib/">Indexation vectorielle</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../vectordb/search_lib/">Recherche hybride</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Références API</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >REST API</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../../api/rest/rest_api/">Documentation Swagger</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Références Python</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/doc_loader/extractor_references/">Extracteurs</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/doc_loader/splitter_references/">Segmentation</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/pipeline/pipeline_references/">Pipeline</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/vectordb/crud_references/">CRUD</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/vectordb/index_references/">Indexation</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/vectordb/search_references/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Intégrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >JavaScript / TypeScript</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/doc_loader/doc_loader_js/">Extraction de documents</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/pipeline/pipeline_js/">Pipeline end-to-end</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/vectordb/crud_js/">Opérations CRUD</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/vectordb/index_js/">Indexation</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/vectordb/search_js/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Cléa-API Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Documentation des librairies</li>
+          <li class="breadcrumb-item">doc_loader</li>
+      <li class="breadcrumb-item active">Extracteurs</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <p><strong>Génération de la documentation de la lib extractor</strong></p>
+<p>L'utilisateur souhaite générer la documentation de la bibliothèque "extractor" à partir d'un seul extracteur, tout en mentionnant qu'il y en a pour cinq types différents : txt, json, docx, html et pdf. Je vais donc créer un fichier markdown qui décrit la bibliothèque, en couvrant la classe de base, la méthode <code>build_document_with_chunks</code>, et chaque extracteur spécifique. Il faudra aussi intégrer des références croisées dans le style de la documentation Python dans MkDocs.</p>
+<p>Réflexion durant 5 secondes</p>
+<div class="highlight"><pre><span></span><code><span class="gh"># Librairie **doc_loader** (Extraction de documents)</span>
+
+Ce module fournit une abstraction et des implémentations concrètes pour charger et découper des documents de différents formats en <span class="gs">**`DocumentWithChunks`**</span>, prêt à être injecté dans la base de données via l’API <span class="gs">**vectordb**</span>.
+
+---
+
+<span class="gu">## Installation</span>
+
+La librairie <span class="sb">`doc_loader`</span> fait partie du package <span class="gs">**`clea-doc-loader`**</span>. Elle se charge automatiquement des dépendances via votre <span class="sb">`pyproject.toml`</span> / <span class="sb">`requirements.txt`</span>.
+
+```bash
+<span class="gh"># depuis la racine du projet</span>
+uv install .
+</code></pre></div>
+<hr />
+<h2 id="structure-du-package">Structure du package</h2>
+<div class="highlight"><pre><span></span><code>doc_loader/
+├── extractor_factory.py    # Sélection de l’extracteur selon l’extension
+├── base.py                 # Interface et helpers communs
+├── docs_loader.py          # Point d’entrée : DocsLoader
+└── data_extractor/         # 5 extracteurs concrets
+    ├── txt_extractor.py    # .txt
+    ├── json_extractor.py   # .json
+    ├── docx_extractor.py   # .docx
+    ├── html_extractor.py   # .html
+    └── pdf_extractor.py    # .pdf
+</code></pre></div>
+<hr />
+<h2 id="1-interface-commune">1. Interface commune</h2>
+<h3 id="baseextractor-basepy"><code>BaseExtractor</code> (<code>base.py</code>)&#x20;</h3>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">BaseExtractor</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Chemin vers le fichier à traiter.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">max_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DocumentWithChunks</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extrait l’ensemble du document en un seul objet `DocumentWithChunks`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            max_length: taille cible des chunks finaux.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            DocumentWithChunks(document: DocumentCreate, chunks: List[ChunkCreate])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="2-constructeur-de-payloads">2. Constructeur de payloads</h2>
+<h3 id="build_document_with_chunks-basepy"><code>build_document_with_chunks(...)</code> (<code>base.py</code>)&#x20;</h3>
+<p>Cette fonction choisit automatiquement entre :</p>
+<ol>
+<li><strong>Mini-document</strong> (un seul chunk si <code>len(full_text) ≤ max_length</code>),</li>
+<li><strong>Segmentation sémantique</strong> (via NLP, <code>_semantic_segmentation</code>),</li>
+<li><strong>Fallback</strong> (découpage fixe + overlap).</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="n">doc_with_chunks</span> <span class="o">=</span> <span class="n">build_document_with_chunks</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Rapport 2024&quot;</span><span class="p">,</span>
+    <span class="n">theme</span><span class="o">=</span><span class="s2">&quot;RSE&quot;</span><span class="p">,</span>
+    <span class="n">document_type</span><span class="o">=</span><span class="s2">&quot;PDF&quot;</span><span class="p">,</span>
+    <span class="n">publish_date</span><span class="o">=</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span>
+    <span class="n">max_length</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+    <span class="n">full_text</span><span class="o">=</span> <span class="s2">&quot;... texte complet ...&quot;</span>
+<span class="p">)</span>
+<span class="c1"># → DocumentWithChunks(document=DocumentCreate(...),</span>
+<span class="c1">#                      chunks=[ChunkCreate(...), ...])</span>
+</code></pre></div>
+<hr />
+<h2 id="3-selection-de-lextracteur">3. Sélection de l’extracteur</h2>
+<h3 id="get_extractorfile_path-str-baseextractor-extractor_factorypy"><code>get_extractor(file_path: str) → BaseExtractor</code> (<code>extractor_factory.py</code>)&#x20;</h3>
+<div class="highlight"><pre><span></span><code><span class="n">ext</span> <span class="o">=</span> <span class="n">get_extractor</span><span class="p">(</span><span class="s2">&quot;/chemin/vers/fichier.docx&quot;</span><span class="p">)</span>
+<span class="c1"># ext est une instance de DocxExtractor, PdfExtractor, JsonExtractor, HtmlExtractor ou TxtExtractor.</span>
+</code></pre></div>
+<ul>
+<li>Lève <code>UnsupportedFileTypeError</code> pour les extensions non listées.</li>
+</ul>
+<hr />
+<h2 id="4-point-dentree-docsloader">4. Point d’entrée : <code>DocsLoader</code></h2>
+<h3 id="docsloader-docs_loaderpy"><code>DocsLoader</code> (<code>docs_loader.py</code>)&#x20;</h3>
+<div class="highlight"><pre><span></span><code><span class="n">loader</span> <span class="o">=</span> <span class="n">DocsLoader</span><span class="p">(</span><span class="s2">&quot;/chemin/fichier.txt&quot;</span><span class="p">)</span>
+<span class="n">doc_with_chunks</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">extract_documents</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1200</span><span class="p">)</span>
+<span class="c1"># renvoie un DocumentWithChunks unique</span>
+</code></pre></div>
+<ul>
+<li><code>extract_documents(...)</code> délègue à <code>extract_one()</code> de l’extracteur choisi.</li>
+</ul>
+<hr />
+<h2 id="5-exemple-detaille-txtextractor">5. Exemple détaillé : <strong>TxtExtractor</strong></h2>
+<h3 id="txtextractor-txt_extractorpy"><code>TxtExtractor</code> (<code>txt_extractor.py</code>)&#x20;</h3>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TxtExtractor</span><span class="p">(</span><span class="n">BaseExtractor</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DocumentWithChunks</span><span class="p">:</span>
+        <span class="c1"># 1) lit tout le fichier</span>
+        <span class="c1"># 2) détecte si c’est un JSON listé → extrait métadonnées + contenu</span>
+        <span class="c1"># 3) sinon, métadonnées par défaut (stem, &quot;Générique&quot;, date.today())</span>
+        <span class="c1"># 4) appelle build_document_with_chunks(...)</span>
+</code></pre></div>
+<ul>
+<li>
+<p>Gère automatiquement :</p>
+</li>
+<li>
+<p>Fichiers TXT « bruts »</p>
+</li>
+<li>Fichiers TXT au format JSON <code>[{"title":…, "theme":…, "publish_date":…, "content":…}, …]</code></li>
+</ul>
+<hr />
+<h2 id="6-autres-extracteurs">6. Autres extracteurs</h2>
+<p>Chaque extracteur hérite de <code>BaseExtractor</code> et implémente <code>extract_one(...)</code> de manière similaire, en utilisant :</p>
+<ul>
+<li><strong>DocxExtractor</strong> (<code>.docx</code>) → segmentation par paragraphes et métadonnées Office ﹒</li>
+<li><strong>PdfExtractor</strong> (<code>.pdf</code>) → lecture <code>pypdf</code>, segmentation <strong>stream</strong> ou <strong>adaptive</strong> ﹒</li>
+<li><strong>HtmlExtractor</strong> (<code>.html</code>) → <code>BeautifulSoup</code>, <code>get_text()</code>, segmentation ﹒</li>
+<li><strong>JsonExtractor</strong> (<code>.json</code>) → parse JSON, extrait <code>entries</code> et segmente le contenu.</li>
+</ul>
+<p>Vous retrouverez la logique spécifique dans <code>data_extractor/{docx,json,html,pdf}_extractor.py</code>.</p>
+<hr />
+<h2 id="7-usage-typique">7. Usage typique</h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">doc_loader.docs_loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">DocsLoader</span>
+
+<span class="c1"># 1. Choix de l’extracteur et extraction</span>
+<span class="n">loader</span> <span class="o">=</span> <span class="n">DocsLoader</span><span class="p">(</span><span class="s2">&quot;mon_fichier.pdf&quot;</span><span class="p">)</span>
+<span class="n">doc_payload</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">extract_documents</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">800</span><span class="p">)</span>
+
+<span class="c1"># 2. Insertion en base (via vectordb)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">vectordb.src.database</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_db</span><span class="p">,</span> <span class="n">add_document_with_chunks</span>
+<span class="n">db</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">get_db</span><span class="p">())</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">add_document_with_chunks</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">doc_payload</span><span class="o">.</span><span class="n">document</span><span class="p">,</span> <span class="n">doc_payload</span><span class="o">.</span><span class="n">chunks</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<blockquote>
+<p>Module <code>doc_loader</code> stable – dernière mise à jour : <strong>02 mai 2025</strong>.</p>
+</blockquote>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../../schemas/" class="btn btn-neutral float-left" title="Schémas"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../splitter_lib/" class="btn btn-neutral float-right" title="Segmentation">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../../../schemas/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../splitter_lib/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+      <script src="../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

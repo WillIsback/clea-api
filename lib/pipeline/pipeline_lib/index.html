@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>Pipeline end-to-end - Cléa-API Documentation</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../../css/mkdocsoad.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Pipeline end-to-end";
+        var mkdocs_page_input_path = "lib/pipeline/pipeline_lib.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Cléa-API Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../home/">Accueil</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../main/">Introduction</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../database/">Base de données</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../schemas/">Schémas</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Documentation des librairies</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../doc_loader/extractor_lib/">Extracteurs</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../doc_loader/splitter_lib/">Segmentation</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" >pipeline</a>
+    <ul class="current">
+                <li class="toctree-l2 current"><a class="reference internal current" href="#">Pipeline end-to-end</a>
+    <ul class="current">
+    <li class="toctree-l3"><a class="reference internal" href="#process_and_store">process_and_store&#x20;</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#description">Description</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#parametres">Paramètres</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#retour">Retour</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#exceptions">Exceptions</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#exemple">Exemple</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#determine_document_type">determine_document_type&#x20;</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#description_1">Description</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#parametre">Paramètre</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#retour_1">Retour</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#exemple_1">Exemple</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../vectordb/crud_lib/">Opérations CRUD</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../vectordb/index_lib/">Indexation vectorielle</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../vectordb/search_lib/">Recherche hybride</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Références API</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >REST API</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../../api/rest/rest_api/">Documentation Swagger</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Références Python</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/doc_loader/extractor_references/">Extracteurs</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/doc_loader/splitter_references/">Segmentation</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/pipeline/pipeline_references/">Pipeline</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/vectordb/crud_references/">CRUD</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/vectordb/index_references/">Indexation</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/vectordb/search_references/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Intégrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >JavaScript / TypeScript</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/doc_loader/doc_loader_js/">Extraction de documents</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/pipeline/pipeline_js/">Pipeline end-to-end</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/vectordb/crud_js/">Opérations CRUD</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/vectordb/index_js/">Indexation</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/vectordb/search_js/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Cléa-API Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Documentation des librairies</li>
+          <li class="breadcrumb-item">pipeline</li>
+      <li class="breadcrumb-item active">Pipeline end-to-end</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <p><strong>Génération de documentation</strong></p>
+<p>L'utilisateur demande à générer une documentation pour la bibliothèque "pipeline". Il semble que le fichier "pipeline.py" actuel soit plus simple et contienne l'implémentation de "process_and_store" et "determine_document_type", alors qu'une version antérieure incluait d'autres éléments comme la classe "InterfaceDocument". Il semble qu'ils veuillent une documentation markdown basée sur ce script actuel. Il faudra alors bien documenter ces deux fonctions principales ainsi que leur rôle dans le cadre de cette bibliothèque.</p>
+<p><strong>Documentant la bibliothèque pipeline</strong></p>
+<p>L'utilisateur souhaite une documentation markdown pour la bibliothèque pipeline, basée sur "pipeline.py". Il semble que ce fichier définisse uniquement deux fonctions : <code>process_and_store</code> et <code>determine_document_type</code>. Nous devrons fournir des informations sur leur signature, leur fonctionnement, leurs arguments, valeurs de retour, exceptions et exemples d'utilisation, sans mentionner de classe "InterfaceDocument" qui n'est pas présente ici. Le tout sera structuré avec une introduction, installation et exemples, en précisant que cette bibliothèque fait partie de <code>clea-pipeline</code>.</p>
+<p>Réflexion durant 13 secondes</p>
+<div class="highlight"><pre><span></span><code><span class="gh"># Module **pipeline**</span>
+
+Orchestration du traitement de documents : extraction, segmentation et insertion en base.
+
+---
+
+<span class="gu">## Installation</span>
+
+Le module <span class="sb">`pipeline.py`</span> fait partie du package <span class="gs">**clea-pipeline**</span>. Pour l’installer :
+
+```bash
+pip install clea-pipeline
+</code></pre></div>
+<hr />
+<h2 id="fonctions-principales">Fonctions principales</h2>
+<h3 id="process_and_store"><code>process_and_store</code>&#x20;</h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">process_and_store</span><span class="p">(</span>
+    <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">max_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span>
+    <span class="n">overlap</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="n">theme</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Thème générique&quot;</span><span class="p">,</span>
+    <span class="n">corpus_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+</code></pre></div>
+<h4 id="description">Description</h4>
+<ol>
+<li><strong>Vérifie</strong> que le fichier existe (lève <code>FileNotFoundError</code> sinon).</li>
+<li><strong>Extrait</strong> et segmente le document en chunks hiérarchiques via <code>DocsLoader</code>.</li>
+<li><strong>Applique</strong> le thème si fourni.</li>
+<li><strong>Insère</strong> le document et ses chunks en base via <code>add_document_with_chunks</code>.</li>
+<li>
+<p><strong>Retourne</strong> le résultat contenant :</p>
+</li>
+<li>
+<p><code>document_id</code> : ID du document créé</p>
+</li>
+<li><code>chunks</code> : nombre de chunks insérés</li>
+<li><code>corpus_id</code> : UUID du corpus</li>
+<li><code>create_index</code> : booléen indiquant si un index doit être (re)créé</li>
+<li><code>index_message</code> : message d’instruction pour la création d’index (si applicable)</li>
+</ol>
+<h4 id="parametres">Paramètres</h4>
+<table>
+<thead>
+<tr>
+<th>Nom</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>file_path</code></td>
+<td><code>str</code></td>
+<td>Chemin vers le fichier à traiter</td>
+</tr>
+<tr>
+<td><code>max_length</code></td>
+<td><code>int</code></td>
+<td>Taille max d’un chunk final (défaut 500)</td>
+</tr>
+<tr>
+<td><code>overlap</code></td>
+<td><code>int</code></td>
+<td>Chevauchement entre chunks (défaut 100)</td>
+</tr>
+<tr>
+<td><code>theme</code></td>
+<td><code>Optional[str]</code></td>
+<td>Thème à appliquer (défaut "Thème générique")</td>
+</tr>
+<tr>
+<td><code>corpus_id</code></td>
+<td><code>Optional[str]</code></td>
+<td>UUID du corpus (généré si None)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="retour">Retour</h4>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;document_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;chunks&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;corpus_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;e0428ce9-4a0a-445d-8f35-f5c9bed89c67&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;create_index&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;index_message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Un nouvel index pour le corpus … doit être créé. Utilisez POST /database/indexes/{corpus_id}/create.&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="exceptions">Exceptions</h4>
+<ul>
+<li><code>FileNotFoundError</code> : si <code>file_path</code> inexistant</li>
+<li><code>ValueError</code> : si aucune extraction ou si l’insertion échoue</li>
+</ul>
+<h4 id="exemple">Exemple</h4>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_and_store</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">process_and_store</span><span class="p">(</span>
+    <span class="s2">&quot;demo/report.pdf&quot;</span><span class="p">,</span>
+    <span class="n">max_length</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span>
+    <span class="n">overlap</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span>
+    <span class="n">theme</span><span class="o">=</span><span class="s2">&quot;Finance&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<span class="c1"># {</span>
+<span class="c1">#   &quot;document_id&quot;: 10,</span>
+<span class="c1">#   &quot;chunks&quot;: 42,</span>
+<span class="c1">#   &quot;corpus_id&quot;: &quot;abcd-1234-…&quot;,</span>
+<span class="c1">#   &quot;create_index&quot;: true,</span>
+<span class="c1">#   &quot;index_message&quot;: &quot;…&quot;</span>
+<span class="c1"># }</span>
+</code></pre></div>
+<hr />
+<h3 id="determine_document_type"><code>determine_document_type</code>&#x20;</h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">determine_document_type</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</code></pre></div>
+<h4 id="description_1">Description</h4>
+<p>Déduit le type du document (<code>PDF</code>, <code>TXT</code>, <code>WORD</code>, etc.) à partir de l’extension du fichier.</p>
+<h4 id="parametre">Paramètre</h4>
+<table>
+<thead>
+<tr>
+<th>Nom</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>file_path</code></td>
+<td><code>str</code></td>
+<td>Chemin complet vers le fichier</td>
+</tr>
+</tbody>
+</table>
+<h4 id="retour_1">Retour</h4>
+<p>Une des valeurs suivantes :</p>
+<div class="highlight"><pre><span></span><code>PDF, TXT, MARKDOWN, WORD, HTML, XML, CSV, JSON, POWERPOINT, EXCEL, UNKNOWN
+</code></pre></div>
+<h4 id="exemple_1">Exemple</h4>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">determine_document_type</span><span class="p">(</span><span class="s2">&quot;guide.docx&quot;</span><span class="p">)</span>
+<span class="s2">&quot;WORD&quot;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">determine_document_type</span><span class="p">(</span><span class="s2">&quot;notes.md&quot;</span><span class="p">)</span>
+<span class="s2">&quot;MARKDOWN&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="utilisation-typique">Utilisation typique</h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_and_store</span><span class="p">,</span> <span class="n">determine_document_type</span>
+
+<span class="c1"># 1. Déterminer le type (facultatif)</span>
+<span class="n">doc_type</span> <span class="o">=</span> <span class="n">determine_document_type</span><span class="p">(</span><span class="s2">&quot;report.pdf&quot;</span><span class="p">)</span>
+
+<span class="c1"># 2. Traiter et stocker en base</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">process_and_store</span><span class="p">(</span>
+    <span class="s2">&quot;report.pdf&quot;</span><span class="p">,</span>
+    <span class="n">max_length</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+    <span class="n">overlap</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+    <span class="n">theme</span><span class="o">=</span><span class="s2">&quot;RSE&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<blockquote>
+<p>Module : <code>pipeline.py</code>
+Dernière mise à jour : 02 mai 2025
+Source : pipeline/src/pipeline.py&#x20;</p>
+</blockquote>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../doc_loader/splitter_lib/" class="btn btn-neutral float-left" title="Segmentation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../vectordb/crud_lib/" class="btn btn-neutral float-right" title="Opérations CRUD">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../../doc_loader/splitter_lib/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../vectordb/crud_lib/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+      <script src="../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

@@ -1,32 +1,28 @@
 {
     "openapi": "3.1.0",
     "info": {
-    "title": "Clea API",
-    "description": "API pour gérer les documents et effectuer des recherches.",
-    "version": "1.0.0"
+    "title": "Cléa API",
+    "description": "API pour gérer les documents et effectuer des recherches sémantiques.",
+    "version": "0.1.1"
     },
     "paths": {
-    "/database/add_document": {
+    "/database/documents": {
     "post": {
     "tags": [
     "Database"
     ],
-    "summary": "Ajouter des documents",
-    "description": "Ajoute une liste de documents à la base de données.\n\nArgs:\n    documents: Liste des documents à ajouter.\n    \nReturns:\n    Liste des documents ajoutés avec leurs IDs.\n    \nRaises:\n    ValueError: Si une erreur survient lors de l'ajout des documents.",
-    "operationId": "add_documents_endpoint_database_add_document_post",
+    "summary": "Ajouter un document avec ses chunks",
+    "description": "Insère le document puis ses chunks dans une transaction unique.\n\nArgs:\n    payload: Objet contenant les données du document et ses chunks.\n    db: Session de base de données injectée par dépendance.\n\nReturns:\n    DocumentResponse: Document créé avec le nombre de chunks associés.\n\nRaises:\n    HTTPException: Si une erreur survient pendant l'insertion.",
+    "operationId": "add_document_database_documents_post",
     "requestBody": {
+    "required": true,
     "content": {
     "application/json": {
     "schema": {
-    "items": {
-    "$ref": "#/components/schemas/DocumentCreate"
-    },
-    "type": "array",
-    "title": "Documents"
+    "$ref": "#/components/schemas/DocumentWithChunks"
     }
     }
-    },
-    "required": true
+    }
     },
     "responses": {
     "200": {
@@ -34,11 +30,113 @@
     "content": {
     "application/json": {
     "schema": {
+    "$ref": "#/components/schemas/DocumentResponse"
+    }
+    }
+    }
+    },
+    "422": {
+    "description": "Validation Error",
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/HTTPValidationError"
+    }
+    }
+    }
+    }
+    }
+    },
+    "get": {
+    "tags": [
+    "Database"
+    ],
+    "summary": "Lister les documents",
+    "description": "Liste l'ensemble des documents de la base de données avec leur nombre de chunks.\n\nCette fonction permet de récupérer un ensemble paginé de documents avec possibilité\nde filtrage sur différents critères.\n\nArgs:\n    theme: Filtre optionnel pour le thème du document.\n    document_type: Filtre optionnel pour le type du document.\n    corpus_id: Filtre optionnel sur l'identifiant du corpus.\n    skip: Nombre de documents à ignorer (pour la pagination).\n    limit: Nombre maximal de documents à retourner.\n    db: Session de base de données fournie par dépendance.\n\nReturns:\n    Liste des documents formatés avec leur nombre de chunks associés.",
+    "operationId": "list_documents_database_documents_get",
+    "parameters": [
+    {
+    "name": "theme",
+    "in": "query",
+    "required": false,
+    "schema": {
+    "anyOf": [
+    {
+    "type": "string"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Theme"
+    }
+    },
+    {
+    "name": "documentType",
+    "in": "query",
+    "required": false,
+    "schema": {
+    "anyOf": [
+    {
+    "type": "string"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Documenttype"
+    }
+    },
+    {
+    "name": "corpusId",
+    "in": "query",
+    "required": false,
+    "schema": {
+    "anyOf": [
+    {
+    "type": "string"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Corpusid"
+    }
+    },
+    {
+    "name": "skip",
+    "in": "query",
+    "required": false,
+    "schema": {
+    "type": "integer",
+    "minimum": 0,
+    "default": 0,
+    "title": "Skip"
+    }
+    },
+    {
+    "name": "limit",
+    "in": "query",
+    "required": false,
+    "schema": {
+    "type": "integer",
+    "exclusiveMinimum": 0,
+    "default": 100,
+    "title": "Limit"
+    }
+    }
+    ],
+    "responses": {
+    "200": {
+    "description": "Successful Response",
+    "content": {
+    "application/json": {
+    "schema": {
+    "type": "array",
     "items": {
     "$ref": "#/components/schemas/DocumentResponse"
     },
-    "type": "array",
-    "title": "Response Add Documents Endpoint Database Add Document Post"
+    "title": "Response List Documents Database Documents Get"
     }
     }
     }
@@ -56,21 +154,75 @@
     }
     }
     },
-    "/database/delete_document": {
+    "/database/documents/{document_id}": {
+    "put": {
+    "tags": [
+    "Database"
+    ],
+    "summary": "Mettre à jour un document (et/ou ajouter des chunks)",
+    "description": "Met à jour les métadonnées d'un document et peut ajouter de nouveaux chunks.\n\nCette fonction permet de modifier les informations d'un document existant et d'y\najouter de nouveaux fragments de texte (chunks) en une seule opération.\n\nArgs:\n    payload: Objet de mise à jour contenant le document et éventuellement des nouveaux chunks.\n    document_id: Identifiant numérique du document à mettre à jour (≥ 1).\n    db: Session de base de données injectée par dépendance.\n\nReturns:\n    DocumentResponse: Document mis à jour avec le nombre total de chunks associés.\n\nRaises:\n    HTTPException:\n        - 404: Si le document n'existe pas dans la base",
+    "operationId": "update_document_database_documents__document_id__put",
+    "parameters": [
+    {
+    "name": "document_id",
+    "in": "path",
+    "required": true,
+    "schema": {
+    "type": "integer",
+    "minimum": 1,
+    "description": "Identifiant du document à mettre à jour (>= 1).",
+    "title": "Document Id"
+    },
+    "description": "Identifiant du document à mettre à jour (>= 1)."
+    }
+    ],
+    "requestBody": {
+    "required": true,
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/UpdateWithChunks"
+    }
+    }
+    }
+    },
+    "responses": {
+    "200": {
+    "description": "Successful Response",
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/DocumentResponse"
+    }
+    }
+    }
+    },
+    "422": {
+    "description": "Validation Error",
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/HTTPValidationError"
+    }
+    }
+    }
+    }
+    }
+    },
     "delete": {
     "tags": [
     "Database"
     ],
-    "summary": "Supprimer un document",
-    "description": "Supprime un document de la base de données en fonction de son ID.",
-    "operationId": "delete_document_endpoint_database_delete_document_delete",
+    "summary": "Supprimer un document et tous ses chunks",
+    "operationId": "remove_document_database_documents__document_id__delete",
     "parameters": [
     {
     "name": "document_id",
-    "in": "query",
+    "in": "path",
     "required": true,
     "schema": {
     "type": "integer",
+    "minimum": 1,
     "title": "Document Id"
     }
     }
@@ -80,48 +232,10 @@
     "description": "Successful Response",
     "content": {
     "application/json": {
-    "schema": {}
-    }
-    }
-    },
-    "422": {
-    "description": "Validation Error",
-    "content": {
-    "application/json": {
     "schema": {
-    "$ref": "#/components/schemas/HTTPValidationError"
-    }
-    }
-    }
-    }
-    }
-    }
-    },
-    "/database/update_document": {
-    "put": {
-    "tags": [
-    "Database"
-    ],
-    "summary": "Mettre à jour un document",
-    "description": "Met à jour un document existant dans la base de données.\n\nArgs:\n    payload: Données pour mettre à jour le document.\n    \nReturns:\n    Document mis à jour.\n    \nRaises:\n    HTTPException: Si le document n'existe pas ou si une erreur survient.",
-    "operationId": "update_document_endpoint_database_update_document_put",
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "$ref": "#/components/schemas/DocumentUpdate"
-    }
-    }
-    },
-    "required": true
-    },
-    "responses": {
-    "200": {
-    "description": "Successful Response",
-    "content": {
-    "application/json": {
-    "schema": {
-    "$ref": "#/components/schemas/DocumentResponse"
+    "type": "object",
+    "additionalProperties": true,
+    "title": "Response Remove Document Database Documents  Document Id  Delete"
     }
     }
     }
@@ -137,27 +251,206 @@
     }
     }
     }
-    }
     },
-    "/database/list_documents": {
     "get": {
     "tags": [
     "Database"
     ],
-    "summary": "Lister les documents",
-    "description": "Affiche la liste des documents dans la base de données.\n\nReturns:\n    Liste de tous les documents dans la base de données.",
-    "operationId": "list_documents_endpoint_database_list_documents_get",
+    "summary": "Récupérer un document",
+    "description": "Récupère un document à partir de son identifiant et le formate en DocumentResponse.\n\nArgs:\n    document_id (int): Identifiant du document à récupérer.\n    db (Session): Session de base de données fournie par dépendance.\n\nReturns:\n    DocumentResponse: Document formaté avec le nombre de chunks associés.\n\nRaises:\n    HTTPException: Si le document n'existe pas dans la base.",
+    "operationId": "get_document_database_documents__document_id__get",
+    "parameters": [
+    {
+    "name": "document_id",
+    "in": "path",
+    "required": true,
+    "schema": {
+    "type": "integer",
+    "minimum": 1,
+    "title": "Document Id"
+    }
+    }
+    ],
     "responses": {
     "200": {
     "description": "Successful Response",
     "content": {
     "application/json": {
     "schema": {
-    "items": {
     "$ref": "#/components/schemas/DocumentResponse"
+    }
+    }
+    }
     },
+    "422": {
+    "description": "Validation Error",
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/HTTPValidationError"
+    }
+    }
+    }
+    }
+    }
+    }
+    },
+    "/database/documents/{document_id}/chunks": {
+    "delete": {
+    "tags": [
+    "Database"
+    ],
+    "summary": "Supprimer des chunks d'un document",
+    "operationId": "remove_chunks_database_documents__document_id__chunks_delete",
+    "parameters": [
+    {
+    "name": "document_id",
+    "in": "path",
+    "required": true,
+    "schema": {
+    "type": "integer",
+    "minimum": 1,
+    "title": "Document Id"
+    }
+    },
+    {
+    "name": "chunk_ids",
+    "in": "query",
+    "required": false,
+    "schema": {
+    "anyOf": [
+    {
     "type": "array",
-    "title": "Response List Documents Endpoint Database List Documents Get"
+    "items": {
+    "type": "integer"
+    }
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "description": "IDs à supprimer ; vide ⇒ tous les chunks du document",
+    "title": "Chunk Ids"
+    },
+    "description": "IDs à supprimer ; vide ⇒ tous les chunks du document"
+    }
+    ],
+    "responses": {
+    "200": {
+    "description": "Successful Response",
+    "content": {
+    "application/json": {
+    "schema": {
+    "type": "object",
+    "additionalProperties": true,
+    "title": "Response Remove Chunks Database Documents  Document Id  Chunks Delete"
+    }
+    }
+    }
+    },
+    "422": {
+    "description": "Validation Error",
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/HTTPValidationError"
+    }
+    }
+    }
+    }
+    }
+    },
+    "get": {
+    "tags": [
+    "Database"
+    ],
+    "summary": "Récupérer les chunks d'un document",
+    "operationId": "get_chunks_database_documents__document_id__chunks_get",
+    "parameters": [
+    {
+    "name": "document_id",
+    "in": "path",
+    "required": true,
+    "schema": {
+    "type": "integer",
+    "minimum": 1,
+    "title": "Document Id"
+    }
+    },
+    {
+    "name": "hierarchyLevel",
+    "in": "query",
+    "required": false,
+    "schema": {
+    "anyOf": [
+    {
+    "type": "integer"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Hierarchylevel"
+    }
+    },
+    {
+    "name": "parentChunkId",
+    "in": "query",
+    "required": false,
+    "schema": {
+    "anyOf": [
+    {
+    "type": "integer"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Parentchunkid"
+    }
+    },
+    {
+    "name": "skip",
+    "in": "query",
+    "required": false,
+    "schema": {
+    "type": "integer",
+    "minimum": 0,
+    "default": 0,
+    "title": "Skip"
+    }
+    },
+    {
+    "name": "limit",
+    "in": "query",
+    "required": false,
+    "schema": {
+    "type": "integer",
+    "exclusiveMinimum": 0,
+    "default": 100,
+    "title": "Limit"
+    }
+    }
+    ],
+    "responses": {
+    "200": {
+    "description": "Successful Response",
+    "content": {
+    "application/json": {
+    "schema": {
+    "type": "array",
+    "items": {},
+    "title": "Response Get Chunks Database Documents  Document Id  Chunks Get"
+    }
+    }
+    }
+    },
+    "422": {
+    "description": "Validation Error",
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/HTTPValidationError"
     }
     }
     }
@@ -170,14 +463,14 @@
     "tags": [
     "Search"
     ],
-    "summary": "Rechercher des documents hybride",
-    "description": "Recherche des documents en fonction de la similarité vectorielle et reranking d'une requête et de filtres optionnels.",
-    "operationId": "search_documents_search_hybrid_search_post",
+    "summary": "Recherche hybride (vecteur + filtres)",
+    "description": "Retourne les *top k* chunks les plus pertinents.\n\nLe moteur combine :\n\n* **Filtres SQL** (theme, `document_type`, dates, `corpus_id`)\n* **Index vectoriel pgvector** *(IVFFLAT ou HNSW)*\n* **Rerank Cross-Encoder** sur un sous-ensemble élargi (*top k × 3*)",
+    "operationId": "hybrid_search_search_hybrid_search_post",
     "requestBody": {
     "content": {
     "application/json": {
     "schema": {
-    "$ref": "#/components/schemas/DocumentSearchRequest"
+    "$ref": "#/components/schemas/SearchRequest"
     }
     }
     },
@@ -189,7 +482,7 @@
     "content": {
     "application/json": {
     "schema": {
-    "$ref": "#/components/schemas/SearchResults"
+    "$ref": "#/components/schemas/SearchResponse"
     }
     }
     }
@@ -200,6 +493,171 @@
     "application/json": {
     "schema": {
     "$ref": "#/components/schemas/HTTPValidationError"
+    }
+    }
+    }
+    }
+    }
+    }
+    },
+    "/index/create-index/{corpus_id}": {
+    "post": {
+    "tags": [
+    "Index"
+    ],
+    "summary": "Créer un index vectoriel pour un corpus",
+    "description": "Crée un index vectoriel pour un corpus spécifique.\n\nCette fonction crée un index IVFFLAT simple pour accélérer les recherches\nvectorielles sur le corpus spécifié.\n\nArgs:\n    corpus_id: Identifiant UUID du corpus à indexer.\n\nReturns:\n    dict: Résultat de l'opération avec statut et message.\n\nRaises:\n    HTTPException: Si une erreur survient lors de la création de l'index.",
+    "operationId": "create_corpus_index_index_create_index__corpus_id__post",
+    "parameters": [
+    {
+    "name": "corpus_id",
+    "in": "path",
+    "required": true,
+    "schema": {
+    "type": "string",
+    "description": "Identifiant UUID du corpus",
+    "title": "Corpus Id"
+    },
+    "description": "Identifiant UUID du corpus"
+    }
+    ],
+    "responses": {
+    "200": {
+    "description": "Successful Response",
+    "content": {
+    "application/json": {
+    "schema": {
+    "type": "object",
+    "additionalProperties": true,
+    "title": "Response Create Corpus Index Index Create Index  Corpus Id  Post"
+    }
+    }
+    }
+    },
+    "422": {
+    "description": "Validation Error",
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/HTTPValidationError"
+    }
+    }
+    }
+    }
+    }
+    }
+    },
+    "/index/drop-index/{corpus_id}": {
+    "delete": {
+    "tags": [
+    "Index"
+    ],
+    "summary": "Supprimer l'index vectoriel d'un corpus",
+    "description": "Supprime l'index vectoriel pour un corpus spécifique.\n\nArgs:\n    corpus_id: Identifiant UUID du corpus.\n\nReturns:\n    dict: Résultat de l'opération.\n\nRaises:\n    HTTPException: Si une erreur survient lors de la suppression de l'index.",
+    "operationId": "remove_corpus_index_index_drop_index__corpus_id__delete",
+    "parameters": [
+    {
+    "name": "corpus_id",
+    "in": "path",
+    "required": true,
+    "schema": {
+    "type": "string",
+    "description": "Identifiant UUID du corpus",
+    "title": "Corpus Id"
+    },
+    "description": "Identifiant UUID du corpus"
+    }
+    ],
+    "responses": {
+    "200": {
+    "description": "Successful Response",
+    "content": {
+    "application/json": {
+    "schema": {
+    "type": "object",
+    "additionalProperties": true,
+    "title": "Response Remove Corpus Index Index Drop Index  Corpus Id  Delete"
+    }
+    }
+    }
+    },
+    "422": {
+    "description": "Validation Error",
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/HTTPValidationError"
+    }
+    }
+    }
+    }
+    }
+    }
+    },
+    "/index/index-status/{corpus_id}": {
+    "get": {
+    "tags": [
+    "Index"
+    ],
+    "summary": "Vérifier l'état de l'index pour un corpus",
+    "description": "Vérifie l'état de l'index pour un corpus spécifique.\n\nArgs:\n    corpus_id: Identifiant UUID du corpus.\n\nReturns:\n    dict: État de l'index et métadonnées.",
+    "operationId": "get_index_status_index_index_status__corpus_id__get",
+    "parameters": [
+    {
+    "name": "corpus_id",
+    "in": "path",
+    "required": true,
+    "schema": {
+    "type": "string",
+    "description": "Identifiant UUID du corpus",
+    "title": "Corpus Id"
+    },
+    "description": "Identifiant UUID du corpus"
+    }
+    ],
+    "responses": {
+    "200": {
+    "description": "Successful Response",
+    "content": {
+    "application/json": {
+    "schema": {
+    "type": "object",
+    "additionalProperties": true,
+    "title": "Response Get Index Status Index Index Status  Corpus Id  Get"
+    }
+    }
+    }
+    },
+    "422": {
+    "description": "Validation Error",
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/HTTPValidationError"
+    }
+    }
+    }
+    }
+    }
+    }
+    },
+    "/index/indexes": {
+    "get": {
+    "tags": [
+    "Index"
+    ],
+    "summary": "Vérifier l'état de tous les index vectoriels",
+    "description": "Vérifie l'état de tous les index vectoriels.\n\nReturns:\n    dict: État des index pour tous les corpus.",
+    "operationId": "get_all_indexes_index_indexes_get",
+    "responses": {
+    "200": {
+    "description": "Successful Response",
+    "content": {
+    "application/json": {
+    "schema": {
+    "additionalProperties": true,
+    "type": "object",
+    "title": "Response Get All Indexes Index Indexes Get"
     }
     }
     }
@@ -213,7 +671,7 @@
     "DocLoader"
     ],
     "summary": "Uploader un fichier et le traiter",
-    "description": "Uploade un fichier, l'extrait et le divise en chunks.\n\nArgs:\n    file: Fichier uploadé par l'utilisateur.\n    max_length: Taille maximale d'un chunk. Par défaut 1000.\n    theme: Thème du document. Par défaut \"Thème générique\".\n\nReturns:\n    Liste des documents extraits.\n    \nRaises:\n    HTTPException: Si une erreur survient lors du traitement ou si aucun contenu n'est extrait.",
+    "description": "Uploade un fichier, l'extrait et le divise en chunks.\n\nArgs:\n    file (UploadFile): Fichier uploadé par l'utilisateur.\n    max_length (int): Taille maximale d'un chunk. Par défaut 1000.\n    theme (str): Thème du document. Par défaut \"Thème générique\".\n\nReturns:\n    List[DocumentWithChunks]: Liste des documents extraits.\n\nRaises:\n    HTTPException: Si une erreur survient lors du traitement ou si aucun contenu n'est extrait.",
     "operationId": "upload_and_process_file_doc_loader_upload_file_post",
     "parameters": [
     {
@@ -257,11 +715,7 @@
     "content": {
     "application/json": {
     "schema": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/ExtractedDocument"
-    },
-    "title": "Response Upload And Process File Doc Loader Upload File Post"
+    "$ref": "#/components/schemas/DocumentWithChunks"
     }
     }
     }
@@ -284,8 +738,8 @@
     "tags": [
     "Pipeline"
     ],
-    "summary": "Charger un fichier, l'extraire et l'insérer dans la base de données",
-    "description": "Charge un fichier, extrait les documents et les insère dans la base de données.\n\nArgs:\n    file (UploadFile): Fichier uploadé par l'utilisateur.\n    max_length (int): Taille maximale d'un chunk.\n    theme (str): Thème à appliquer aux documents.\n\nReturns:\n    List[Dict]: Liste des documents ajoutés avec leurs IDs.",
+    "summary": "Charger un fichier, l'extraire et l'insérer dans la base de données avec segmentation adaptative",
+    "description": "Charge un fichier, l'extrait avec segmentation hiérarchique et l'insère dans la base de données.\n\nLe fichier est temporairement sauvegardé sur le disque, traité pour en extraire le\ncontenu textuel, segmenté selon une approche hiérarchique, puis inséré dans la base\nde données avec génération automatique d'embeddings.\n\nArgs:\n    file: Fichier uploadé par l'utilisateur.\n    max_length: Taille maximale d'un chunk final.\n    overlap: Chevauchement entre les chunks.\n    theme: Thème à appliquer au document.\n    document_type: Type de document (déterminé automatiquement si non spécifié).\n    corpus_id: Identifiant du corpus (généré si non spécifié).\n\nReturns:\n    Résultats de l'opération avec l'ID du document et les statistiques de segmentation.\n\nRaises:\n    HTTPException: Si une erreur survient pendant le traitement du document.",
     "operationId": "process_and_store_endpoint_pipeline_process_and_store_post",
     "parameters": [
     {
@@ -295,10 +749,22 @@
     "schema": {
     "type": "integer",
     "description": "Taille maximale d'un chunk",
-    "default": 1000,
+    "default": 500,
     "title": "Max Length"
     },
     "description": "Taille maximale d'un chunk"
+    },
+    {
+    "name": "overlap",
+    "in": "query",
+    "required": false,
+    "schema": {
+    "type": "integer",
+    "description": "Chevauchement entre les chunks",
+    "default": 100,
+    "title": "Overlap"
+    },
+    "description": "Chevauchement entre les chunks"
     },
     {
     "name": "theme",
@@ -311,6 +777,24 @@
     "title": "Theme"
     },
     "description": "Thème du document"
+    },
+    {
+    "name": "corpus_id",
+    "in": "query",
+    "required": false,
+    "schema": {
+    "anyOf": [
+    {
+    "type": "string"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "description": "Identifiant du corpus (généré si non spécifié)",
+    "title": "Corpus Id"
+    },
+    "description": "Identifiant du corpus (généré si non spécifié)"
     }
     ],
     "requestBody": {
@@ -329,12 +813,109 @@
     "content": {
     "application/json": {
     "schema": {
-    "type": "array",
-    "items": {
     "type": "object",
-    "additionalProperties": true
-    },
+    "additionalProperties": true,
     "title": "Response Process And Store Endpoint Pipeline Process And Store Post"
+    }
+    }
+    }
+    },
+    "422": {
+    "description": "Validation Error",
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/HTTPValidationError"
+    }
+    }
+    }
+    }
+    }
+    }
+    },
+    "/pipeline/process-and-store-async": {
+    "post": {
+    "tags": [
+    "Pipeline"
+    ],
+    "summary": "Traiter un fichier en arrière-plan et l'insérer dans la base de données",
+    "description": "Traite un fichier en arrière-plan et l'insère dans la base de données.\n\nSimilaire à process-and-store mais s'exécute de manière asynchrone pour les fichiers\nvolumineux. Le client reçoit immédiatement une réponse avec un identifiant de tâche\npendant que le traitement se poursuit en arrière-plan.\n\nArgs:\n    background_tasks: Gestionnaire de tâches en arrière-plan de FastAPI.\n    file: Fichier uploadé par l'utilisateur.\n    max_length: Taille maximale d'un chunk final.\n    overlap: Chevauchement entre les chunks.\n    theme: Thème à appliquer au document.\n    document_type: Type de document (déterminé automatiquement si non spécifié).\n    corpus_id: Identifiant du corpus (généré si non spécifié).\n\nReturns:\n    Informations sur la tâche en arrière-plan créée.",
+    "operationId": "process_and_store_async_endpoint_pipeline_process_and_store_async_post",
+    "parameters": [
+    {
+    "name": "max_length",
+    "in": "query",
+    "required": false,
+    "schema": {
+    "type": "integer",
+    "description": "Taille maximale d'un chunk",
+    "default": 500,
+    "title": "Max Length"
+    },
+    "description": "Taille maximale d'un chunk"
+    },
+    {
+    "name": "overlap",
+    "in": "query",
+    "required": false,
+    "schema": {
+    "type": "integer",
+    "description": "Chevauchement entre les chunks",
+    "default": 100,
+    "title": "Overlap"
+    },
+    "description": "Chevauchement entre les chunks"
+    },
+    {
+    "name": "theme",
+    "in": "query",
+    "required": false,
+    "schema": {
+    "type": "string",
+    "description": "Thème du document",
+    "default": "Thème générique",
+    "title": "Theme"
+    },
+    "description": "Thème du document"
+    },
+    {
+    "name": "corpus_id",
+    "in": "query",
+    "required": false,
+    "schema": {
+    "anyOf": [
+    {
+    "type": "string"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "description": "Identifiant du corpus (généré si non spécifié)",
+    "title": "Corpus Id"
+    },
+    "description": "Identifiant du corpus (généré si non spécifié)"
+    }
+    ],
+    "requestBody": {
+    "required": true,
+    "content": {
+    "multipart/form-data": {
+    "schema": {
+    "$ref": "#/components/schemas/Body_process_and_store_async_endpoint_pipeline_process_and_store_async_post"
+    }
+    }
+    }
+    },
+    "responses": {
+    "200": {
+    "description": "Successful Response",
+    "content": {
+    "application/json": {
+    "schema": {
+    "type": "object",
+    "additionalProperties": true,
+    "title": "Response Process And Store Async Endpoint Pipeline Process And Store Async Post"
     }
     }
     }
@@ -355,6 +936,7 @@
     "/": {
     "get": {
     "summary": "Root",
+    "description": "Endpoint racine pour vérifier l'état de l'API.\n\nReturns:\n    dict: Message indiquant que l'API est en cours d'exécution.",
     "operationId": "root__get",
     "responses": {
     "200": {
@@ -371,6 +953,21 @@
     },
     "components": {
     "schemas": {
+    "Body_process_and_store_async_endpoint_pipeline_process_and_store_async_post": {
+    "properties": {
+    "file": {
+    "type": "string",
+    "format": "binary",
+    "title": "File",
+    "description": "Fichier à traiter"
+    }
+    },
+    "type": "object",
+    "required": [
+    "file"
+    ],
+    "title": "Body_process_and_store_async_endpoint_pipeline_process_and_store_async_post"
+    },
     "Body_process_and_store_endpoint_pipeline_process_and_store_post": {
     "properties": {
     "file": {
@@ -401,8 +998,70 @@
     ],
     "title": "Body_upload_and_process_file_doc_loader_upload_file_post"
     },
-    "DocumentCreate": {
+    "ChunkCreate": {
     "properties": {
+    "id": {
+    "anyOf": [
+    {
+    "type": "integer"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Id"
+    },
+    "content": {
+    "type": "string",
+    "title": "Content"
+    },
+    "startChar": {
+    "type": "integer",
+    "minimum": 0,
+    "title": "Startchar",
+    "default": 0
+    },
+    "endChar": {
+    "type": "integer",
+    "title": "Endchar"
+    },
+    "hierarchyLevel": {
+    "type": "integer",
+    "maximum": 3,
+    "minimum": 0,
+    "title": "Hierarchylevel",
+    "default": 3
+    },
+    "parentChunkId": {
+    "anyOf": [
+    {
+    "type": "integer"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Parentchunkid"
+    }
+    },
+    "type": "object",
+    "required": [
+    "content",
+    "endChar"
+    ],
+    "title": "ChunkCreate",
+    "description": "Corps pour créer un chunk (texte + méta hiérarchiques)."
+    },
+    "ChunkResult": {
+    "properties": {
+    "chunkId": {
+    "type": "integer",
+    "title": "Chunkid"
+    },
+    "documentId": {
+    "type": "integer",
+    "title": "Documentid"
+    },
     "title": {
     "type": "string",
     "title": "Title"
@@ -415,26 +1074,89 @@
     "type": "string",
     "title": "Theme"
     },
-    "document_type": {
+    "documentType": {
     "type": "string",
-    "title": "Document Type"
+    "title": "Documenttype"
     },
-    "publish_date": {
+    "publishDate": {
     "type": "string",
     "format": "date",
-    "title": "Publish Date"
+    "title": "Publishdate"
+    },
+    "score": {
+    "type": "number",
+    "title": "Score"
+    },
+    "hierarchyLevel": {
+    "type": "integer",
+    "title": "Hierarchylevel"
+    },
+    "context": {
+    "anyOf": [
+    {
+    "$ref": "#/components/schemas/HierarchicalContext"
+    },
+    {
+    "type": "null"
+    }
+    ]
+    }
+    },
+    "type": "object",
+    "required": [
+    "chunkId",
+    "documentId",
+    "title",
+    "content",
+    "theme",
+    "documentType",
+    "publishDate",
+    "score",
+    "hierarchyLevel"
+    ],
+    "title": "ChunkResult",
+    "description": "Un chunk classé dans la réponse de recherche."
+    },
+    "DocumentCreate": {
+    "properties": {
+    "title": {
+    "type": "string",
+    "title": "Title"
+    },
+    "theme": {
+    "type": "string",
+    "title": "Theme"
+    },
+    "documentType": {
+    "type": "string",
+    "title": "Documenttype"
+    },
+    "publishDate": {
+    "type": "string",
+    "format": "date",
+    "title": "Publishdate"
+    },
+    "corpusId": {
+    "anyOf": [
+    {
+    "type": "string"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Corpusid"
     }
     },
     "type": "object",
     "required": [
     "title",
-    "content",
     "theme",
-    "document_type",
-    "publish_date"
+    "documentType",
+    "publishDate"
     ],
     "title": "DocumentCreate",
-    "description": "Classe représentant un document à créer.\n\nArgs:\n    title: Titre du document.\n    content: Contenu du document.\n    theme: Thème du document.\n    document_type: Type de document.\n    publish_date: Date de publication du document."
+    "description": "Corps minimal pour créer un document (hors contenu)."
     },
     "DocumentResponse": {
     "properties": {
@@ -446,155 +1168,82 @@
     "type": "string",
     "title": "Title"
     },
-    "content": {
-    "type": "string",
-    "title": "Content"
-    },
     "theme": {
     "type": "string",
     "title": "Theme"
     },
-    "document_type": {
+    "documentType": {
     "type": "string",
-    "title": "Document Type"
+    "title": "Documenttype"
     },
-    "publish_date": {
+    "publishDate": {
     "type": "string",
     "format": "date",
-    "title": "Publish Date"
+    "title": "Publishdate"
+    },
+    "corpusId": {
+    "anyOf": [
+    {
+    "type": "string"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Corpusid"
+    },
+    "chunkCount": {
+    "type": "integer",
+    "minimum": 0,
+    "title": "Chunkcount"
+    },
+    "indexNeeded": {
+    "type": "boolean",
+    "title": "Indexneeded",
+    "default": false
     }
     },
     "type": "object",
     "required": [
     "id",
     "title",
-    "content",
     "theme",
-    "document_type",
-    "publish_date"
+    "documentType",
+    "publishDate",
+    "chunkCount"
     ],
     "title": "DocumentResponse",
-    "description": "Classe représentant un document de réponse.\n\nArgs:\n    id: ID du document.\n    title: Titre du document.\n    content: Contenu du document.\n    theme: Thème du document.\n    document_type: Type de document.\n    publish_date: Date de publication du document."
+    "description": "Réponse standard lorsqu’un document est renvoyé côté API.\n\nAttributs:\n    id (int): Identifiant du document.\n    title (str): Titre du document.\n    theme (str): Thème du document.\n    document_type (str): Type de document.\n    publish_date (date): Date de publication.\n    corpus_id (Optional[str]): Identifiant du corpus.\n    chunk_count (int): Nombre de chunks associés (>= 0)."
     },
-    "DocumentSearchRequest": {
-    "properties": {
-    "query": {
-    "type": "string",
-    "title": "Query"
-    },
-    "top_k": {
-    "type": "integer",
-    "title": "Top K",
-    "default": 10
-    },
-    "theme": {
-    "anyOf": [
-    {
-    "type": "string"
-    },
-    {
-    "type": "null"
-    }
-    ],
-    "title": "Theme"
-    },
-    "document_type": {
-    "anyOf": [
-    {
-    "type": "string"
-    },
-    {
-    "type": "null"
-    }
-    ],
-    "title": "Document Type"
-    },
-    "start_date": {
-    "anyOf": [
-    {
-    "type": "string",
-    "format": "date"
-    },
-    {
-    "type": "null"
-    }
-    ],
-    "title": "Start Date"
-    },
-    "end_date": {
-    "anyOf": [
-    {
-    "type": "string",
-    "format": "date"
-    },
-    {
-    "type": "null"
-    }
-    ],
-    "title": "End Date"
-    }
-    },
-    "type": "object",
-    "required": [
-    "query"
-    ],
-    "title": "DocumentSearchRequest",
-    "description": "Classe représentant une requête de recherche de documents.\n\nContient la requête de recherche, le nombre de résultats souhaités et les filtres optionnels.\n\nArgs:\n    query (str): La requête de recherche.\n    top_k (int): Nombre de résultats à retourner, par défaut 10.\n    theme (str, optional): Thème du document pour le filtrage.\n    document_type (str, optional): Type de document pour le filtrage.\n    start_date (date, optional): Date de début pour le filtrage.\n    end_date (date, optional): Date de fin pour le filtrage."
-    },
-    "DocumentSearchResponse": {
+    "DocumentUpdate": {
     "properties": {
     "id": {
     "type": "integer",
     "title": "Id"
     },
     "title": {
-    "type": "string",
+    "anyOf": [
+    {
+    "type": "string"
+    },
+    {
+    "type": "null"
+    }
+    ],
     "title": "Title"
     },
-    "content": {
-    "type": "string",
-    "title": "Content"
-    },
     "theme": {
-    "type": "string",
+    "anyOf": [
+    {
+    "type": "string"
+    },
+    {
+    "type": "null"
+    }
+    ],
     "title": "Theme"
     },
-    "document_type": {
-    "type": "string",
-    "title": "Document Type"
-    },
-    "publish_date": {
-    "type": "string",
-    "format": "date",
-    "title": "Publish Date"
-    },
-    "metadata": {
-    "additionalProperties": true,
-    "type": "object",
-    "title": "Metadata"
-    }
-    },
-    "type": "object",
-    "required": [
-    "id",
-    "title",
-    "content",
-    "theme",
-    "document_type",
-    "publish_date",
-    "metadata"
-    ],
-    "title": "DocumentSearchResponse",
-    "description": "Classe représentant un document de recherche.\n\nContient les informations du document ainsi que les métadonnées.\n\nArgs:\n    id (int): ID du document.\n    title (str): Titre du document.\n    content (str): Contenu du document.\n    theme (str): Thème du document.\n    document_type (str): Type de document.\n    publish_date (date): Date de publication.\n    metadata (dict): Métadonnées associées au document."
-    },
-    "DocumentUpdate": {
-    "properties": {
-    "document_id": {
-    "type": "integer",
-    "title": "Document Id",
-    "description": "Identifiant unique du document à mettre à jour"
-    },
-    "title": {
+    "documentType": {
     "anyOf": [
     {
     "type": "string"
@@ -603,46 +1252,9 @@
     "type": "null"
     }
     ],
-    "title": "Title",
-    "description": "Titre mis à jour du document"
+    "title": "Documenttype"
     },
-    "content": {
-    "anyOf": [
-    {
-    "type": "string"
-    },
-    {
-    "type": "null"
-    }
-    ],
-    "title": "Content",
-    "description": "Contenu mis à jour du document"
-    },
-    "theme": {
-    "anyOf": [
-    {
-    "type": "string"
-    },
-    {
-    "type": "null"
-    }
-    ],
-    "title": "Theme",
-    "description": "Thème mis à jour du document"
-    },
-    "document_type": {
-    "anyOf": [
-    {
-    "type": "string"
-    },
-    {
-    "type": "null"
-    }
-    ],
-    "title": "Document Type",
-    "description": "Type mis à jour du document"
-    },
-    "publish_date": {
+    "publishDate": {
     "anyOf": [
     {
     "type": "string",
@@ -652,46 +1264,9 @@
     "type": "null"
     }
     ],
-    "title": "Publish Date",
-    "description": "Date de publication mise à jour (format ISO)"
-    }
+    "title": "Publishdate"
     },
-    "type": "object",
-    "required": [
-    "document_id"
-    ],
-    "title": "DocumentUpdate",
-    "description": "Classe représentant un document à mettre à jour.\n\nArgs:\n    document_id: ID du document à mettre à jour.\n    title: Nouveau titre.\n    content: Nouveau contenu.\n    theme: Nouveau thème.\n    document_type: Nouveau type de document.\n    publish_date: Nouvelle date de publication."
-    },
-    "ExtractedDocument": {
-    "properties": {
-    "title": {
-    "type": "string",
-    "title": "Title",
-    "description": "Titre du document"
-    },
-    "content": {
-    "type": "string",
-    "title": "Content",
-    "description": "Contenu brut extrait"
-    },
-    "theme": {
-    "type": "string",
-    "title": "Theme",
-    "description": "Thème du document"
-    },
-    "document_type": {
-    "type": "string",
-    "title": "Document Type",
-    "description": "Type (PDF, DOCX, etc.)"
-    },
-    "publish_date": {
-    "type": "string",
-    "format": "date",
-    "title": "Publish Date",
-    "description": "Date de publication"
-    },
-    "embedding": {
+    "corpusId": {
     "anyOf": [
     {
     "type": "string"
@@ -700,20 +1275,36 @@
     "type": "null"
     }
     ],
-    "title": "Embedding",
-    "description": "Représentation vectorielle (optionnelle)"
+    "title": "Corpusid"
     }
     },
     "type": "object",
     "required": [
-    "title",
-    "content",
-    "theme",
-    "document_type",
-    "publish_date"
+    "id"
     ],
-    "title": "ExtractedDocument",
-    "description": "Schéma commun de sortie pour tous les extracteurs de documents."
+    "title": "DocumentUpdate",
+    "description": "Corps de mise à jour d'un document."
+    },
+    "DocumentWithChunks": {
+    "properties": {
+    "document": {
+    "$ref": "#/components/schemas/DocumentCreate"
+    },
+    "chunks": {
+    "items": {
+    "$ref": "#/components/schemas/ChunkCreate"
+    },
+    "type": "array",
+    "title": "Chunks"
+    }
+    },
+    "type": "object",
+    "required": [
+    "document",
+    "chunks"
+    ],
+    "title": "DocumentWithChunks",
+    "description": "Payload complet pour `POST /database/documents`."
     },
     "HTTPValidationError": {
     "properties": {
@@ -728,13 +1319,9 @@
     "type": "object",
     "title": "HTTPValidationError"
     },
-    "SearchResults": {
+    "HierarchicalContext": {
     "properties": {
-    "query": {
-    "type": "string",
-    "title": "Query"
-    },
-    "filters": {
+    "level0": {
     "anyOf": [
     {
     "additionalProperties": true,
@@ -744,15 +1331,147 @@
     "type": "null"
     }
     ],
-    "title": "Filters"
+    "title": "Level0"
     },
-    "total_results": {
+    "level1": {
+    "anyOf": [
+    {
+    "additionalProperties": true,
+    "type": "object"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Level1"
+    },
+    "level2": {
+    "anyOf": [
+    {
+    "additionalProperties": true,
+    "type": "object"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Level2"
+    }
+    },
+    "type": "object",
+    "title": "HierarchicalContext",
+    "description": "Parents (level 0 – 2) d’un chunk lorsque `hierarchical=True`."
+    },
+    "SearchRequest": {
+    "properties": {
+    "query": {
+    "type": "string",
+    "title": "Query"
+    },
+    "topK": {
     "type": "integer",
-    "title": "Total Results"
+    "minimum": 1,
+    "title": "Topk",
+    "default": 10
+    },
+    "theme": {
+    "anyOf": [
+    {
+    "type": "string"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Theme"
+    },
+    "documentType": {
+    "anyOf": [
+    {
+    "type": "string"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Documenttype"
+    },
+    "startDate": {
+    "anyOf": [
+    {
+    "type": "string",
+    "format": "date"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Startdate"
+    },
+    "endDate": {
+    "anyOf": [
+    {
+    "type": "string",
+    "format": "date"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Enddate"
+    },
+    "corpusId": {
+    "anyOf": [
+    {
+    "type": "string"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Corpusid"
+    },
+    "hierarchical": {
+    "type": "boolean",
+    "title": "Hierarchical",
+    "default": false
+    },
+    "hierarchyLevel": {
+    "anyOf": [
+    {
+    "type": "integer"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Hierarchylevel"
+    }
+    },
+    "type": "object",
+    "required": [
+    "query"
+    ],
+    "title": "SearchRequest",
+    "description": "Paramètres acceptés par `POST /search/hybrid_search`."
+    },
+    "SearchResponse": {
+    "properties": {
+    "query": {
+    "type": "string",
+    "title": "Query"
+    },
+    "topK": {
+    "type": "integer",
+    "title": "Topk"
+    },
+    "totalResults": {
+    "type": "integer",
+    "title": "Totalresults"
     },
     "results": {
     "items": {
-    "$ref": "#/components/schemas/DocumentSearchResponse"
+    "$ref": "#/components/schemas/ChunkResult"
     },
     "type": "array",
     "title": "Results"
@@ -761,12 +1480,39 @@
     "type": "object",
     "required": [
     "query",
-    "filters",
-    "total_results",
+    "topK",
+    "totalResults",
     "results"
     ],
-    "title": "SearchResults",
-    "description": "Classe représentant les résultats de recherche.\n\nContient la requête, les filtres appliqués, le nombre total de résultats et les résultats eux-mêmes.\n\nArgs:\n    query (str): La requête de recherche.\n    filters (dict, optional): Les filtres appliqués lors de la recherche.\n    total_results (int): Le nombre total de résultats trouvés.\n    results (List[DocumentSearchResponse]): Liste des résultats de recherche formatés."
+    "title": "SearchResponse",
+    "description": "Réponse complète du moteur de recherche."
+    },
+    "UpdateWithChunks": {
+    "properties": {
+    "document": {
+    "$ref": "#/components/schemas/DocumentUpdate"
+    },
+    "newChunks": {
+    "anyOf": [
+    {
+    "items": {
+    "$ref": "#/components/schemas/ChunkCreate"
+    },
+    "type": "array"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Newchunks"
+    }
+    },
+    "type": "object",
+    "required": [
+    "document"
+    ],
+    "title": "UpdateWithChunks",
+    "description": "Payload de mise-à-jour :\n\n* `document`  → DTO `DocumentUpdate`\n* `newChunks` → éventuelle liste de nouveaux chunks à ajouter"
     },
     "ValidationError": {
     "properties": {

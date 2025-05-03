@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Schémas - Cléa-API Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../css/mkdocsoad.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Sch\u00e9mas";
+        var mkdocs_page_input_path = "schemas.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Cléa-API Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../home/">Accueil</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../main/">Introduction</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../database/">Base de données</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Schémas</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#documentcreate">DocumentCreate</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#documentwithchunks">DocumentWithChunks</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#documentresponse">DocumentResponse</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#documentupdate">DocumentUpdate</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#updatewithchunks">UpdateWithChunks</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#hierarchicalcontext">HierarchicalContext</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#chunkresult">ChunkResult</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#searchrequest">SearchRequest</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#searchresponse">SearchResponse</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#indexstatus">IndexStatus</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Documentation des librairies</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../lib/doc_loader/extractor_lib/">Extracteurs</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../lib/doc_loader/splitter_lib/">Segmentation</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../lib/pipeline/pipeline_lib/">Pipeline end-to-end</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../lib/vectordb/crud_lib/">Opérations CRUD</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../lib/vectordb/index_lib/">Indexation vectorielle</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../lib/vectordb/search_lib/">Recherche hybride</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Références API</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >REST API</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../api/rest/rest_api/">Documentation Swagger</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Références Python</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../api/lib/doc_loader/extractor_references/">Extracteurs</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../api/lib/doc_loader/splitter_references/">Segmentation</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../api/lib/pipeline/pipeline_references/">Pipeline</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../api/lib/vectordb/crud_references/">CRUD</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../api/lib/vectordb/index_references/">Indexation</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../api/lib/vectordb/search_references/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Intégrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >JavaScript / TypeScript</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../Integration/doc_loader/doc_loader_js/">Extraction de documents</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../Integration/pipeline/pipeline_js/">Pipeline end-to-end</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../Integration/vectordb/crud_js/">Opérations CRUD</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../Integration/vectordb/index_js/">Indexation</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../Integration/vectordb/search_js/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Cléa-API Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Schémas</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="schemas-pydantic-de-clea-api">Schemas Pydantic de Clea-API</h1>
+<p>Les schémas Pydantic définissent la forme des données échangées avec l’API (requêtes et réponses).<br />
+Tous les modèles utilisent la configuration <strong><code>CamelConfig</code></strong> pour accepter et produire du <strong>camelCase</strong>.</p>
+<hr />
+<h2 id="documentcreate">DocumentCreate</h2>
+<p><strong>Payload</strong> minimal pour créer un document (sans contenu).</p>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Type</th>
+<th>Requis</th>
+<th>Alias</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>title</code></td>
+<td><code>string</code></td>
+<td>Oui</td>
+<td><code>title</code></td>
+<td>Titre du document.</td>
+</tr>
+<tr>
+<td><code>theme</code></td>
+<td><code>string</code></td>
+<td>Oui</td>
+<td><code>theme</code></td>
+<td>Thème du document.</td>
+</tr>
+<tr>
+<td><code>document_type</code></td>
+<td><code>string</code></td>
+<td>Oui</td>
+<td><code>documentType</code></td>
+<td>Type du document (PDF, TXT, etc.).</td>
+</tr>
+<tr>
+<td><code>publish_date</code></td>
+<td><code>date</code></td>
+<td>Oui</td>
+<td><code>publishDate</code></td>
+<td>Date de publication (YYYY-MM-DD).</td>
+</tr>
+<tr>
+<td><code>corpus_id</code></td>
+<td><code>string</code></td>
+<td>Non</td>
+<td><code>corpusId</code></td>
+<td>UUID du corpus (optionnel).</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="kr">type</span><span class="w"> </span><span class="nx">DocumentCreate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">theme</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">documentType</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">publishDate</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="c1">// &quot;2025-05-01&quot;</span>
+<span class="w">  </span><span class="nx">corpusId?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="sb">````</span>
+
+<span class="o">---</span>
+
+<span class="err">##</span><span class="w"> </span><span class="nx">ChunkCreate</span>
+
+<span class="o">**</span><span class="nx">Payload</span><span class="o">**</span><span class="w"> </span><span class="nx">pour</span><span class="w"> </span><span class="nx">créer</span><span class="w"> </span><span class="nx">un</span><span class="w"> </span><span class="nx">chunk</span><span class="w"> </span><span class="p">(</span><span class="nx">fragment</span><span class="w"> </span><span class="nx">de</span><span class="w"> </span><span class="nx">texte</span><span class="w"> </span><span class="nx">et</span><span class="w"> </span><span class="nx">métadonnées</span><span class="w"> </span><span class="nx">hiérarchiques</span><span class="p">).</span>
+
+<span class="o">|</span><span class="w"> </span><span class="nx">Champ</span><span class="w">             </span><span class="o">|</span><span class="w"> </span><span class="nx">Type</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="nx">Requis</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">Alias</span><span class="w">            </span><span class="o">|</span><span class="w"> </span><span class="nx">Description</span><span class="w">                                                  </span><span class="o">|</span>
+<span class="o">|</span><span class="w"> </span><span class="o">-----------------</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">---------</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">------</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">----------------</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">------------------------------------------------------------</span><span class="w"> </span><span class="o">|</span>
+<span class="o">|</span><span class="w"> </span><span class="sb">`id`</span><span class="w">              </span><span class="o">|</span><span class="w"> </span><span class="sb">`number`</span><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="nx">Non</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="sb">`id`</span><span class="w">             </span><span class="o">|</span><span class="w"> </span><span class="nx">Identifiant</span><span class="w"> </span><span class="nx">temporaire</span><span class="w"> </span><span class="p">(</span><span class="nx">uniquement</span><span class="w"> </span><span class="nx">pour</span><span class="w"> </span><span class="nx">hiérarchie</span><span class="w"> </span><span class="nx">interne</span><span class="p">).</span><span class="w"> </span><span class="o">|</span>
+<span class="o">|</span><span class="w"> </span><span class="sb">`content`</span><span class="w">         </span><span class="o">|</span><span class="w"> </span><span class="sb">`string`</span><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="nx">Oui</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="sb">`content`</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nx">Contenu</span><span class="w"> </span><span class="nx">textuel</span><span class="w"> </span><span class="nx">du</span><span class="w"> </span><span class="nx">chunk</span><span class="p">.</span><span class="w">                                    </span><span class="o">|</span>
+<span class="o">|</span><span class="w"> </span><span class="sb">`start_char`</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="sb">`integer`</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">Oui</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="sb">`startChar`</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="nx">Position</span><span class="w"> </span><span class="nx">de</span><span class="w"> </span><span class="nx">début</span><span class="w"> </span><span class="nx">dans</span><span class="w"> </span><span class="nx">le</span><span class="w"> </span><span class="nx">texte</span><span class="w"> </span><span class="nx">source</span><span class="w"> </span><span class="p">(</span><span class="o">&gt;=</span><span class="w"> </span><span class="mf">0</span><span class="p">).</span><span class="w">               </span><span class="o">|</span>
+<span class="o">|</span><span class="w"> </span><span class="sb">`end_char`</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="sb">`integer`</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">Oui</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="sb">`endChar`</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="nx">Position</span><span class="w"> </span><span class="nx">de</span><span class="w"> </span><span class="nx">fin</span><span class="w"> </span><span class="nx">dans</span><span class="w"> </span><span class="nx">le</span><span class="w"> </span><span class="nx">texte</span><span class="w"> </span><span class="nx">source</span><span class="w"> </span><span class="p">(</span><span class="o">&gt;</span><span class="w"> </span><span class="sb">`startChar`</span><span class="p">).</span><span class="w">        </span><span class="o">|</span>
+<span class="o">|</span><span class="w"> </span><span class="sb">`hierarchy_level`</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="sb">`integer`</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">Oui</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="sb">`hierarchyLevel`</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">Niveau</span><span class="w"> </span><span class="nx">hiérarchique</span><span class="w"> </span><span class="p">(</span><span class="mf">0</span><span class="err">–</span><span class="mf">3</span><span class="p">).</span><span class="w">                                   </span><span class="o">|</span>
+<span class="o">|</span><span class="w"> </span><span class="sb">`parent_chunk_id`</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="sb">`integer`</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">Non</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="sb">`parentChunkId`</span><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="nx">ID</span><span class="w"> </span><span class="nx">du</span><span class="w"> </span><span class="nx">chunk</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="p">(</span><span class="nx">ou</span><span class="w"> </span><span class="sb">`null`</span><span class="p">).</span><span class="w">                              </span><span class="o">|</span>
+
+<span class="sb">```ts</span>
+<span class="sb">type ChunkCreate = {</span>
+<span class="sb">  id?: number;</span>
+<span class="sb">  content: string;</span>
+<span class="sb">  startChar: number;</span>
+<span class="sb">  endChar: number;</span>
+<span class="sb">  hierarchyLevel: 0 | 1 | 2 | 3;</span>
+<span class="sb">  parentChunkId?: number | null;</span>
+<span class="sb">}</span>
+</code></pre></div>
+<hr />
+<h2 id="documentwithchunks">DocumentWithChunks</h2>
+<p><strong>Payload</strong> complet pour <code>POST /database/documents</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Type</th>
+<th>Requis</th>
+<th>Alias</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>document</code></td>
+<td><a href="#DocumentCreate"><code>DocumentCreate</code></a></td>
+<td>Oui</td>
+<td><code>document</code></td>
+<td>Métadonnées du document.</td>
+</tr>
+<tr>
+<td><code>chunks</code></td>
+<td><code>ChunkCreate[]</code></td>
+<td>Oui</td>
+<td><code>chunks</code></td>
+<td>Liste des chunks à insérer.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="kr">type</span><span class="w"> </span><span class="nx">DocumentWithChunks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">document</span><span class="o">:</span><span class="w"> </span><span class="kt">DocumentCreate</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">chunks</span><span class="o">:</span><span class="w"> </span><span class="kt">ChunkCreate</span><span class="p">[];</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="documentresponse">DocumentResponse</h2>
+<p><strong>Réponse</strong> standard pour toutes les opérations CRUD sur les documents.</p>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Type</th>
+<th>Requis</th>
+<th>Alias</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td><code>integer</code></td>
+<td>Oui</td>
+<td><code>id</code></td>
+<td>Identifiant du document.</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td><code>string</code></td>
+<td>Oui</td>
+<td><code>title</code></td>
+<td>Titre du document.</td>
+</tr>
+<tr>
+<td><code>theme</code></td>
+<td><code>string</code></td>
+<td>Oui</td>
+<td><code>theme</code></td>
+<td>Thème du document.</td>
+</tr>
+<tr>
+<td><code>document_type</code></td>
+<td><code>string</code></td>
+<td>Oui</td>
+<td><code>documentType</code></td>
+<td>Type du document.</td>
+</tr>
+<tr>
+<td><code>publish_date</code></td>
+<td><code>date</code></td>
+<td>Oui</td>
+<td><code>publishDate</code></td>
+<td>Date de publication.</td>
+</tr>
+<tr>
+<td><code>corpus_id</code></td>
+<td><code>string</code></td>
+<td>Non</td>
+<td><code>corpusId</code></td>
+<td>UUID du corpus.</td>
+</tr>
+<tr>
+<td><code>chunk_count</code></td>
+<td><code>integer</code></td>
+<td>Oui</td>
+<td><code>chunkCount</code></td>
+<td>Nombre de chunks associés (≥ 0).</td>
+</tr>
+<tr>
+<td><code>index_needed</code></td>
+<td><code>boolean</code></td>
+<td>Oui</td>
+<td><code>indexNeeded</code></td>
+<td><code>true</code> si un nouvel index est requis.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="kr">type</span><span class="w"> </span><span class="nx">DocumentResponse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">theme</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">documentType</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">publishDate</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">corpusId?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">chunkCount</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">indexNeeded</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="documentupdate">DocumentUpdate</h2>
+<p><strong>Payload</strong> pour <code>PUT /database/documents/{id}</code> (mise à jour).</p>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Type</th>
+<th>Requis</th>
+<th>Alias</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td><code>integer</code></td>
+<td>Oui</td>
+<td><code>id</code></td>
+<td>Identifiant du document à mettre à jour.</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td><code>string</code></td>
+<td>Non</td>
+<td><code>title</code></td>
+<td>Nouveau titre.</td>
+</tr>
+<tr>
+<td><code>theme</code></td>
+<td><code>string</code></td>
+<td>Non</td>
+<td><code>theme</code></td>
+<td>Nouveau thème.</td>
+</tr>
+<tr>
+<td><code>document_type</code></td>
+<td><code>string</code></td>
+<td>Non</td>
+<td><code>documentType</code></td>
+<td>Nouveau type de document.</td>
+</tr>
+<tr>
+<td><code>publish_date</code></td>
+<td><code>date</code></td>
+<td>Non</td>
+<td><code>publishDate</code></td>
+<td>Nouvelle date de publication.</td>
+</tr>
+<tr>
+<td><code>corpus_id</code></td>
+<td><code>string</code></td>
+<td>Non</td>
+<td><code>corpusId</code></td>
+<td>Nouvel UUID de corpus.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="kr">type</span><span class="w"> </span><span class="nx">DocumentUpdate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">title?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">theme?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">documentType?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">publishDate?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">corpusId?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="updatewithchunks">UpdateWithChunks</h2>
+<p><strong>Payload</strong> pour <code>PUT /database/documents/{id}</code> avec ajout de chunks.</p>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Type</th>
+<th>Requis</th>
+<th>Alias</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>document</code></td>
+<td><code>DocumentUpdate</code></td>
+<td>Oui</td>
+<td><code>document</code></td>
+<td>Métadonnées à mettre à jour.</td>
+</tr>
+<tr>
+<td><code>new_chunks</code></td>
+<td><code>ChunkCreate[]</code></td>
+<td>Non</td>
+<td><code>newChunks</code></td>
+<td>Liste de nouveaux chunks à ajouter.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="kr">type</span><span class="w"> </span><span class="nx">UpdateWithChunks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">document</span><span class="o">:</span><span class="w"> </span><span class="kt">DocumentUpdate</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">newChunks?</span><span class="o">:</span><span class="w"> </span><span class="kt">ChunkCreate</span><span class="p">[];</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="hierarchicalcontext">HierarchicalContext</h2>
+<p>Parents (niveaux 0–2) renvoyés quand <code>hierarchical=true</code> en recherche.</p>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Type</th>
+<th>Requis</th>
+<th>Alias</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>level_0</code></td>
+<td><code>object</code> or <code>null</code></td>
+<td>Non</td>
+<td><code>level0</code></td>
+<td>Chunk de section (lvl 0).</td>
+</tr>
+<tr>
+<td><code>level_1</code></td>
+<td><code>object</code> or <code>null</code></td>
+<td>Non</td>
+<td><code>level1</code></td>
+<td>Chunk de sous-section (lvl 1).</td>
+</tr>
+<tr>
+<td><code>level_2</code></td>
+<td><code>object</code> or <code>null</code></td>
+<td>Non</td>
+<td><code>level2</code></td>
+<td>Chunk de paragraphe (lvl 2).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="chunkresult">ChunkResult</h2>
+<p>Un chunk renvoyé par <code>POST /search/hybrid_search</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Type</th>
+<th>Requis</th>
+<th>Alias</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>chunk_id</code></td>
+<td><code>integer</code></td>
+<td>Oui</td>
+<td><code>chunkId</code></td>
+<td>Identifiant du chunk.</td>
+</tr>
+<tr>
+<td><code>document_id</code></td>
+<td><code>integer</code></td>
+<td>Oui</td>
+<td><code>documentId</code></td>
+<td>ID du document parent.</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td><code>string</code></td>
+<td>Oui</td>
+<td><code>title</code></td>
+<td>Titre du document parent.</td>
+</tr>
+<tr>
+<td><code>content</code></td>
+<td><code>string</code></td>
+<td>Oui</td>
+<td><code>content</code></td>
+<td>Contenu du chunk.</td>
+</tr>
+<tr>
+<td><code>theme</code></td>
+<td><code>string</code></td>
+<td>Oui</td>
+<td><code>theme</code></td>
+<td>Thème du document.</td>
+</tr>
+<tr>
+<td><code>document_type</code></td>
+<td><code>string</code></td>
+<td>Oui</td>
+<td><code>documentType</code></td>
+<td>Type du document.</td>
+</tr>
+<tr>
+<td><code>publish_date</code></td>
+<td><code>date</code></td>
+<td>Oui</td>
+<td><code>publishDate</code></td>
+<td>Date de publication.</td>
+</tr>
+<tr>
+<td><code>score</code></td>
+<td><code>number</code></td>
+<td>Oui</td>
+<td><code>score</code></td>
+<td>Score de similarité (distance ou score).</td>
+</tr>
+<tr>
+<td><code>hierarchy_level</code></td>
+<td><code>integer</code></td>
+<td>Oui</td>
+<td><code>hierarchyLevel</code></td>
+<td>Niveau hiérarchique (0–3).</td>
+</tr>
+<tr>
+<td><code>context</code></td>
+<td><code>HierarchicalContext</code> or <code>null</code></td>
+<td>Non</td>
+<td><code>context</code></td>
+<td>Contexte parent (facultatif).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="searchrequest">SearchRequest</h2>
+<p>Paramètres de la recherche hybride.</p>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Type</th>
+<th>Requis</th>
+<th>Alias</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>query</code></td>
+<td><code>string</code></td>
+<td>Oui</td>
+<td><code>query</code></td>
+<td>Texte de la requête.</td>
+</tr>
+<tr>
+<td><code>top_k</code></td>
+<td><code>integer</code></td>
+<td>Non</td>
+<td><code>topK</code></td>
+<td>Nombre max de résultats (défaut 10).</td>
+</tr>
+<tr>
+<td><code>theme</code></td>
+<td><code>string</code></td>
+<td>Non</td>
+<td><code>theme</code></td>
+<td>Filtrer sur le thème.</td>
+</tr>
+<tr>
+<td><code>document_type</code></td>
+<td><code>string</code></td>
+<td>Non</td>
+<td><code>documentType</code></td>
+<td>Filtrer sur le type de document.</td>
+</tr>
+<tr>
+<td><code>start_date</code></td>
+<td><code>date</code></td>
+<td>Non</td>
+<td><code>startDate</code></td>
+<td>Filtrer date ≥.</td>
+</tr>
+<tr>
+<td><code>end_date</code></td>
+<td><code>date</code></td>
+<td>Non</td>
+<td><code>endDate</code></td>
+<td>Filtrer date ≤.</td>
+</tr>
+<tr>
+<td><code>corpus_id</code></td>
+<td><code>string</code></td>
+<td>Non</td>
+<td><code>corpusId</code></td>
+<td>Filtrer sur l’UUID de corpus.</td>
+</tr>
+<tr>
+<td><code>hierarchical</code></td>
+<td><code>boolean</code></td>
+<td>Non</td>
+<td><code>hierarchical</code></td>
+<td><code>true</code> pour renvoyer le contexte hiérarchique.</td>
+</tr>
+<tr>
+<td><code>hierarchy_level</code></td>
+<td><code>integer</code></td>
+<td>Non</td>
+<td><code>hierarchyLevel</code></td>
+<td>Filtrer un niveau précis (0–3).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="searchresponse">SearchResponse</h2>
+<p>Réponse complète du moteur de recherche.</p>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Type</th>
+<th>Requis</th>
+<th>Alias</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>query</code></td>
+<td><code>string</code></td>
+<td>Oui</td>
+<td><code>query</code></td>
+<td>Texte de la requête.</td>
+</tr>
+<tr>
+<td><code>top_k</code></td>
+<td><code>integer</code></td>
+<td>Oui</td>
+<td><code>topK</code></td>
+<td>Nombre de résultats retournés.</td>
+</tr>
+<tr>
+<td><code>total_results</code></td>
+<td><code>integer</code></td>
+<td>Oui</td>
+<td><code>totalResults</code></td>
+<td>Nombre total de résultats trouvés.</td>
+</tr>
+<tr>
+<td><code>results</code></td>
+<td><code>ChunkResult[]</code></td>
+<td>Oui</td>
+<td><code>results</code></td>
+<td>Liste des chunks classés.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="indexstatus">IndexStatus</h2>
+<p>Statut d’indexation d’un corpus.</p>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Type</th>
+<th>Requis</th>
+<th>Alias</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>corpus_id</code></td>
+<td><code>string</code></td>
+<td>Oui</td>
+<td><code>corpusId</code></td>
+<td>UUID du corpus interrogé.</td>
+</tr>
+<tr>
+<td><code>index_exists</code></td>
+<td><code>boolean</code></td>
+<td>Oui</td>
+<td><code>indexExists</code></td>
+<td><code>true</code> si l’index physique existe en base.</td>
+</tr>
+<tr>
+<td><code>config_exists</code></td>
+<td><code>boolean</code></td>
+<td>Oui</td>
+<td><code>configExists</code></td>
+<td><code>true</code> si la config SQLAlchemy (<code>IndexConfig</code>) existe.</td>
+</tr>
+<tr>
+<td><code>is_indexed</code></td>
+<td><code>boolean</code></td>
+<td>Oui</td>
+<td><code>isIndexed</code></td>
+<td><code>true</code> si la config est marquée indexée.</td>
+</tr>
+<tr>
+<td><code>index_type</code></td>
+<td><code>string</code></td>
+<td>Non</td>
+<td><code>indexType</code></td>
+<td>Type d’index (<code>ivfflat</code>, <code>hnsw</code>).</td>
+</tr>
+<tr>
+<td><code>chunk_count</code></td>
+<td><code>integer</code></td>
+<td>Oui</td>
+<td><code>chunkCount</code></td>
+<td>Nombre total de chunks dans le corpus.</td>
+</tr>
+<tr>
+<td><code>indexed_chunks</code></td>
+<td><code>integer</code></td>
+<td>Oui</td>
+<td><code>indexedChunks</code></td>
+<td>Nombre de chunks effectivement indexés.</td>
+</tr>
+<tr>
+<td><code>last_indexed</code></td>
+<td><code>date</code></td>
+<td>Non</td>
+<td><code>lastIndexed</code></td>
+<td>Date du dernier index (ou <code>null</code>).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<blockquote>
+<p>Tous les modèles se trouvent dans <code>vectordb/src/schemas.py</code>&#x20;
+Dernière mise à jour : <strong>03 mai 2025</strong>.</p>
+</blockquote>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../database/" class="btn btn-neutral float-left" title="Base de données"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../lib/doc_loader/extractor_lib/" class="btn btn-neutral float-right" title="Extracteurs">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../database/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../lib/doc_loader/extractor_lib/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

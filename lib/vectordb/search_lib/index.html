@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>Recherche hybride - Cléa-API Documentation</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../../css/mkdocsoad.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Recherche hybride";
+        var mkdocs_page_input_path = "lib/vectordb/search_lib.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Cléa-API Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../home/">Accueil</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../main/">Introduction</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../database/">Base de données</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../schemas/">Schémas</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Documentation des librairies</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../doc_loader/extractor_lib/">Extracteurs</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../doc_loader/splitter_lib/">Segmentation</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../pipeline/pipeline_lib/">Pipeline end-to-end</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" >vectordb</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" href="../crud_lib/">Opérations CRUD</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../index_lib/">Indexation vectorielle</a>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" href="#">Recherche hybride</a>
+    <ul class="current">
+    <li class="toctree-l3"><a class="reference internal" href="#table-des-matieres">Table des matières</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#installation">Installation</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#modeles-schemas">Modèles (schemas)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#classe-searchengine">Classe SearchEngine&#x20;</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#constructeur">Constructeur</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#methode-hybrid_search">Méthode hybrid_search</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#methode-privee-_build_sql">Méthode privée _build_sql</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#methode-privee-_get_context">Méthode privée _get_context</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#exemple-dutilisation">Exemple d’utilisation</a>
+    </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Références API</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >REST API</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../../api/rest/rest_api/">Documentation Swagger</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Références Python</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/doc_loader/extractor_references/">Extracteurs</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/doc_loader/splitter_references/">Segmentation</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/pipeline/pipeline_references/">Pipeline</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/vectordb/crud_references/">CRUD</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/vectordb/index_references/">Indexation</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/vectordb/search_references/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Intégrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >JavaScript / TypeScript</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/doc_loader/doc_loader_js/">Extraction de documents</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/pipeline/pipeline_js/">Pipeline end-to-end</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/vectordb/crud_js/">Opérations CRUD</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/vectordb/index_js/">Indexation</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/vectordb/search_js/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Cléa-API Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Documentation des librairies</li>
+          <li class="breadcrumb-item">vectordb</li>
+      <li class="breadcrumb-item active">Recherche hybride</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <p><strong>Génération de la documentation</strong></p>
+<p>L'utilisateur veut que je génère la documentation pour un module <code>search.py</code>. Je vais rédiger la doc en format Markdown pour décrire les fonctions, classes et méthodes principales du moteur de recherche, comme <code>SearchEngine</code>, avec ses méthodes <code>__init__</code>, <code>hybrid_search</code>, <code>_build_sql</code> et <code>_get_context</code>. Je vais inclure des descriptions, des exemples, des paramètres et les valeurs de retour. Je vais aussi vérifier si les schémas Pydantic sont à intégrer dans cette documentation, en particulier <code>SearchRequest</code>, <code>SearchResponse</code>, <code>ChunkResult</code>, et <code>HierarchicalContext</code>.</p>
+<p>Réflexion durant 6 secondes</p>
+<h1 id="module-search-hybrid-semantic-metadata-search">Module <strong>search</strong> (Hybrid Semantic / Metadata Search)</h1>
+<p>Ce module implémente un moteur de recherche hybride combinant filtres SQL, similarité vectorielle (pgvector) et rerank via Cross-Encoder.</p>
+<hr />
+<h2 id="table-des-matieres">Table des matières</h2>
+<ol>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#modèles-schemas">Modèles (schemas)</a></li>
+<li>
+<p><a href="#classe-searchengine">Classe <code>SearchEngine</code></a></p>
+</li>
+<li>
+<p><a href="#constructeur">Constructeur</a></p>
+</li>
+<li><a href="#méthode-hybrid_search">Méthode <code>hybrid_search</code></a></li>
+<li><a href="#méthode-privée-_build_sql">Méthode privée <code>_build_sql</code></a></li>
+<li><a href="#méthode-privée-_get_context">Méthode privée <code>_get_context</code></a></li>
+<li><a href="#exemple-dutilisation">Exemple d’utilisation</a></li>
+</ol>
+<hr />
+<h2 id="installation">Installation</h2>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>clea_vectordb<span class="w">  </span><span class="c1"># ou via votre setup.py/pyproject.toml</span>
+</code></pre></div>
+<hr />
+<h2 id="modeles-schemas">Modèles (schemas)</h2>
+<p>Les Pydantic schemas utilisés par le moteur se trouvent dans <code>vectordb/src/schemas.py</code> :</p>
+<ul>
+<li><strong><code>SearchRequest</code></strong> : paramètres de la recherche (requête, filtres, pagination, etc.).</li>
+<li><strong><code>ChunkResult</code></strong> : un chunk renvoyé (camelCase).</li>
+<li><strong><code>HierarchicalContext</code></strong> : contexte parent (niveaux 0–2).</li>
+<li><strong><code>SearchResponse</code></strong> : enveloppe de réponse (requête, total, liste des <code>ChunkResult</code>).</li>
+</ul>
+<blockquote>
+<p>Pour la définition détaillée de ces schémas, référez-vous à la section <strong>Components → Schemas</strong> dans votre OpenAPI/Swagger.</p>
+</blockquote>
+<hr />
+<h2 id="classe-searchengine">Classe <code>SearchEngine</code>&#x20;</h2>
+<h3 id="constructeur">Constructeur</h3>
+<div class="highlight"><pre><span></span><code><span class="n">engine</span> <span class="o">=</span> <span class="n">SearchEngine</span><span class="p">()</span>
+</code></pre></div>
+<ul>
+<li>
+<p><strong>Initialise</strong> :</p>
+</li>
+<li>
+<p>un générateur d’embeddings (<code>EmbeddingGenerator</code>)</p>
+</li>
+<li>un ranker Cross-Encoder (<code>ResultRanker</code>)</li>
+</ul>
+<h3 id="methode-hybrid_search">Méthode <code>hybrid_search</code></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">hybrid_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="n">req</span><span class="p">:</span> <span class="n">SearchRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SearchResponse</span><span class="p">:</span>
+    <span class="o">...</span>
+</code></pre></div>
+<ul>
+<li>
+<p><strong>Arguments</strong></p>
+</li>
+<li>
+<p><code>db: Session</code> – session SQLAlchemy</p>
+</li>
+<li>
+<p><code>req: SearchRequest</code> – paramètres de la recherche</p>
+</li>
+<li>
+<p><strong>Fonctionnement</strong></p>
+</li>
+<li>
+<p>Génère l’embedding de la requête.</p>
+</li>
+<li>Monte la requête SQL pour ANN + métadonnées (via <code>_build_sql</code>).</li>
+<li>Exécute <code>db.execute(text(sql), params)</code>.</li>
+<li>Si pas de résultat, renvoie un <code>SearchResponse</code> vide.</li>
+<li>Rerank les top <em>k × 3</em> résultats avec un Cross-Encoder.</li>
+<li>Construit la liste finale de <code>ChunkResult</code>, en récupérant le contexte hiérarchique si <code>req.hierarchical=True</code>.</li>
+<li>
+<p>Renvoie un <code>SearchResponse(query, topK, totalResults, results)</code> .</p>
+</li>
+<li>
+<p><strong>Retour</strong></p>
+</li>
+<li>
+<p><code>SearchResponse</code> contenant :</p>
+<ul>
+<li><code>query</code> (str)</li>
+<li><code>topK</code> (int)</li>
+<li><code>totalResults</code> (int)</li>
+<li><code>results</code> (<code>List[ChunkResult]</code>)</li>
+</ul>
+</li>
+</ul>
+<h3 id="methode-privee-_build_sql">Méthode privée <code>_build_sql</code></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_build_sql</span><span class="p">(</span><span class="n">req</span><span class="p">:</span> <span class="n">SearchRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+    <span class="o">...</span>
+</code></pre></div>
+<ul>
+<li><strong>But</strong> : assembler dynamiquement la clause <code>WHERE</code> SQL selon les filtres de <code>req</code></li>
+<li>
+<p><strong>Filtres gérés</strong> :</p>
+</li>
+<li>
+<p><code>theme</code>, <code>document_type</code></p>
+</li>
+<li>plage <code>start_date</code>–<code>end_date</code></li>
+<li><code>corpus_id</code></li>
+<li><code>hierarchy_level</code></li>
+<li><strong>Structure</strong> :</li>
+</ul>
+<p><div class="highlight"><pre><span></span><code><span class="k">WITH</span><span class="w"> </span><span class="n">ranked</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="k">SELECT</span><span class="w"> </span><span class="err">…</span><span class="p">,</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">embedding</span><span class="w"> </span><span class="o">&lt;=&gt;</span><span class="w"> </span><span class="p">(:</span><span class="n">query_embedding</span><span class="p">)::</span><span class="n">vector</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">distance</span>
+<span class="w">  </span><span class="k">FROM</span><span class="w"> </span><span class="n">chunks</span><span class="w"> </span><span class="k">c</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">documents</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="err">…</span>
+<span class="w">  </span><span class="k">WHERE</span><span class="w"> </span><span class="mi">1</span><span class="o">=</span><span class="mi">1</span>
+<span class="w">    </span><span class="p">[</span><span class="k">AND</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">theme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">:</span><span class="n">theme</span><span class="p">]</span>
+<span class="w">    </span><span class="p">[</span><span class="k">AND</span><span class="w"> </span><span class="err">…</span><span class="p">]</span>
+<span class="w">  </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">distance</span>
+<span class="w">  </span><span class="k">LIMIT</span><span class="w"> </span><span class="p">:</span><span class="n">expanded_limit</span>
+<span class="p">)</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">ranked</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">distance</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="p">:</span><span class="n">top_k</span><span class="p">;</span>
+</code></pre></div>
+* <strong>Retour</strong> : tuple <code>(sql: str, params: dict)</code> .</p>
+<h3 id="methode-privee-_get_context">Méthode privée <code>_get_context</code></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_context</span><span class="p">(</span><span class="n">db</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="n">chunk_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">HierarchicalContext</span><span class="p">]:</span>
+    <span class="o">...</span>
+</code></pre></div>
+<ul>
+<li><strong>But</strong> : pour un chunk donné, remonter récursivement ses parents (niveaux 0–2)</li>
+<li><strong>Retour</strong> : instanciation de <code>HierarchicalContext</code> ou <code>None</code> si pas de parent .</li>
+</ul>
+<hr />
+<h2 id="exemple-dutilisation">Exemple d’utilisation</h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_engine</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy.orm</span><span class="w"> </span><span class="kn">import</span> <span class="n">sessionmaker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">vectordb.src.search</span><span class="w"> </span><span class="kn">import</span> <span class="n">SearchEngine</span><span class="p">,</span> <span class="n">SearchRequest</span>
+
+<span class="c1"># 1. Préparer la session</span>
+<span class="n">engine_db</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s2">&quot;postgresql://…&quot;</span><span class="p">)</span>
+<span class="n">SessionLocal</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">engine_db</span><span class="p">)</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">SessionLocal</span><span class="p">()</span>
+
+<span class="c1"># 2. Instancier le SearchEngine</span>
+<span class="n">searcher</span> <span class="o">=</span> <span class="n">SearchEngine</span><span class="p">()</span>
+
+<span class="c1"># 3. Construire la requête</span>
+<span class="n">req</span> <span class="o">=</span> <span class="n">SearchRequest</span><span class="p">(</span>
+    <span class="n">query</span><span class="o">=</span><span class="s2">&quot;analyse risques climatiques&quot;</span><span class="p">,</span>
+    <span class="n">top_k</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">theme</span><span class="o">=</span><span class="s2">&quot;RSE&quot;</span><span class="p">,</span>
+    <span class="n">corpus_id</span><span class="o">=</span><span class="s2">&quot;0207a0ec-394b-475f-912e-edf0315f6fa3&quot;</span><span class="p">,</span>
+    <span class="n">hierarchical</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># 4. Exécuter la recherche</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">searcher</span><span class="o">.</span><span class="n">hybrid_search</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">req</span><span class="p">)</span>
+
+<span class="c1"># 5. Parcourir les résultats</span>
+<span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">results</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">chunk</span><span class="o">.</span><span class="n">score</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">chunk</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">chunk</span><span class="o">.</span><span class="n">content</span><span class="p">[:</span><span class="mi">60</span><span class="p">]</span><span class="si">}</span><span class="s2">…&quot;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<blockquote>
+<p><strong>Voir aussi</strong> : les <strong>endpoints</strong> FastAPI dans <code>search_endpoint.py</code>
+– <code>POST /search/hybrid_search</code> → renvoie <code>List[ChunkResult]</code> .</p>
+</blockquote>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../index_lib/" class="btn btn-neutral float-left" title="Indexation vectorielle"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../../api/rest/rest_api/" class="btn btn-neutral float-right" title="Documentation Swagger">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../index_lib/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../../api/rest/rest_api/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+      <script src="../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

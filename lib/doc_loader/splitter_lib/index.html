@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>Segmentation - Cléa-API Documentation</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../../css/mkdocsoad.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Segmentation";
+        var mkdocs_page_input_path = "lib/doc_loader/splitter_lib.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Cléa-API Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../home/">Accueil</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../main/">Introduction</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../database/">Base de données</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../schemas/">Schémas</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Documentation des librairies</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" >doc_loader</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" href="../extractor_lib/">Extracteurs</a>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" href="#">Segmentation</a>
+    <ul class="current">
+    <li class="toctree-l3"><a class="reference internal" href="#table-des-matieres">Table des matières</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#1-constantes-globales">1. Constantes globales</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2-segmentation-principale-segmentationpy">2. Segmentation principale (segmentation.py)</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#semantic_segmentation_streamtext-str-max_length-int-iteratorchunkcreate">semantic_segmentation_stream(text: str, max_length: int) → Iterator[ChunkCreate]</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#_semantic_segmentationtext-str-max_length-int-listchunkcreate">_semantic_segmentation(text: str, max_length: int) → List[ChunkCreate]</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#fallback_segmentation_streamtext-str-max_length-int-iteratorchunkcreate">fallback_segmentation_stream(text: str, max_length: int) → Iterator[ChunkCreate]</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#_fallback_segmentationtext-str-max_length-int-listchunkcreate">_fallback_segmentation(text: str, max_length: int) → List[ChunkCreate]</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#3-extraction-semantique-text_analysispy">3. Extraction sémantique (text_analysis.py)</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#_extract_semantic_sectionstext-str-max_sections-int-20-listdict">_extract_semantic_sections(text: str, max_sections: int = 20) → List[Dict]</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#_extract_semantic_paragraphstext-str-base_offset-int-0-max_paragraphs-int-20-listdict">_extract_semantic_paragraphs(text: str, base_offset: int = 0, max_paragraphs: int = 20) → List[Dict]</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#_create_semantic_chunkstext-str-max_length-int-min_overlap-int-50-base_offset-int-0-max_chunks-int-20-listdict">_create_semantic_chunks(text: str, max_length: int, min_overlap: int = 50, base_offset: int = 0, max_chunks: int = 20) → List[Dict]</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#4-utilitaires-texte-text_utilspy">4. Utilitaires texte (text_utils.py)</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#_get_meaningful_previewtext-str-max_length-int-str">_get_meaningful_preview(text: str, max_length: int) → str</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#is_sentence_boundarytext-str-pos-int-bool">is_sentence_boundary(text: str, pos: int) → bool</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#find_paragraph_boundariestext-str-listint">find_paragraph_boundaries(text: str) → List[int]</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#5-exemple-dutilisation">5. Exemple d'utilisation</a>
+    </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../pipeline/pipeline_lib/">Pipeline end-to-end</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../vectordb/crud_lib/">Opérations CRUD</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../vectordb/index_lib/">Indexation vectorielle</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../vectordb/search_lib/">Recherche hybride</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Références API</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >REST API</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../../api/rest/rest_api/">Documentation Swagger</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Références Python</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/doc_loader/extractor_references/">Extracteurs</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/doc_loader/splitter_references/">Segmentation</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/pipeline/pipeline_references/">Pipeline</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/vectordb/crud_references/">CRUD</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/vectordb/index_references/">Indexation</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/vectordb/search_references/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Intégrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >JavaScript / TypeScript</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/doc_loader/doc_loader_js/">Extraction de documents</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/pipeline/pipeline_js/">Pipeline end-to-end</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/vectordb/crud_js/">Opérations CRUD</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/vectordb/index_js/">Indexation</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/vectordb/search_js/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Cléa-API Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Documentation des librairies</li>
+          <li class="breadcrumb-item">doc_loader</li>
+      <li class="breadcrumb-item active">Segmentation</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="librairie-splitter">Librairie <strong>splitter</strong></h1>
+<p>Ce module fournit des algorithmes de segmentation hiérarchique et sémantique de textes, avec des stratégies de secours pour les corpus non structurés. Il est conçu pour découper efficacement de grands documents en <strong>chunks</strong> exploitables par le pipeline d'indexation vectorielle.</p>
+<hr />
+<h2 id="table-des-matieres">Table des matières</h2>
+<ol>
+<li>Constantes globales  </li>
+<li>Segmentation principale  </li>
+<li><code>semantic_segmentation_stream</code>  </li>
+<li><code>_semantic_segmentation</code>  </li>
+<li><code>fallback_segmentation_stream</code>  </li>
+<li><code>_fallback_segmentation</code>  </li>
+<li>Extraction sémantique  </li>
+<li><code>_extract_semantic_sections</code>  </li>
+<li><code>_extract_semantic_paragraphs</code>  </li>
+<li><code>_create_semantic_chunks</code>  </li>
+<li>Utilitaires texte  </li>
+<li><code>_get_meaningful_preview</code>  </li>
+<li><code>is_sentence_boundary</code>  </li>
+<li><code>find_paragraph_boundaries</code>  </li>
+<li>Exemple d'utilisation  </li>
+</ol>
+<hr />
+<h2 id="1-constantes-globales">1. Constantes globales</h2>
+<p>Définissent les paramètres limites pour le découpage et le mode de fonctionnement "stream" ou "fallback".</p>
+<table>
+<thead>
+<tr>
+<th>Constante</th>
+<th>Valeur</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>THRESHOLD_LARGE</code></td>
+<td>5 000 000</td>
+<td>Seuil (en octets) pour basculer en mode "stream" sur gros fichiers</td>
+</tr>
+<tr>
+<td><code>MAX_CHUNKS</code></td>
+<td>5 000</td>
+<td>Nombre max de chunks générés</td>
+</tr>
+<tr>
+<td><code>MAX_TEXT_LENGTH</code></td>
+<td>20 000 000</td>
+<td>Longueur texte max supportée</td>
+</tr>
+<tr>
+<td><code>MAX_CHUNK_SIZE</code></td>
+<td>8 000</td>
+<td>Taille max d'un chunk (chars)</td>
+</tr>
+<tr>
+<td><code>MIN_LEVEL3_LENGTH</code></td>
+<td>200</td>
+<td>Seuil min pour chunks niveau 3</td>
+</tr>
+<tr>
+<td><code>MAX_LEVEL3_CHUNKS</code></td>
+<td>100</td>
+<td>Nombre max de sous-chunks niveau 3 par paragraphe</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-segmentation-principale-segmentationpy">2. Segmentation principale (<code>segmentation.py</code>)</h2>
+<h3 id="semantic_segmentation_streamtext-str-max_length-int-iteratorchunkcreate"><code>semantic_segmentation_stream(text: str, max_length: int) → Iterator[ChunkCreate]</code></h3>
+<p><strong>Description:</strong>
+Réalise un découpage sémantique hiérarchique en 4 niveaux (0-3) avec gestion optimisée de la mémoire.</p>
+<p><strong>Args:</strong></p>
+<ul>
+<li>text: Texte source à segmenter</li>
+<li>max_length: Longueur maximale souhaitée des chunks</li>
+</ul>
+<p><strong>Yields:</strong></p>
+<ul>
+<li>Objets ChunkCreate générés séquentiellement (mode streaming)</li>
+</ul>
+<p><strong>Étapes:</strong></p>
+<ol>
+<li>Chunk racine (niveau 0)  </li>
+<li>Sections sémantiques (niv. 1) via <code>_extract_semantic_sections</code>  </li>
+<li>Paragraphes (niv. 2) via <code>_extract_semantic_paragraphs</code>  </li>
+<li>Sous-chunks (niv. 3) via <code>_create_semantic_chunks</code>  </li>
+</ol>
+<p><strong>Sécurité:</strong></p>
+<ul>
+<li>Évite les duplications</li>
+<li>S'arrête à <code>MAX_CHUNKS</code></li>
+</ul>
+<h3 id="_semantic_segmentationtext-str-max_length-int-listchunkcreate"><code>_semantic_segmentation(text: str, max_length: int) → List[ChunkCreate]</code></h3>
+<p><strong>Description:</strong>
+Retourne la liste complète des chunks en utilisant le générateur <code>semantic_segmentation_stream</code>.</p>
+<p><strong>Args:</strong></p>
+<ul>
+<li>text: Texte source à segmenter</li>
+<li>max_length: Longueur maximale souhaitée des chunks</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul>
+<li>Liste des chunks générés, limitée à <code>MAX_CHUNKS</code></li>
+</ul>
+<h3 id="fallback_segmentation_streamtext-str-max_length-int-iteratorchunkcreate"><code>fallback_segmentation_stream(text: str, max_length: int) → Iterator[ChunkCreate]</code></h3>
+<p><strong>Description:</strong>
+Méthode de segmentation de secours robuste pour textes non structurés.</p>
+<p><strong>Args:</strong></p>
+<ul>
+<li>text: Texte source à segmenter</li>
+<li>max_length: Longueur maximale souhaitée des chunks</li>
+</ul>
+<p><strong>Yields:</strong></p>
+<ul>
+<li>Objets ChunkCreate générés séquentiellement</li>
+</ul>
+<p><strong>Stratégie:</strong></p>
+<ol>
+<li>Chunk racine (aperçu)  </li>
+<li>Segments glissants de taille <code>min(max_length*2, MAX_CHUNK_SIZE)</code>  </li>
+<li>Tentatives de coupure naturelle (phrases, paragraphes)  </li>
+<li>Chevauchement d'environ 10%</li>
+</ol>
+<h3 id="_fallback_segmentationtext-str-max_length-int-listchunkcreate"><code>_fallback_segmentation(text: str, max_length: int) → List[ChunkCreate]</code></h3>
+<p><strong>Description:</strong>
+Retourne la segmentation complète des chunks produits par <code>fallback_segmentation_stream</code>.</p>
+<p><strong>Args:</strong></p>
+<ul>
+<li>text: Texte source à segmenter</li>
+<li>max_length: Longueur maximale souhaitée des chunks</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul>
+<li>Liste des chunks générés, limitée à <code>MAX_CHUNKS</code></li>
+</ul>
+<hr />
+<h2 id="3-extraction-semantique-text_analysispy">3. Extraction sémantique (<code>text_analysis.py</code>)</h2>
+<h3 id="_extract_semantic_sectionstext-str-max_sections-int-20-listdict"><code>_extract_semantic_sections(text: str, max_sections: int = 20) → List[Dict]</code></h3>
+<p><strong>Description:</strong>
+Identifie les sections sémantiques dans un texte.</p>
+<p><strong>Args:</strong></p>
+<ul>
+<li>text: Texte à analyser</li>
+<li>max_sections: Nombre maximal de sections à extraire</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul>
+<li>Liste de dictionnaires <code>[{title, content, start_char, end_char}, ...]</code></li>
+</ul>
+<p><strong>Méthode:</strong></p>
+<ul>
+<li>Détecte titres formels (Markdown, soulignés) puis séparateurs naturels (sauts de ligne multiples)</li>
+<li>Si insuffisant, découpe artificiellement en blocs</li>
+</ul>
+<h3 id="_extract_semantic_paragraphstext-str-base_offset-int-0-max_paragraphs-int-20-listdict"><code>_extract_semantic_paragraphs(text: str, base_offset: int = 0, max_paragraphs: int = 20) → List[Dict]</code></h3>
+<p><strong>Description:</strong>
+Divise un texte en paragraphes sémantiques.</p>
+<p><strong>Args:</strong></p>
+<ul>
+<li>text: Texte à analyser</li>
+<li>base_offset: Décalage de caractères à appliquer dans le document original</li>
+<li>max_paragraphs: Nombre maximal de paragraphes à extraire</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul>
+<li>Liste de dictionnaires <code>[{content, start_char, end_char}, ...]</code></li>
+</ul>
+<p><strong>Méthode:</strong></p>
+<ul>
+<li>Sépare sur <code>\n\n</code></li>
+<li>Si trop peu de blocs, découpes par phrases ou artificiellement</li>
+<li>Regroupe petits blocs pour cohérence</li>
+</ul>
+<h3 id="_create_semantic_chunkstext-str-max_length-int-min_overlap-int-50-base_offset-int-0-max_chunks-int-20-listdict"><code>_create_semantic_chunks(text: str, max_length: int, min_overlap: int = 50, base_offset: int = 0, max_chunks: int = 20) → List[Dict]</code></h3>
+<p><strong>Description:</strong>
+Crée des chunks sémantiques à partir d'un texte.</p>
+<p><strong>Args:</strong></p>
+<ul>
+<li>text: Texte à découper</li>
+<li>max_length: Longueur maximale d'un chunk</li>
+<li>min_overlap: Chevauchement minimal entre chunks consécutifs</li>
+<li>base_offset: Décalage de caractères à appliquer dans le document original</li>
+<li>max_chunks: Nombre maximal de chunks à générer</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul>
+<li>Liste de dictionnaires <code>[{content, start_char, end_char}, ...]</code></li>
+</ul>
+<p><strong>Méthode:</strong></p>
+<ul>
+<li>Découpage sur frontières de phrases ou paragraphes</li>
+<li>Ajustement de <code>effective_max</code> et <code>effective_overlap</code> selon longueur du texte</li>
+</ul>
+<hr />
+<h2 id="4-utilitaires-texte-text_utilspy">4. Utilitaires texte (<code>text_utils.py</code>)</h2>
+<h3 id="_get_meaningful_previewtext-str-max_length-int-str"><code>_get_meaningful_preview(text: str, max_length: int) → str</code></h3>
+<p><strong>Description:</strong>
+Extrait un aperçu significatif d'un texte.</p>
+<p><strong>Args:</strong></p>
+<ul>
+<li>text: Texte source</li>
+<li>max_length: Longueur maximale de l'aperçu</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul>
+<li>Aperçu combinant début, phrases clés et fin du texte</li>
+</ul>
+<p><strong>Méthode:</strong></p>
+<ol>
+<li>Extrait du début du texte  </li>
+<li>Sélectionne phrases clés du milieu (contenant: "essentiel", "clé", etc.)  </li>
+<li>Inclut la fin du texte</li>
+</ol>
+<h3 id="is_sentence_boundarytext-str-pos-int-bool"><code>is_sentence_boundary(text: str, pos: int) → bool</code></h3>
+<p><strong>Description:</strong>
+Vérifie si une position donnée correspond à une frontière de phrase.</p>
+<p><strong>Args:</strong></p>
+<ul>
+<li>text: Texte à analyser</li>
+<li>pos: Position à vérifier</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul>
+<li>True si la position marque une fin de phrase, False sinon</li>
+</ul>
+<p><strong>Critères:</strong>
+Présence de <code>. ! ?</code> suivi d'un espace ou de la fin de chaîne.</p>
+<h3 id="find_paragraph_boundariestext-str-listint"><code>find_paragraph_boundaries(text: str) → List[int]</code></h3>
+<p><strong>Description:</strong>
+Identifie les positions de début de chaque paragraphe.</p>
+<p><strong>Args:</strong></p>
+<ul>
+<li>text: Texte à analyser</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul>
+<li>Liste des indices de début de paragraphe</li>
+</ul>
+<p><strong>Méthode:</strong>
+Détection des séparations de type <code>\n\s*\n</code>.</p>
+<hr />
+<h2 id="5-exemple-dutilisation">5. Exemple d'utilisation</h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">splitter.segmentation</span><span class="w"> </span><span class="kn">import</span> <span class="n">semantic_segmentation_stream</span><span class="p">,</span> <span class="n">fallback_segmentation_stream</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;mon_document.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+<span class="c1"># 1. Segmentation sémantique (recommandée)</span>
+<span class="n">chunks</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">semantic_segmentation_stream</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">1000</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span><span class="si">}</span><span class="s2"> chunks générés (niveaux 0–3)&quot;</span><span class="p">)</span>
+
+<span class="c1"># 2. Fallback si échec ou corpus simple</span>
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="n">chunks</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">fallback_segmentation_stream</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">800</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fallback : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span><span class="si">}</span><span class="s2"> chunks générés&quot;</span><span class="p">)</span>
+</code></pre></div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../extractor_lib/" class="btn btn-neutral float-left" title="Extracteurs"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../pipeline/pipeline_lib/" class="btn btn-neutral float-right" title="Pipeline end-to-end">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../extractor_lib/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../pipeline/pipeline_lib/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+      <script src="../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>Opérations CRUD - Cléa-API Documentation</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../../css/mkdocsoad.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Op\u00e9rations CRUD";
+        var mkdocs_page_input_path = "lib/vectordb/crud_lib.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Cléa-API Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../home/">Accueil</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../main/">Introduction</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../database/">Base de données</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../schemas/">Schémas</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Documentation des librairies</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../doc_loader/extractor_lib/">Extracteurs</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../doc_loader/splitter_lib/">Segmentation</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../pipeline/pipeline_lib/">Pipeline end-to-end</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" >vectordb</a>
+    <ul class="current">
+                <li class="toctree-l2 current"><a class="reference internal current" href="#">Opérations CRUD</a>
+    <ul class="current">
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../index_lib/">Indexation vectorielle</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../search_lib/">Recherche hybride</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Références API</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >REST API</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../../api/rest/rest_api/">Documentation Swagger</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Références Python</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/doc_loader/extractor_references/">Extracteurs</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/doc_loader/splitter_references/">Segmentation</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/pipeline/pipeline_references/">Pipeline</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/vectordb/crud_references/">CRUD</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/vectordb/index_references/">Indexation</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/vectordb/search_references/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Intégrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >JavaScript / TypeScript</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/doc_loader/doc_loader_js/">Extraction de documents</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/pipeline/pipeline_js/">Pipeline end-to-end</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/vectordb/crud_js/">Opérations CRUD</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/vectordb/index_js/">Indexation</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/vectordb/search_js/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Cléa-API Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Documentation des librairies</li>
+          <li class="breadcrumb-item">vectordb</li>
+      <li class="breadcrumb-item active">Opérations CRUD</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <p>Réflexion durant 4 secondes</p>
+<div class="highlight"><pre><span></span><code><span class="gh"># Module `crud`</span>
+
+Ce module fournit des opérations CRUD de haut niveau sur les entités <span class="gs">**Document**</span>, <span class="gs">**Chunk**</span> et <span class="gs">**IndexConfig**</span>, avec gestion des embeddings et des index pgvector.  
+
+Fichier source : <span class="sb">`vectordb/src/crud.py`</span> :contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}
+
+---
+
+<span class="gu">## Installation</span>
+
+Ce module est inclus dans le package <span class="sb">`vectordb`</span>. Pour l’installer :
+
+```bash
+pip install vectordb
+</code></pre></div>
+<hr />
+<h2 id="table-des-matieres">Table des matières</h2>
+<ol>
+<li><a href="#add_document_with_chunks">add_document_with_chunks</a></li>
+<li><a href="#update_document_with_chunks">update_document_with_chunks</a></li>
+<li><a href="#delete_document_chunks">delete_document_chunks</a></li>
+<li><a href="#delete_document">delete_document</a></li>
+</ol>
+<hr />
+<p><a name="add_document_with_chunks"></a></p>
+<h2 id="1-add_document_with_chunksdb-doc-chunks-batch_size10-dictstr-any">1. <code>add_document_with_chunks(db, doc, chunks, batch_size=10) → Dict[str, Any]</code></h2>
+<p>Ajoute un <strong>document</strong> et ses <strong>chunks</strong> en base, génère les embeddings en lot, et gère la configuration de l’index.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy.orm</span><span class="w"> </span><span class="kn">import</span> <span class="n">Session</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">vectordb.src.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">DocumentCreate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">vectordb.src.crud</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_document_with_chunks</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">add_document_with_chunks</span><span class="p">(</span><span class="n">db</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="n">doc</span><span class="p">:</span> <span class="n">DocumentCreate</span><span class="p">,</span> <span class="n">chunks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="description">Description</h3>
+<ul>
+<li>Génère <code>corpus_id</code> si manquant.</li>
+<li>Insère le document (<code>Document</code>) avec un flag <code>index_needed</code>.</li>
+<li>
+<p>Pour chaque lot de <code>batch_size</code> chunks :</p>
+</li>
+<li>
+<p>Calcule les embeddings via <code>EmbeddingGenerator.generate_embeddings_batch</code>.</p>
+</li>
+<li>Insère les objets <code>Chunk</code> (avec flush intermédiaires).</li>
+<li>Construit les relations parent↔enfant.</li>
+<li>Met à jour ou crée la configuration d’index (<code>IndexConfig</code>).</li>
+<li>Commit ou rollback en cas d’erreur.</li>
+</ul>
+<h3 id="parametres">Paramètres</h3>
+<table>
+<thead>
+<tr>
+<th>Nom</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>db</code></td>
+<td><code>Session</code></td>
+<td>Session SQLAlchemy active.</td>
+</tr>
+<tr>
+<td><code>doc</code></td>
+<td><code>DocumentCreate</code></td>
+<td>Métadonnées du document à créer.</td>
+</tr>
+<tr>
+<td><code>chunks</code></td>
+<td><code>List[dict]</code></td>
+<td>Liste de chunks <code>{ content, hierarchy_level, ... }</code>.</td>
+</tr>
+<tr>
+<td><code>batch_size</code></td>
+<td><code>int</code> (défaut 10)</td>
+<td>Taille des sous-lots pour la génération d’embeddings.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="retour">Retour</h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;document_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">i</span><span class="kc">nt</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;chunks&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">i</span><span class="kc">nt</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;corpus_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">s</span><span class="kc">tr</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;index_needed&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">bool</span>
+<span class="p">}</span>
+</code></pre></div>
+<ul>
+<li><code>index_needed = True</code> si un nouvel index doit être (re)créé.&#x20;</li>
+</ul>
+<hr />
+<p><a name="update_document_with_chunks"></a></p>
+<h2 id="2-update_document_with_chunksdocument_update-new_chunksnone-dictstr-any">2. <code>update_document_with_chunks(document_update, new_chunks=None) → Dict[str, Any]</code></h2>
+<p>Met à jour un document existant et ajoute éventuellement de nouveaux chunks.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">vectordb.src.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">DocumentUpdate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">vectordb.src.crud</span><span class="w"> </span><span class="kn">import</span> <span class="n">update_document_with_chunks</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">update_document_with_chunks</span><span class="p">(</span>
+    <span class="n">document_update</span><span class="p">:</span> <span class="n">DocumentUpdate</span><span class="p">,</span>
+    <span class="n">new_chunks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span>  <span class="c1"># facultatif</span>
+<span class="p">)</span>
+</code></pre></div>
+<h3 id="description_1">Description</h3>
+<ul>
+<li>Charge le <code>Document</code> par son <code>id</code>.</li>
+<li>Met à jour les champs fournis (<code>title</code>, <code>theme</code>, etc.).</li>
+<li>
+<p>Si <code>new_chunks</code> est fourni :</p>
+</li>
+<li>
+<p>Calcule les embeddings un par un.</p>
+</li>
+<li>Insère en bulk via <code>insert(Chunk)</code>.</li>
+<li>Met à jour le compteur <code>chunk_count</code> dans <code>IndexConfig</code>.</li>
+<li>Si <code>corpus_id</code> change, ajuste les compteurs sur les anciennes/nouvelles configurations d’index.</li>
+<li>Retourne les métadonnées mises à jour et si <code>index_needed</code> suite à un changement de corpus.</li>
+</ul>
+<h3 id="parametres_1">Paramètres</h3>
+<table>
+<thead>
+<tr>
+<th>Nom</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>document_update</code></td>
+<td><code>DocumentUpdate</code></td>
+<td>DTO avec l’<code>id</code> du document et champs modifiés.</td>
+</tr>
+<tr>
+<td><code>new_chunks</code></td>
+<td><code>List[dict]</code> (optionnel)</td>
+<td>Nouveaux chunks à ajouter.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="retour_1">Retour</h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">i</span><span class="kc">nt</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">s</span><span class="kc">tr</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;theme&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">s</span><span class="kc">tr</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;document_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">s</span><span class="kc">tr</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;publish_date&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">da</span><span class="kc">te</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;corpus_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">s</span><span class="kc">tr</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;chunks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">i</span><span class="kc">nt</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;added&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">i</span><span class="kc">nt</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;index_needed&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">bool</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>En cas de document introuvable : <code>{"error": "… introuvable."}</code>&#x20;</p>
+<hr />
+<p><a name="delete_document_chunks"></a></p>
+<h2 id="3-delete_document_chunksdocument_id-chunk_idsnone-dictstr-any">3. <code>delete_document_chunks(document_id, chunk_ids=None) → Dict[str, Any]</code></h2>
+<p>Supprime un ou plusieurs chunks d’un document, ou tous si <code>chunk_ids</code> non fourni.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">vectordb.src.crud</span><span class="w"> </span><span class="kn">import</span> <span class="n">delete_document_chunks</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">delete_document_chunks</span><span class="p">(</span><span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">chunk_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]])</span>
+</code></pre></div>
+<h3 id="description_2">Description</h3>
+<ul>
+<li>Vérifie l’existence du <code>Document</code>.</li>
+<li>
+<p>Si <code>chunk_ids</code> est une liste :</p>
+</li>
+<li>
+<p>Supprime uniquement ces chunks.</p>
+</li>
+<li>
+<p>Sinon :</p>
+</li>
+<li>
+<p>Supprime tous les chunks associés.</p>
+</li>
+<li>Met à jour <code>chunk_count</code> dans <code>IndexConfig</code>.</li>
+<li>Commit ou rollback en cas d’erreur.</li>
+</ul>
+<h3 id="parametres_2">Paramètres</h3>
+<table>
+<thead>
+<tr>
+<th>Nom</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>document_id</code></td>
+<td><code>int</code></td>
+<td>Identifiant du document.</td>
+</tr>
+<tr>
+<td><code>chunk_ids</code></td>
+<td><code>List[int]</code> (optionnel)</td>
+<td>Liste d’IDs de chunks à supprimer (None → tous).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="retour_2">Retour</h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;document_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">i</span><span class="kc">nt</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;chunks_deleted&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">i</span><span class="kc">nt</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;remaining_chunks&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">i</span><span class="kc">nt</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Remarque : si document introuvable → <code>{"error": "… introuvable."}</code>&#x20;</p>
+<hr />
+<p><a name="delete_document"></a></p>
+<h2 id="4-delete_documentdocument_id-dictstr-any">4. <code>delete_document(document_id) → Dict[str, Any]</code></h2>
+<p>Supprime un document et tous ses chunks en cascade.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">vectordb.src.crud</span><span class="w"> </span><span class="kn">import</span> <span class="n">delete_document</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">delete_document</span><span class="p">(</span><span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="description_3">Description</h3>
+<ul>
+<li>Charge le <code>Document</code> par <code>id</code>.</li>
+<li>Met à jour <code>chunk_count</code> dans la configuration d’index (diminue du nombre de chunks supprimés).</li>
+<li>Supprime le document (cascade supprime les chunks).</li>
+<li>Commit ou rollback en cas d’erreur.</li>
+</ul>
+<h3 id="parametres_3">Paramètres</h3>
+<table>
+<thead>
+<tr>
+<th>Nom</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>document_id</code></td>
+<td><code>int</code></td>
+<td>Identifiant du document à supprimer.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="retour_3">Retour</h3>
+<ul>
+<li>En cas de succès :</li>
+</ul>
+<p><div class="highlight"><pre><span></span><code><span class="p">{</span><span class="w"> </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Document avec ID X supprimé avec succès.&quot;</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+* Si introuvable :</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="w"> </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Document avec ID X introuvable.&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="err">```</span><span class="w"> </span><span class="p">:</span><span class="err">co</span><span class="kc">ntent</span><span class="err">Re</span><span class="kc">feren</span><span class="err">ce</span><span class="p">[</span><span class="err">oaici</span><span class="kc">te</span><span class="p">:</span><span class="mi">8</span><span class="p">]{</span><span class="err">i</span><span class="kc">n</span><span class="err">dex=</span><span class="mi">8</span><span class="p">}:</span><span class="err">co</span><span class="kc">ntent</span><span class="err">Re</span><span class="kc">feren</span><span class="err">ce</span><span class="p">[</span><span class="err">oaici</span><span class="kc">te</span><span class="p">:</span><span class="mi">9</span><span class="p">]{</span><span class="err">i</span><span class="kc">n</span><span class="err">dex=</span><span class="mi">9</span><span class="p">}</span>
+</code></pre></div>
+<hr />
+<blockquote>
+<p>Module : <code>vectordb/src/crud.py</code>
+Dernière mise à jour : 02 mai 2025</p>
+</blockquote>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../pipeline/pipeline_lib/" class="btn btn-neutral float-left" title="Pipeline end-to-end"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../index_lib/" class="btn btn-neutral float-right" title="Indexation vectorielle">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../../pipeline/pipeline_lib/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../index_lib/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+      <script src="../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

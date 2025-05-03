@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Introduction - Cléa-API Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../css/mkdocsoad.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Introduction";
+        var mkdocs_page_input_path = "main.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Cléa-API Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../home/">Accueil</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Introduction</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-chargement-de-la-configuration">1. Chargement de la configuration</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#6-middleware-et-routeurs">6. Middleware et routeurs</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#7-gestion-des-erreurs-globales">7. Gestion des erreurs globales</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#8-endpoints-de-sante">8. Endpoints de santé</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#9-lancement-du-serveur">9. Lancement du serveur</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../database/">Base de données</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../schemas/">Schémas</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Documentation des librairies</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../lib/doc_loader/extractor_lib/">Extracteurs</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../lib/doc_loader/splitter_lib/">Segmentation</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../lib/pipeline/pipeline_lib/">Pipeline end-to-end</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../lib/vectordb/crud_lib/">Opérations CRUD</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../lib/vectordb/index_lib/">Indexation vectorielle</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../lib/vectordb/search_lib/">Recherche hybride</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Références API</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >REST API</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../api/rest/rest_api/">Documentation Swagger</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Références Python</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../api/lib/doc_loader/extractor_references/">Extracteurs</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../api/lib/doc_loader/splitter_references/">Segmentation</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../api/lib/pipeline/pipeline_references/">Pipeline</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../api/lib/vectordb/crud_references/">CRUD</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../api/lib/vectordb/index_references/">Indexation</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../api/lib/vectordb/search_references/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Intégrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >JavaScript / TypeScript</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../Integration/doc_loader/doc_loader_js/">Extraction de documents</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../Integration/pipeline/pipeline_js/">Pipeline end-to-end</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../Integration/vectordb/crud_js/">Opérations CRUD</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../Integration/vectordb/index_js/">Indexation</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../Integration/vectordb/search_js/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Cléa-API Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Introduction</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="point-dentree-principal-mainpy">Point d’entrée principal : <code>main.py</code></h1>
+<p>Le fichier <strong><code>main.py</code></strong> constitue le <strong>démarreur</strong> de tout le framework <strong>Cléa-API</strong>, initialisant l’environnement, la base de données, les extensions, puis lançant l’application FastAPI via Uvicorn.</p>
+<hr />
+<h2 id="1-chargement-de-la-configuration">1. Chargement de la configuration</h2>
+<ul>
+<li>Charge les variables d’environnement depuis <code>.env</code> (via <code>python-dotenv</code>)  </li>
+<li>Configure le <strong>logger</strong> global  </li>
+<li>Lit les paramètres PostgreSQL et API (hôte, port, workers, niveau de log) :contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="n">load_dotenv</span><span class="p">()</span>
+<span class="n">POSTGRES_USER</span>     <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DB_USER&quot;</span><span class="p">)</span>
+<span class="n">POSTGRES_PASSWORD</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DB_PASSWORD&quot;</span><span class="p">)</span>
+<span class="err">…</span>
+<span class="n">API_HOST</span>  <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;API_HOST&quot;</span><span class="p">,</span> <span class="s2">&quot;localhost&quot;</span><span class="p">)</span>
+<span class="n">API_PORT</span>  <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;API_PORT&quot;</span><span class="p">,</span> <span class="mi">8080</span><span class="p">))</span>
+<span class="n">API_WORKERS</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;API_WORKERS&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">API_LOG_LEVEL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;API_LOG_LEVEL&quot;</span><span class="p">,</span> <span class="s2">&quot;info&quot;</span><span class="p">)</span>
+<span class="err">````</span>
+
+<span class="o">---</span>
+
+<span class="c1">## 2. Vérification et démarrage de PostgreSQL</span>
+
+<span class="c1">### `start_postgres() → bool`</span>
+
+<span class="mf">1.</span> <span class="n">Récupère</span> <span class="n">l</span><span class="err">’</span><span class="n">utilisateur</span> <span class="n">courant</span> <span class="p">(</span><span class="err">`</span><span class="n">get_current_user</span><span class="err">`</span><span class="p">)</span><span class="o">.</span>
+<span class="mf">2.</span> <span class="n">Vérifie</span> <span class="n">la</span> <span class="n">disponibilité</span> <span class="n">de</span> <span class="n">PostgreSQL</span> <span class="p">(</span><span class="err">`</span><span class="n">check_postgres_status</span><span class="err">`</span><span class="p">)</span><span class="o">.</span>
+<span class="mf">3.</span> <span class="n">Si</span> <span class="n">indisponible</span><span class="p">,</span> <span class="n">affiche</span> <span class="n">des</span> <span class="o">**</span><span class="n">suggestions</span> <span class="n">d</span><span class="err">’</span><span class="n">installation</span><span class="o">**</span> <span class="n">pour</span> <span class="n">Linux</span><span class="p">,</span> <span class="n">notamment</span> <span class="n">OpenSUSE</span> <span class="n">Tumbleweed</span><span class="o">.</span>
+<span class="mf">4.</span> <span class="n">Retourne</span> <span class="err">`</span><span class="kc">True</span><span class="err">`</span> <span class="n">si</span> <span class="n">PostgreSQL</span> <span class="n">est</span> <span class="n">accessible</span><span class="p">,</span> <span class="err">`</span><span class="kc">False</span><span class="err">`</span> <span class="n">sinon</span><span class="o">.&amp;</span><span class="c1">#x20;</span>
+
+<span class="o">---</span>
+
+<span class="c1">## 3. Initialisation de la base de données</span>
+
+<span class="c1">### `setup_database() → bool`</span>
+
+<span class="mf">1.</span> <span class="n">Crée</span> <span class="n">les</span> <span class="n">tables</span> <span class="n">SQLAlchemy</span> <span class="p">(</span><span class="err">`</span><span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">create_all</span><span class="err">`</span><span class="p">)</span> <span class="n">et</span> <span class="n">l</span><span class="err">’</span><span class="n">extension</span> <span class="o">**</span><span class="n">vector</span><span class="o">**.</span>
+<span class="mf">2.</span> <span class="n">Appelle</span> <span class="err">`</span><span class="n">init_db</span><span class="p">()</span><span class="err">`</span> <span class="n">pour</span> <span class="n">installer</span> <span class="n">pgvector</span> <span class="n">et</span> <span class="n">valider</span> <span class="n">la</span> <span class="n">création</span> <span class="n">des</span> <span class="n">tables</span><span class="o">.</span>
+<span class="mf">3.</span> <span class="n">Renvoie</span> <span class="err">`</span><span class="kc">True</span><span class="err">`</span> <span class="n">si</span> <span class="n">l</span><span class="err">’</span><span class="n">extension</span> <span class="n">et</span> <span class="n">les</span> <span class="n">tables</span> <span class="n">sont</span> <span class="n">correctement</span> <span class="n">créées</span><span class="o">.&amp;</span><span class="c1">#x20;</span>
+
+<span class="o">---</span>
+
+<span class="c1">## 4. Cycle de vie de l’application</span>
+
+<span class="c1">### `lifespan(app: FastAPI)`</span>
+
+<span class="n">Gestionnaire</span> <span class="o">**</span><span class="n">asynchrone</span><span class="o">**</span> <span class="n">exécuté</span> <span class="n">au</span> <span class="n">démarrage</span> <span class="n">et</span> <span class="n">à</span> <span class="n">l</span><span class="err">’</span><span class="n">arrêt</span> <span class="p">:</span>
+
+<span class="o">*</span> <span class="o">**</span><span class="n">Au</span> <span class="n">démarrage</span><span class="o">**</span> <span class="p">:</span>
+
+  <span class="mf">1.</span> <span class="n">Démarre</span><span class="o">/</span><span class="n">vérifie</span> <span class="n">PostgreSQL</span> <span class="n">via</span> <span class="err">`</span><span class="n">start_postgres</span><span class="err">`</span><span class="o">.</span>
+  <span class="mf">2.</span> <span class="n">Vérifie</span> <span class="n">l</span><span class="err">’</span><span class="n">existence</span> <span class="n">des</span> <span class="n">tables</span> <span class="p">(</span><span class="err">`</span><span class="n">verify_database_tables</span><span class="err">`</span><span class="p">),</span> <span class="n">et</span> <span class="n">lance</span> <span class="err">`</span><span class="n">setup_database</span><span class="err">`</span> <span class="n">si</span> <span class="n">nécessaire</span><span class="o">.</span>
+<span class="o">*</span> <span class="o">**</span><span class="n">À</span> <span class="n">l</span><span class="err">’</span><span class="n">arrêt</span><span class="o">**</span> <span class="p">:</span>
+
+  <span class="o">*</span> <span class="n">Vide</span> <span class="n">le</span> <span class="n">cache</span> <span class="n">de</span> <span class="n">ressources</span> <span class="n">globales</span><span class="o">.&amp;</span><span class="c1">#x20;</span>
+
+<span class="o">---</span>
+
+<span class="c1">## 5. Création de l’application FastAPI</span>
+
+<span class="err">```</span><span class="n">python</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Cléa API&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;API pour gérer les documents et effectuer des recherches sémantiques.&quot;</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s2">&quot;0.1.1&quot;</span><span class="p">,</span>
+    <span class="n">docs_url</span><span class="o">=</span><span class="s2">&quot;/docs&quot;</span><span class="p">,</span>
+    <span class="n">redoc_url</span><span class="o">=</span><span class="s2">&quot;/redoc&quot;</span><span class="p">,</span>
+    <span class="n">lifespan</span><span class="o">=</span><span class="n">lifespan</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<ul>
+<li>Active <strong>Swagger UI</strong> (<code>/docs</code>) et <strong>ReDoc</strong> (<code>/redoc</code>).</li>
+<li>Associe le <strong>lifespan</strong> défini ci-dessus.&#x20;</li>
+</ul>
+<hr />
+<h2 id="6-middleware-et-routeurs">6. Middleware et routeurs</h2>
+<ul>
+<li><strong>CORS</strong> : autorise toutes les origines, méthodes et headers (<code>CORSMiddleware</code>).</li>
+<li>
+<p><strong>Inclusion des routers</strong> :</p>
+</li>
+<li>
+<p><code>/database</code> → crud documents &amp; chunks</p>
+</li>
+<li><code>/search</code>   → recherche hybride</li>
+<li><code>/index</code>    → gestion des index vectoriels</li>
+<li><code>/doc_loader</code> → upload et extraction de documents</li>
+<li><code>/pipeline</code> → traitement complet (extract → segment → insert)&#x20;</li>
+</ul>
+<hr />
+<h2 id="7-gestion-des-erreurs-globales">7. Gestion des erreurs globales</h2>
+<ul>
+<li><strong><code>StarletteHTTPException</code></strong> → renvoie <code>{ "error": detail }</code></li>
+<li><strong><code>RequestValidationError</code></strong> → renvoie <code>{ "error": "Invalid request", "details": [...] }</code></li>
+<li><strong><code>Exception</code></strong> → capture toute erreur non gérée et renvoie <code>500 Internal server error</code>.&#x20;</li>
+</ul>
+<hr />
+<h2 id="8-endpoints-de-sante">8. Endpoints de santé</h2>
+<div class="highlight"><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">root</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Cléa API is running&quot;</span><span class="p">}</span>
+</code></pre></div>
+<p>– Vérifie simplement que l’API est en ligne.&#x20;</p>
+<hr />
+<h2 id="9-lancement-du-serveur">9. Lancement du serveur</h2>
+<p>Lorsque <code>main.py</code> est exécuté directement (<code>if __name__ == "__main__"</code>), il :</p>
+<ol>
+<li>Crée une configuration <strong>Uvicorn</strong> optimisée (reload, workers, proxy headers, choix auto de loop/http).</li>
+<li>Démarre le serveur avec <code>uvicorn.Server(config).run()</code>.&#x20;</li>
+</ol>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>main.py
+<span class="c1"># ou</span>
+uvicorn<span class="w"> </span>main:app<span class="w"> </span>--host<span class="w"> </span><span class="nv">$API_HOST</span><span class="w"> </span>--port<span class="w"> </span><span class="nv">$API_PORT</span><span class="w"> </span>--workers<span class="w"> </span><span class="nv">$API_WORKERS</span>
+</code></pre></div>
+<hr />
+<blockquote>
+<p><strong>Fichier source</strong> : <code>main.py</code>&#x20;
+<strong>Dernière mise à jour</strong> : 03 mai 2025</p>
+</blockquote>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../home/" class="btn btn-neutral float-left" title="Accueil"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../database/" class="btn btn-neutral float-right" title="Base de données">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../home/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../database/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
