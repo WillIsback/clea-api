@@ -1,26 +1,46 @@
 site_name: Cléa-API Documentation
 
 nav:
-  - Home: index.md
-
-  - REST API:
-      - REST API (Swagger): rest_api.md
-
-  - Python API:
+  - Accueil: home.md
+  - Introduction: main.md
+  - Base de données: database.md
+  - Schémas: schemas.md
+  
+  - Documentation des librairies:
       - doc_loader:
-          - Présentation: doc_loader.md
-          - Référence (auto): lib_doc_loader.md
-      - vectordb:
-          - Modèles & DB: database.md
-          - Recherche hybride: search.md
-          - Référence (auto): lib_vectordb.md
+          - Extracteurs: lib/doc_loader/extractor_lib.md
+          - Segmentation: lib/doc_loader/splitter_lib.md
       - pipeline:
-          - Pipeline end-to-end: pipeline.md
-          - Référence (auto): lib_pipeline.md
-
-  - Integrations:
+          - Pipeline end-to-end: lib/pipeline/pipeline_lib.md
+      - vectordb:
+          - Opérations CRUD: lib/vectordb/crud_lib.md
+          - Indexation vectorielle: lib/vectordb/index_lib.md
+          - Recherche hybride: lib/vectordb/search_lib.md
+  
+  - Références API:
+      - REST API:
+          - Documentation Swagger: api/rest/rest_api.md
+      - Références Python:
+          - doc_loader:
+              - Extracteurs: api/lib/doc_loader/extractor_references.md
+              - Segmentation: api/lib/doc_loader/splitter_references.md
+          - pipeline:
+              - Pipeline: api/lib/pipeline/pipeline_references.md
+          - vectordb:
+              - CRUD: api/lib/vectordb/crud_references.md
+              - Indexation: api/lib/vectordb/index_references.md
+              - Recherche: api/lib/vectordb/search_references.md
+  
+  - Intégrations:
       - JavaScript / TypeScript: 
-        - vectordb: Integration/vectordb.md  
+          - doc_loader:
+              - Extraction de documents: Integration/doc_loader/doc_loader_js.md
+          - pipeline:
+              - Pipeline end-to-end: Integration/pipeline/pipeline_js.md
+          - vectordb:
+              - Opérations CRUD: Integration/vectordb/crud_js.md
+              - Indexation: Integration/vectordb/index_js.md
+              - Recherche: Integration/vectordb/search_js.md
 
 theme:
   name: readthedocs
@@ -32,6 +52,7 @@ plugins:
         python:
           options:
             show_source: false
+            docstring_style: google
   - neoteroi.mkdocsoad:
       use_pymdownx: true
 
@@ -40,6 +61,9 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
+  - admonition
+  - tables
+  - footnotes
 
 extra_css:
   - css/mkdocsoad.css

@@ -96,6 +96,7 @@ class DocumentResponse(BaseModel):
     publish_date: date
     corpus_id: Optional[str] = None
     chunk_count: int = Field(..., ge=0)
+    index_needed: bool = False
 
     model_config = CamelConfig
 
@@ -189,5 +190,20 @@ class SearchResponse(BaseModel):
     top_k: int = Field(..., alias="topK")
     total_results: int = Field(..., alias="totalResults")
     results: List[ChunkResult]
+
+    model_config = CamelConfig
+
+
+class IndexStatus(BaseModel):
+    """Statut de l'indexation d'un document."""
+
+    corpus_id: Optional[str]
+    index_exists: bool
+    config_exists: bool
+    is_indexed: bool
+    index_type: Optional[str]
+    chunk_count: int
+    indexed_chunks: int
+    last_indexed: Optional[date]
 
     model_config = CamelConfig

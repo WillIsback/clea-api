@@ -1,0 +1,70 @@
+=== Tests de performance d'index démarrés le 2025-05-03 15:57:21.601560 ===
+
+Ce rapport compare les temps d'exécution des recherches vectorielles
+avec et sans index vectoriel pgvector.
+
+2025-05-03 15:57:21.602168 -- === TEST: Comparaison de performance d'indexation vectorielle ===
+2025-05-03 15:57:21.602271 -- Utilisation du corpus: demo/benchmark_large.txt
+2025-05-03 15:57:25.201231 -- Corpus initial chargé avec 147 chunks (ID: a1b0791e-51f8-45fd-924a-56d922226ef9)
+2025-05-03 15:57:25.201343 -- Chunks insuffisants. Création de 1 documents supplémentaires...
+2025-05-03 15:57:25.201381 -- Création du document supplémentaire #2...
+2025-05-03 15:57:27.954407 -- Total final: 294 chunks répartis sur 2 documents
+2025-05-03 15:57:27.954525 -- Utilisation du corpus avec ID: a1b0791e-51f8-45fd-924a-56d922226ef9
+2025-05-03 15:57:27.960084 -- État initial de l'index (corpus de 147 chunks): {'corpus_id': 'a1b0791e-51f8-45fd-924a-56d922226ef9', 'index_exists': False, 'config_exists': True, 'is_indexed': False, 'index_type': 'ivfflat', 'chunk_count': 147, 'indexed_chunks': 147, 'last_indexed': None}
+2025-05-03 15:57:27.960195 -- Exécution des requêtes de test SANS index vectoriel...
+2025-05-03 15:57:30.746670 -- Temps moyen sans index: 34.93 ms
+2025-05-03 15:57:30.746825 -- Création de l'index vectoriel pour le corpus a1b0791e-51f8-45fd-924a-56d922226ef9...
+2025-05-03 15:57:30.861148 -- Résultat de la création: {'status': 'success', 'message': 'Index vectoriel créé pour 147 chunks dans le corpus a1b0791e-51f8-45fd-924a-56d922226ef9', 'index_type': 'ivfflat', 'lists': 12, 'documents_updated': 1, 'view_name': 'temp_corpus_chunks_a1b0791e_51f8_45fd_924a_56d922226ef9'}
+2025-05-03 15:57:30.865387 -- État de l'index après création: {'corpus_id': 'a1b0791e-51f8-45fd-924a-56d922226ef9', 'index_exists': True, 'config_exists': True, 'is_indexed': True, 'index_type': 'ivfflat', 'chunk_count': 147, 'indexed_chunks': 147, 'last_indexed': datetime.date(2025, 5, 3)}
+2025-05-03 15:57:30.865468 -- Exécution des requêtes de test AVEC index vectoriel...
+2025-05-03 15:57:33.640667 -- Temps moyen avec index: 33.52 ms
+2025-05-03 15:57:33.640852 -- 
+## RAPPORT DE PERFORMANCE D'INDEXATION VECTORIELLE ##
+
+Taille du corpus: 147 chunks
+
+Amélioration globale: x1.04 (4.2%)
+
+Temps moyen sans index: 34.93 ms
+Temps moyen avec index: 33.52 ms
+Accélération moyenne: 1.40 ms
+
+## DÉTAIL PAR REQUÊTE ##
+
+
+Requête: "Quel est le meilleur type d'index ANN pour une base de donné..."
+  - Sans index: 35.68 ms (min=30.98, max=44.56)
+  - Avec index: 33.43 ms (min=33.02, max=33.76)
+  - Amélioration: x1.07 (6.7%)
+  - Résultats trouvés: 10
+
+Requête: "Comment l'algorithme IVFFLAT partitionne-t-il l'espace vecto..."
+  - Sans index: 35.64 ms (min=30.44, max=49.11)
+  - Avec index: 36.22 ms (min=30.70, max=41.86)
+  - Amélioration: x0.98 (-1.6%)
+  - Résultats trouvés: 10
+
+Requête: "Avantages et inconvénients des index HNSW par rapport aux au..."
+  - Sans index: 37.54 ms (min=31.51, max=51.73)
+  - Avec index: 32.88 ms (min=30.03, max=42.77)
+  - Amélioration: x1.14 (14.2%)
+  - Résultats trouvés: 10
+
+Requête: "Optimisation des paramètres lists dans pgvector pour maximis..."
+  - Sans index: 34.56 ms (min=27.85, max=45.02)
+  - Avec index: 29.31 ms (min=28.24, max=30.02)
+  - Amélioration: x1.18 (17.9%)
+  - Résultats trouvés: 10
+
+Requête: "Impact de la dimensionnalité des vecteurs sur l'efficacité d..."
+  - Sans index: 31.20 ms (min=29.87, max=33.67)
+  - Avec index: 35.77 ms (min=29.30, max=42.13)
+  - Amélioration: x0.87 (-12.8%)
+  - Résultats trouvés: 10
+2025-05-03 15:57:33.653219 -- Suppression de l'index: {'status': 'success', 'message': 'Index idx_vector_a1b0791e_51f8_45fd_924a_56d922226ef9 et vue temp_corpus_chunks_a1b0791e_51f8_45fd_924a_56d922226ef9 supprimés avec succès'}
+2025-05-03 15:57:33.657821 -- État final de l'index: {'corpus_id': 'a1b0791e-51f8-45fd-924a-56d922226ef9', 'index_exists': False, 'config_exists': True, 'is_indexed': False, 'index_type': 'ivfflat', 'chunk_count': 147, 'indexed_chunks': 147, 'last_indexed': datetime.date(2025, 5, 3)}
+2025-05-03 15:57:34.075364 -- Suppression du document: {'success': 'Document avec ID 26 supprimé avec succès.'}
+2025-05-03 15:57:34.075468 -- ✅ Test de comparaison de performance terminé avec succès
+2025-05-03 15:57:34.075512 -- Facteur d'amélioration: x1.04
+2025-05-03 15:57:34.075544 -- Facteur d'amélioration attendu (pour 147 chunks): x1.20
+2025-05-03 15:57:34.075575 -- ⚠️ Amélioration insuffisante: 4.2% (attendu: 20.0%)

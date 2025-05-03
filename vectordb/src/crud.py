@@ -40,8 +40,19 @@ def add_document_with_chunks(
     if not doc.corpus_id:
         doc.corpus_id = str(uuid.uuid4())
 
-    # Créer le document
-    document = Document(**doc.model_dump())
+    # Vérifier si ce corpus nécessite un index
+    index_needed = False
+    cfg = db.query(IndexConfig).filter(IndexConfig.corpus_id == doc.corpus_id).first()
+
+    if not cfg:
+        # Nouveau corpus sans configuration - index nécessaire
+        index_needed = True
+    elif not cfg.is_indexed:
+        # Corpus existant mais pas encore indexé
+        index_needed = True
+
+    # Créer le document avec le drapeau index_needed approprié
+    document = Document(**doc.model_dump(), index_needed=index_needed)
     db.add(document)
     db.flush()  # pour obtenir document.id
 
@@ -91,21 +102,22 @@ def add_document_with_chunks(
         db.flush()
 
         # Gestion de la configuration d'index
-        cfg = (
-            db.query(IndexConfig).filter(IndexConfig.corpus_id == doc.corpus_id).first()
-        )
         if not cfg:
             db.add(
                 IndexConfig(
                     corpus_id=doc.corpus_id,
                     index_type="ivfflat",
                     chunk_count=len(chunks),
+                    is_indexed=False,
                 )
             )
-            create_index_needed = True
         else:
             cfg.chunk_count += len(chunks)
-            create_index_needed = False
+            if cfg.is_indexed:
+                # Si le corpus était indexé, il faut maintenant mettre à jour l'index
+                cfg.is_indexed = False
+                index_needed = True
+
             if cfg.chunk_count > 300_000 and cfg.index_type == "ivfflat":
                 logger.warning(
                     "Corpus %s contient désormais %s chunks, envisager la migration vers un index HNSW",
@@ -118,7 +130,7 @@ def add_document_with_chunks(
             "document_id": document.id,
             "chunks": len(chunks),
             "corpus_id": doc.corpus_id,
-            "create_index": create_index_needed,
+            "index_needed": index_needed,
         }
 
     except Exception as e:
@@ -220,7 +232,7 @@ def update_document_with_chunks(
                     )
 
         # Vérifier si le corpus_id a changé, ce qui nécessite une mise à jour des index
-        index_update_needed = False
+        index_needed = False
         if old_corpus_id != document.corpus_id:
             # Mettre à jour les statistiques des deux corpus
             old_cfg = (
@@ -254,7 +266,7 @@ def update_document_with_chunks(
                     )
                 )
 
-            index_update_needed = True
+            index_needed = True
 
         # Valider les modifications
         db.commit()
@@ -272,7 +284,7 @@ def update_document_with_chunks(
             "publish_date": document.publish_date,
             "corpus_id": document.corpus_id,
             "chunks": {"total": total_chunks, "added": chunks_added},
-            "index_update_needed": index_update_needed,
+            "index_needed": index_needed,
         }
 
         return result

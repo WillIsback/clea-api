@@ -29,9 +29,8 @@ def semantic_segmentation_stream(text: str, max_length: int) -> Iterator[ChunkCr
     """
     Génère les chunks sémantiques d'un document au fil de l'eau.
 
-    Cette fonction implémente une segmentation hiérarchique en mode streaming, avec deux objectifs :
-    1. Limiter la consommation mémoire pour les documents volumineux
-    2. Optimiser les chunks pour la recherche sémantique
+    Version optimisée pour les grands corpus non structurés avec une meilleure
+    extraction des frontières naturelles de texte et davantage de chunks.
 
     Args:
         text: Texte à segmenter.
@@ -45,8 +44,12 @@ def semantic_segmentation_stream(text: str, max_length: int) -> Iterator[ChunkCr
     seen_hashes: Set[int] = set()  # Utilisation de hashes pour éviter la duplication
 
     # Niveau 0: Document (résumé significatif)
-    # On limite le résumé à ~20% du document ou 1000 caractères maximum
-    summary_length = min(1000, max(200, len(text) // 5))
+    # On limite le résumé à ~10% du document pour les très longs textes
+    if len(text) > 100_000:
+        summary_length = min(1500, max(500, len(text) // 10))
+    else:
+        summary_length = min(1000, max(200, len(text) // 5))
+
     summary = text[:summary_length].strip()
 
     # Génération de l'ID racine
@@ -66,19 +69,31 @@ def semantic_segmentation_stream(text: str, max_length: int) -> Iterator[ChunkCr
     chunk_count += 1
     seen_hashes.add(hash(summary))
 
-    # Segmentation intelligente en sections
-    sections = _extract_semantic_sections(text, max_sections=min(10, MAX_CHUNKS // 5))
+    # Taille du corpus adaptative
+    corpus_size = len(text)
+    large_corpus = corpus_size > 500_000
+
+    # Ajuster les paramètres en fonction de la taille du corpus
+    if large_corpus:
+        section_limit = min(20, MAX_CHUNKS // 10)  # Plus de sections pour grands corpus
+        para_per_section = min(10, (MAX_CHUNKS - chunk_count) // section_limit // 2)
+    else:
+        section_limit = min(10, MAX_CHUNKS // 5)
+        para_per_section = min(5, (MAX_CHUNKS - chunk_count) // section_limit // 2)
+
+    # Segmentation intelligente en sections (avec paramètres adaptés)
+    sections = _extract_semantic_sections(text, max_sections=section_limit)
 
     # Niveau 1: Sections
     for section_idx, section in enumerate(sections):
-        if chunk_count >= MAX_CHUNKS - 1:  # Garder une marge
+        if chunk_count >= MAX_CHUNKS - 1:
             logger.warning(
                 "Limite de chunks atteinte pendant la segmentation des sections"
             )
             break
 
         section_title = section["title"]
-        # Extrait significatif du contenu de la section (pas tout le contenu)
+        # Extrait significatif du contenu de la section
         section_preview = _get_meaningful_preview(section["content"], max_length)
         section_content = f"{section_title}\n\n{section_preview}"
 
@@ -103,15 +118,16 @@ def semantic_segmentation_stream(text: str, max_length: int) -> Iterator[ChunkCr
         chunk_count += 1
         seen_hashes.add(content_hash)
 
-        # Niveau 2: Paragraphes sémantiquement significatifs
+        # Niveau 2: Paragraphes
+        # Adapter le nombre maximum en fonction de la taille
         paragraphs = _extract_semantic_paragraphs(
             section["content"],
             base_offset=section["start_char"],
-            max_paragraphs=min(5, (MAX_CHUNKS - chunk_count) // 3),
+            max_paragraphs=para_per_section,
         )
 
         for para_idx, paragraph in enumerate(paragraphs):
-            if chunk_count >= MAX_CHUNKS - 2:  # Garder une marge
+            if chunk_count >= MAX_CHUNKS - 2:
                 logger.warning(
                     "Limite de chunks atteinte pendant la segmentation des paragraphes"
                 )
@@ -130,7 +146,7 @@ def semantic_segmentation_stream(text: str, max_length: int) -> Iterator[ChunkCr
 
             para_id = int(uuid.uuid4())
 
-            # Créer un chunk de paragraphe sans copier le titre de la section
+            # Créer un chunk de paragraphe
             para_chunk = ChunkCreate(
                 id=para_id,
                 content=para_content,
@@ -145,14 +161,25 @@ def semantic_segmentation_stream(text: str, max_length: int) -> Iterator[ChunkCr
             chunk_count += 1
             seen_hashes.add(para_hash)
 
-            # Niveau 3: Uniquement pour les paragraphes vraiment longs
-            if len(para_content) > max(max_length * 2, MIN_LEVEL3_LENGTH * 3):
+            # Niveau 3: Pour les paragraphes longs - seuil adaptatif
+            min_level3_threshold = MIN_LEVEL3_LENGTH * (3 if large_corpus else 2)
+            if len(para_content) > max(max_length * 1.5, min_level3_threshold):
+                # Adapter le nombre de chunks de niveau 3 en fonction de la taille
+                if large_corpus:
+                    max_l3_chunks = min(
+                        MAX_LEVEL3_CHUNKS, (MAX_CHUNKS - chunk_count) // 2
+                    )
+                else:
+                    max_l3_chunks = min(
+                        MAX_LEVEL3_CHUNKS // 2, MAX_CHUNKS - chunk_count
+                    )
+
                 semantic_chunks = _create_semantic_chunks(
                     para_content,
                     max_length,
-                    min_overlap=max_length // 10,  # Overlap limité mais significatif
+                    min_overlap=max_length // 10,
                     base_offset=paragraph["start_char"],
-                    max_chunks=min(MAX_LEVEL3_CHUNKS, MAX_CHUNKS - chunk_count),
+                    max_chunks=max_l3_chunks,
                 )
 
                 for chunk_idx, sem_chunk in enumerate(semantic_chunks):
@@ -184,7 +211,9 @@ def semantic_segmentation_stream(text: str, max_length: int) -> Iterator[ChunkCr
                     chunk_count += 1
                     seen_hashes.add(chunk_hash)
 
-    logger.info(f"Segmentation sémantique terminée: {chunk_count} chunks générés")
+    logger.info(
+        f"Segmentation sémantique terminée: {chunk_count} chunks générés sur un document de {len(text)} caractères"
+    )
 
 
 def _semantic_segmentation(text: str, max_length: int) -> List[ChunkCreate]:

@@ -100,22 +100,27 @@ def build_document_with_chunks(
     max_length: int,
     full_text: str,
 ) -> DocumentWithChunks:
-    """
-    Crée un DocumentWithChunks à partir d'un texte complet.
+    """Crée un DocumentWithChunks à partir d'un texte complet.
+
+    Cette fonction analyse le texte fourni et le découpe en fragments hiérarchiques
+    (chunks) en utilisant soit une segmentation sémantique, soit une segmentation de
+    secours en cas d'échec.
 
     Args:
         title: Titre du document.
-        theme: Thème du document.
-        document_type: Type du document (TXT, HTML, etc.).
-        publish_date: Date de publication.
-        max_length: Longueur maximale d'un chunk.
-        full_text: Contenu complet du document.
+        theme: Thème ou catégorie du document.
+        document_type: Type du document (PDF, DOCX, HTML, etc.).
+        publish_date: Date de publication du document.
+        max_length: Longueur maximale souhaitée pour chaque chunk.
+        full_text: Contenu textuel complet du document.
 
     Returns:
-        DocumentWithChunks: Document avec ses chunks hiérarchiques.
+        DocumentWithChunks: Structure contenant les métadonnées du document et
+            l'ensemble des chunks générés hiérarchiquement.
 
     Raises:
-        ValueError: Si le texte est trop volumineux ou dépasse les limites sécurisées.
+        ValueError: Si le texte dépasse la taille maximale autorisée ou si les
+            paramètres sont invalides.
     """
     # Validation des entrées
     if not full_text:
@@ -124,7 +129,8 @@ def build_document_with_chunks(
 
     if len(full_text) > MAX_TEXT_LENGTH:
         logger.warning(f"Texte trop volumineux ({len(full_text)} caractères) - tronqué")
-        full_text = full_text[:MAX_TEXT_LENGTH]
+        # Assurons-nous que l'index est un entier
+        full_text = full_text[: int(MAX_TEXT_LENGTH)]
 
     # Validation max_length
     if max_length <= 0:
@@ -136,7 +142,7 @@ def build_document_with_chunks(
         logger.warning(
             f"max_length trop grande ({max_length}), limitée à {MAX_CHUNK_SIZE}"
         )
-        max_length = MAX_CHUNK_SIZE
+        max_length = int(MAX_CHUNK_SIZE)  # Conversion explicite en entier
 
     doc_meta = DocumentCreate(
         title=title,
@@ -161,11 +167,26 @@ def build_document_with_chunks(
     # 2) texte plus long : segmentation hiérarchique sémantique
     # ------------------------------------------------------------------ #
     try:
-        chunks = _semantic_segmentation(full_text, max_length)
+        # Assurons-nous que max_length est un entier pour la segmentation
+        chunks = _semantic_segmentation(full_text, int(max_length))
         return DocumentWithChunks(document=doc_meta, chunks=chunks)
 
     except Exception as e:
-        logger.error(f"Erreur pendant la segmentation: {str(e)}")
+        logger.error(f"Erreur pendant la segmentation: {str(e)}", exc_info=True)
         # Segmentation de secours (fallback)
-        chunks = _fallback_segmentation(full_text, max_length)
-        return DocumentWithChunks(document=doc_meta, chunks=chunks)
+        try:
+            chunks = _fallback_segmentation(full_text, int(max_length))
+            return DocumentWithChunks(document=doc_meta, chunks=chunks)
+        except Exception as fallback_error:
+            logger.error(
+                f"Échec de la segmentation de secours: {str(fallback_error)}",
+                exc_info=True,
+            )
+            # Dernier recours: un seul chunk avec le début du texte
+            root = ChunkCreate(
+                content=full_text[: int(max_length)],
+                start_char=0,
+                end_char=min(len(full_text), int(max_length)),
+                hierarchy_level=0,
+            )
+            return DocumentWithChunks(document=doc_meta, chunks=[root])

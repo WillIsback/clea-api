@@ -16,7 +16,6 @@ from sqlalchemy.orm import Session
 from vectordb.src.database import (
     Chunk,
     Document,
-    create_index_for_corpus,
     get_db,
 )
 
@@ -77,6 +76,7 @@ def add_document(
             publish_date=doc.publish_date,
             corpus_id=doc.corpus_id,
             chunk_count=add_document["chunks"],
+            index_needed=add_document["index_needed"],
         )
     except Exception as exc:  # pragma: no cover
         raise HTTPException(400, f"Erreur lors de l'ajout du document: {exc}")
@@ -86,7 +86,6 @@ def add_document(
     "/documents/{document_id}",
     summary="Mettre à jour un document (et/ou ajouter des chunks)",
     response_model=DocumentResponse,
-    tags=["Database"],
 )
 def update_document(
     payload: UpdateWithChunks,
@@ -137,6 +136,7 @@ def update_document(
         publish_date=result["publish_date"],
         corpus_id=result["corpus_id"],
         chunk_count=chunk_count,
+        index_needed=result.get("index_needed", False),
     )
 
 
@@ -194,18 +194,21 @@ def list_documents(
     limit: int = Query(100, gt=0),
     db: Session = Depends(get_db),
 ) -> List[DocumentResponse]:
-    """Liste l'ensemble des documents de la base de données en y associant le nombre de chunks.
+    """Liste l'ensemble des documents de la base de données avec leur nombre de chunks.
+
+    Cette fonction permet de récupérer un ensemble paginé de documents avec possibilité
+    de filtrage sur différents critères.
 
     Args:
-        theme (Optional[str]): Filtre optionnel pour le thème du document.
-        document_type (Optional[str]): Filtre optionnel pour le type du document.
-        corpus_id (Optional[str]): Filtre optionnel sur l'identifiant du corpus.
-        skip (int): Nombre de documents à ignorer (pour la pagination).
-        limit (int): Nombre maximal de documents à retourner.
-        db (Session): Session de base de données fournie par Depends.
+        theme: Filtre optionnel pour le thème du document.
+        document_type: Filtre optionnel pour le type du document.
+        corpus_id: Filtre optionnel sur l'identifiant du corpus.
+        skip: Nombre de documents à ignorer (pour la pagination).
+        limit: Nombre maximal de documents à retourner.
+        db: Session de base de données fournie par dépendance.
 
     Returns:
-        List[DocumentResponse]: Liste des documents formatés avec leur compte de chunks.
+        Liste des documents formatés avec leur nombre de chunks associés.
     """
     q = db.query(Document)
     if theme:
@@ -216,7 +219,27 @@ def list_documents(
         q = q.filter(Document.corpus_id == corpus_id)
 
     docs = q.offset(skip).limit(limit).all()
-    return [DocumentResponse.model_validate(doc) for doc in docs]
+
+    # Préparer la liste de réponses en incluant le comptage des chunks
+    result = []
+    for doc in docs:
+        # Compter les chunks pour ce document
+        chunk_count = db.query(Chunk).filter(Chunk.document_id == doc.id).count()
+
+        # Créer un objet DocumentResponse à partir du document
+        doc_response = DocumentResponse(
+            id=doc.id,
+            title=doc.title,
+            theme=doc.theme,
+            document_type=doc.document_type,
+            publish_date=doc.publish_date,
+            corpus_id=doc.corpus_id,
+            chunk_count=chunk_count,
+            index_needed=doc.index_needed,
+        )
+        result.append(doc_response)
+
+    return result
 
 
 # --------------------------------------------------------------------------- #
@@ -258,6 +281,7 @@ def get_document(
         publish_date=doc.publish_date,
         corpus_id=doc.corpus_id,
         chunk_count=chunk_count,
+        index_needed=doc.index_needed,
     )
 
 
@@ -300,36 +324,3 @@ def get_chunks(
         }
         for c in chunks
     ]
-
-
-# --------------------------------------------------------------------------- #
-#  POST /indexes/{corpus_id}/create
-# --------------------------------------------------------------------------- #
-@router.post(
-    "/indexes/{corpus_id}/create",
-    summary="Créer un index vectoriel pour un corpus",
-    response_model=dict,
-)
-def create_index(
-    *,
-    corpus_id: str = Path(..., alias="corpusId"),
-    index_type: str = Query("auto", pattern="^(auto|ivfflat|hnsw)$"),
-    force: bool = Query(False),
-) -> dict:
-    """Crée un index vectoriel pour un corpus donné.
-
-    Args:
-        corpus_id (str): Identifiant du corpus pour lequel créer l'index.
-        index_type (str): Type d'index à créer (auto, ivfflat, hnsw).
-        force (bool): Indique si l'index doit être recréé même s'il existe déjà.
-
-    Returns:
-        dict: Résultat de l'opération, incluant un message de succès ou une erreur.
-
-    Raises:
-        HTTPException: Si une erreur survient lors de la création de l'index.
-    """
-    result = create_index_for_corpus(corpus_id, index_type, force)
-    if "error" in result:
-        raise HTTPException(400, result["error"])
-    return result

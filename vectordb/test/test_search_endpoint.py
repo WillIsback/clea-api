@@ -15,7 +15,11 @@ import pytest
 from fastapi.testclient import TestClient
 
 from main import app  # Point d'entrée FastAPI
-from vectordb.src.database import Base, engine
+from vectordb.src.database import (
+    Base,
+    engine,
+)
+
 
 # --------------------------------------------------------------------------- #
 # Constantes

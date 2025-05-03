@@ -1,6 +1,5 @@
 from vectordb.src.database import (
     Document,
-    check_and_update_indexes,
     get_db,
 )
 from vectordb.src.search import (
@@ -26,13 +25,18 @@ from vectordb.src.schemas import (
     DocumentWithChunks,
 )
 
+from vectordb.api import (
+    database_endpoint,
+    search_endpoint,
+    index_endpoint,
+)
+
 __all__ = [
     "get_db",
     "add_document_with_chunks",
     "delete_document_chunks",
     "update_document_with_chunks",
     "delete_document",
-    "check_and_update_indexes",
     "SearchEngine",
     "Document",
     "DocumentResponse",
@@ -44,4 +48,7 @@ __all__ = [
     "DocumentWithChunks",
     "DocumentCreate",
     "ChunkCreate",
+    "database_endpoint",
+    "search_endpoint",
+    "index_endpoint",
 ]
