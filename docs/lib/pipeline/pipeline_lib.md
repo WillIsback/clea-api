@@ -1,16 +1,3 @@
-**Génération de documentation**
-
-L'utilisateur demande à générer une documentation pour la bibliothèque "pipeline". Il semble que le fichier "pipeline.py" actuel soit plus simple et contienne l'implémentation de "process\_and\_store" et "determine\_document\_type", alors qu'une version antérieure incluait d'autres éléments comme la classe "InterfaceDocument". Il semble qu'ils veuillent une documentation markdown basée sur ce script actuel. Il faudra alors bien documenter ces deux fonctions principales ainsi que leur rôle dans le cadre de cette bibliothèque.
-
-**Documentant la bibliothèque pipeline**
-
-L'utilisateur souhaite une documentation markdown pour la bibliothèque pipeline, basée sur "pipeline.py". Il semble que ce fichier définisse uniquement deux fonctions : `process_and_store` et `determine_document_type`. Nous devrons fournir des informations sur leur signature, leur fonctionnement, leurs arguments, valeurs de retour, exceptions et exemples d'utilisation, sans mentionner de classe "InterfaceDocument" qui n'est pas présente ici. Le tout sera structuré avec une introduction, installation et exemples, en précisant que cette bibliothèque fait partie de `clea-pipeline`.
-
-
-Réflexion durant 13 secondes
-
-
-````markdown
 # Module **pipeline**
 
 Orchestration du traitement de documents : extraction, segmentation et insertion en base.

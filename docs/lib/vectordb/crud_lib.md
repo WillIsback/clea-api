@@ -1,7 +1,3 @@
-Réflexion durant 4 secondes
-
-
-````markdown
 # Module `crud`
 
 Ce module fournit des opérations CRUD de haut niveau sur les entités **Document**, **Chunk** et **IndexConfig**, avec gestion des embeddings et des index pgvector.  

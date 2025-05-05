@@ -1,12 +1,3 @@
-**Génération de la documentation de la lib extractor**
-
-L'utilisateur souhaite générer la documentation de la bibliothèque "extractor" à partir d'un seul extracteur, tout en mentionnant qu'il y en a pour cinq types différents : txt, json, docx, html et pdf. Je vais donc créer un fichier markdown qui décrit la bibliothèque, en couvrant la classe de base, la méthode `build_document_with_chunks`, et chaque extracteur spécifique. Il faudra aussi intégrer des références croisées dans le style de la documentation Python dans MkDocs.
-
-
-Réflexion durant 5 secondes
-
-
-````markdown
 # Librairie **doc_loader** (Extraction de documents)
 
 Ce module fournit une abstraction et des implémentations concrètes pour charger et découper des documents de différents formats en **`DocumentWithChunks`**, prêt à être injecté dans la base de données via l’API **vectordb**.

@@ -1,7 +1,3 @@
-Réflexion durant 7 secondes
-
-
-````markdown
 # Module `index_manager`
 
 Gestion des index vectoriels pour pgvector au sein de **Cléa-API**.  

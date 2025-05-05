@@ -1,11 +1,3 @@
-**Génération de la documentation**
-
-L'utilisateur veut que je génère la documentation pour un module `search.py`. Je vais rédiger la doc en format Markdown pour décrire les fonctions, classes et méthodes principales du moteur de recherche, comme `SearchEngine`, avec ses méthodes `__init__`, `hybrid_search`, `_build_sql` et `_get_context`. Je vais inclure des descriptions, des exemples, des paramètres et les valeurs de retour. Je vais aussi vérifier si les schémas Pydantic sont à intégrer dans cette documentation, en particulier `SearchRequest`, `SearchResponse`, `ChunkResult`, et `HierarchicalContext`.
-
-
-Réflexion durant 6 secondes
-
-
 # Module **search** (Hybrid Semantic / Metadata Search)
 
 Ce module implémente un moteur de recherche hybride combinant filtres SQL, similarité vectorielle (pgvector) et rerank via Cross-Encoder.
