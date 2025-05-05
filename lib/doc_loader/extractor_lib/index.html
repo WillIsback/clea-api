@@ -69,6 +69,36 @@
     <ul class="current">
                 <li class="toctree-l2 current"><a class="reference internal current" href="#">Extracteurs</a>
     <ul class="current">
+    <li class="toctree-l3"><a class="reference internal" href="#installation">Installation</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2-constructeur-de-payloads">2. Constructeur de payloads</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#build_document_with_chunks-basepy">build_document_with_chunks(...) (base.py)&#x20;</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#3-selection-de-lextracteur">3. Sélection de l’extracteur</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#get_extractorfile_path-str-baseextractor-extractor_factorypy">get_extractor(file_path: str) → BaseExtractor (extractor_factory.py)&#x20;</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#4-point-dentree-docsloader">4. Point d’entrée : DocsLoader</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#docsloader-docs_loaderpy">DocsLoader (docs_loader.py)&#x20;</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#5-exemple-detaille-txtextractor">5. Exemple détaillé : TxtExtractor</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#txtextractor-txt_extractorpy">TxtExtractor (txt_extractor.py)&#x20;</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#6-autres-extracteurs">6. Autres extracteurs</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#7-usage-typique">7. Usage typique</a>
+    </li>
     </ul>
                 </li>
                 <li class="toctree-l2"><a class="reference internal" href="../splitter_lib/">Segmentation</a>
@@ -196,26 +226,20 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <p><strong>Génération de la documentation de la lib extractor</strong></p>
-<p>L'utilisateur souhaite générer la documentation de la bibliothèque "extractor" à partir d'un seul extracteur, tout en mentionnant qu'il y en a pour cinq types différents : txt, json, docx, html et pdf. Je vais donc créer un fichier markdown qui décrit la bibliothèque, en couvrant la classe de base, la méthode <code>build_document_with_chunks</code>, et chaque extracteur spécifique. Il faudra aussi intégrer des références croisées dans le style de la documentation Python dans MkDocs.</p>
-<p>Réflexion durant 5 secondes</p>
-<div class="highlight"><pre><span></span><code><span class="gh"># Librairie **doc_loader** (Extraction de documents)</span>
-
-Ce module fournit une abstraction et des implémentations concrètes pour charger et découper des documents de différents formats en <span class="gs">**`DocumentWithChunks`**</span>, prêt à être injecté dans la base de données via l’API <span class="gs">**vectordb**</span>.
+                <h1 id="librairie-doc_loader-extraction-de-documents">Librairie <strong>doc_loader</strong> (Extraction de documents)</h1>
+<p>Ce module fournit une abstraction et des implémentations concrètes pour charger et découper des documents de différents formats en <strong><code>DocumentWithChunks</code></strong>, prêt à être injecté dans la base de données via l’API <strong>vectordb</strong>.</p>
+<hr />
+<h2 id="installation">Installation</h2>
+<p>La librairie <code>doc_loader</code> fait partie du package <strong><code>clea-doc-loader</code></strong>. Elle se charge automatiquement des dépendances via votre <code>pyproject.toml</code> / <code>requirements.txt</code>.</p>
+<p><div class="highlight"><pre><span></span><code><span class="c1"># depuis la racine du projet</span>
+uv<span class="w"> </span>install<span class="w"> </span>.
+<span class="sb">````</span>
 
 ---
 
-<span class="gu">## Installation</span>
-
-La librairie <span class="sb">`doc_loader`</span> fait partie du package <span class="gs">**`clea-doc-loader`**</span>. Elle se charge automatiquement des dépendances via votre <span class="sb">`pyproject.toml`</span> / <span class="sb">`requirements.txt`</span>.
-
-```bash
-<span class="gh"># depuis la racine du projet</span>
-uv install .
+<span class="c1">## Structure du package</span>
 </code></pre></div>
-<hr />
-<h2 id="structure-du-package">Structure du package</h2>
-<div class="highlight"><pre><span></span><code>doc_loader/
+doc_loader/
 ├── extractor_factory.py    # Sélection de l’extracteur selon l’extension
 ├── base.py                 # Interface et helpers communs
 ├── docs_loader.py          # Point d’entrée : DocsLoader
@@ -225,26 +249,29 @@ uv install .
     ├── docx_extractor.py   # .docx
     ├── html_extractor.py   # .html
     └── pdf_extractor.py    # .pdf
-</code></pre></div>
-<hr />
-<h2 id="1-interface-commune">1. Interface commune</h2>
-<h3 id="baseextractor-basepy"><code>BaseExtractor</code> (<code>base.py</code>)&#x20;</h3>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">BaseExtractor</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Chemin vers le fichier à traiter.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code>---
 
-    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">extract_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">max_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DocumentWithChunks</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Extrait l’ensemble du document en un seul objet `DocumentWithChunks`.</span>
+## 1. Interface commune
 
-<span class="sd">        Args:</span>
-<span class="sd">            max_length: taille cible des chunks finaux.</span>
-<span class="sd">        Returns:</span>
-<span class="sd">            DocumentWithChunks(document: DocumentCreate, chunks: List[ChunkCreate])</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-</code></pre></div>
+### `BaseExtractor` (`base.py`)&amp;#x20;
+
+```python
+class BaseExtractor(ABC):
+    def __init__(self, file_path: str) -&gt; None:
+        &quot;&quot;&quot;Chemin vers le fichier à traiter.&quot;&quot;&quot;
+        self.file_path = Path(file_path)
+
+    @abstractmethod
+    def extract_one(self, *, max_length: int = 1000) -&gt; DocumentWithChunks:
+        &quot;&quot;&quot;
+        Extrait l’ensemble du document en un seul objet `DocumentWithChunks`.
+
+        Args:
+            max_length: taille cible des chunks finaux.
+        Returns:
+            DocumentWithChunks(document: DocumentCreate, chunks: List[ChunkCreate])
+        &quot;&quot;&quot;
+</code></pre></div></p>
 <hr />
 <h2 id="2-constructeur-de-payloads">2. Constructeur de payloads</h2>
 <h3 id="build_document_with_chunks-basepy"><code>build_document_with_chunks(...)</code> (<code>base.py</code>)&#x20;</h3>
