@@ -38,8 +38,6 @@ logger = logging.getLogger("rag-tests")
 LOG_DIR = Path("askai/test/log")
 LOG_PATH = LOG_DIR / "rag_test.log"
 
-# Configuration pour anyio (limitation à asyncio uniquement)
-pytestmark = pytest.mark.anyio(backends=["asyncio"])
 
 # Documents de test avec données réelles pour les différents tests
 TEST_DOCUMENTS = [

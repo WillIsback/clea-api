@@ -27,6 +27,9 @@ from vectordb.api.search_endpoint import router as search_router
 from doc_loader.api.loader_endpoint import router as doc_loader_router
 from pipeline.api.pipeline_endpoint import router as pipeline_router
 from askai.api.askai_endpoint import router as askai_router
+from stats.api.stats_api_endpoint import router as stats_router
+
+from vectordb.src.index_cleaner import schedule_cleanup_job
 
 from utils import (
     get_current_user,
@@ -238,6 +241,14 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 
     logger.info("✅ Base de données et ressources initialisées avec succès")
 
+    # Lancer le nettoyage des index orphelins
+    if not resources.get("cleanup_job_started"):
+        schedule_cleanup_job(interval_hours=24)
+        resources["cleanup_job_started"] = True
+        logger.info("✅ Job de nettoyage des index orphelins démarré")
+    else:
+        logger.info("Job de nettoyage des index orphelins déjà démarré")
+
     # Rendre le contrôle à l'application pendant son exécution
     yield
 
@@ -273,6 +284,7 @@ app.include_router(index_router, prefix="/index", tags=["Index"])
 app.include_router(doc_loader_router, prefix="/doc_loader", tags=["DocLoader"])
 app.include_router(pipeline_router, prefix="/pipeline", tags=["Pipeline"])
 app.include_router(askai_router, prefix="/askai", tags=["AskAI"])
+app.include_router(stats_router, prefix="/stats", tags=["Stats"])
 
 
 # Gestionnaires d'erreurs globaux

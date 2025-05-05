@@ -1,18 +1,18 @@
 # Module `index_manager`
 
 Gestion des index vectoriels pour pgvector au sein de **Cléa-API**.  
-Ce module offre une API simple pour créer, supprimer et contrôler l’état des index IVFFLAT associés aux chunks de documents.
+Ce module offre une API simple pour créer, supprimer et contrôler l'état des index IVFFLAT associés aux chunks de documents.
 
 ---
 
 ## Installation
 
 Le module `index_manager` fait partie du package `vectordb`.  
-Aucun paquet externe n’est nécessaire, si ce n’est votre installation PostgreSQL/pgvector et SQLAlchemy.
+Aucun paquet externe n'est nécessaire, si ce n'est votre installation PostgreSQL/pgvector et SQLAlchemy.
 
 ```bash
-pip install vectordb
-````
+uv pip install vectordb
+```
 
 ---
 
@@ -20,8 +20,10 @@ pip install vectordb
 
 1. [Créer un index simple](#create_simple_index)
 2. [Supprimer un index](#drop_index)
-3. [Vérifier l’état d’un index](#check_index_status)
+3. [Vérifier l'état d'un index](#check_index_status)
 4. [Vérifier tous les index](#check_all_indexes)
+5. [Nettoyer les index orphelins](#clean_orphaned_indexes)
+6. [Programmation du nettoyage automatique](#schedule_cleanup_job)
 
 ---
 
@@ -75,7 +77,7 @@ print(result)
 
 ## 2. `drop_index(corpus_id: str) → dict`
 
-Supprime l’index et la vue matérialisée correspondant au corpus.
+Supprime l'index et la vue matérialisée correspondant au corpus.
 
 ```python
 from vectordb.src.index_manager import drop_index
@@ -86,12 +88,12 @@ print(result)
 
 | Paramètre   | Type  | Description                                    |
 | ----------- | ----- | ---------------------------------------------- |
-| `corpus_id` | `str` | UUID du corpus dont on veut supprimer l’index. |
+| `corpus_id` | `str` | UUID du corpus dont on veut supprimer l'index. |
 
 **Retourne** :
 
-* `status`: `"success"`, `"warning"` (si l’index n’existait pas) ou `"error"`.
-* `message`: explication de l’opération.
+* `status`: `"success"`, `"warning"` (si l'index n'existait pas) ou `"error"`.
+* `message`: explication de l'opération.
 
 <details>
 <summary>Exemple de sortie</summary>
@@ -111,7 +113,7 @@ print(result)
 
 ## 3. `check_index_status(corpus_id: str) → dict`
 
-Récupère l’état courant de l’index vectoriel pour un corpus donné.
+Récupère l'état courant de l'index vectoriel pour un corpus donné.
 
 ```python
 from vectordb.src.index_manager import check_index_status
@@ -127,9 +129,9 @@ print(status)
 **Retourne** un objet contenant :
 
 * `corpus_id` : UUID interrogé.
-* `index_exists` : booléen, l’index existe-t-il en base ?
+* `index_exists` : booléen, l'index existe-t-il en base ?
 * `config_exists` : booléen, la config Pydantic/SQLAlchemy existe-t-elle ?
-* `is_indexed` : booléen, l’index est-il actif selon la config ?
+* `is_indexed` : booléen, l'index est-il actif selon la config ?
 * `index_type` : `"ivfflat"` ou `"hnsw"` ou `null`.
 * `chunk_count` : nombre total de chunks dans le corpus.
 * `indexed_chunks` : nombre de chunks réellement indexés (config).
@@ -159,7 +161,7 @@ print(status)
 
 ## 4. `check_all_indexes() → dict`
 
-Balaye tous les corpus en base et renvoie l’état de leurs index.
+Balaye tous les corpus en base et renvoie l'état de leurs index.
 
 ```python
 from vectordb.src.index_manager import check_all_indexes
@@ -172,7 +174,7 @@ print(all_status)
 
 * `status`: `"success"` ou `"error"`.
 * `corpus_count`: nombre de corpus trouvés.
-* `indexes`: tableau d’objets identiques à la sortie de `check_index_status()`.
+* `indexes`: tableau d'objets identiques à la sortie de `check_index_status()`.
 
 <details>
 <summary>Exemple de sortie</summary>
@@ -210,12 +212,98 @@ print(all_status)
 
 ---
 
-## Logging & erreurs
+<a name="clean_orphaned_indexes"></a>
 
-* Toutes les opérations journalisent en niveau **INFO** et **WARNING** via le logger standard.
-* En cas d’erreur, la transaction est roll-backée et `{"status":"error","message":...}` est retourné.
+## 5. `clean_orphaned_indexes() → dict`
+
+Nettoie les index et configurations orphelins qui ne sont plus associés à des corpus existants.
+
+Cette fonction est utile pour maintenir la propreté de la base de données après la suppression de documents :
+- Elle identifie les configurations d'index dont le corpus n'existe plus
+- Elle supprime les vues matérialisées et index PostgreSQL associés
+- Elle nettoie les entrées dans la table `index_configs`
+
+```python
+from vectordb.src.index_cleaner import clean_orphaned_indexes
+
+result = clean_orphaned_indexes()
+print(result)
+```
+
+**Retourne** un dictionnaire comportant :
+
+* `status`: `"success"`, `"partial_success"` (certaines suppressions ont échoué) ou `"error"`.
+* `deleted_count`: nombre de configurations d'index supprimées.
+* `cleaned_corpus_ids`: liste des identifiants de corpus nettoyés.
+* `errors`: liste d'erreurs éventuelles lors du nettoyage (si `partial_success`).
+* `timestamp`: horodatage de l'opération.
+
+<details>
+<summary>Exemple de sortie</summary>
+
+```json
+{
+  "status": "success",
+  "deleted_count": 2,
+  "cleaned_corpus_ids": [
+    "cccc111-dddd-eeee-ffff-gggghhhhiiii",
+    "jjjj222-kkkk-llll-mmmm-nnnnoooooppp"
+  ],
+  "errors": [],
+  "timestamp": "2025-05-05T10:30:45.123456"
+}
+```
+
+</details>
 
 ---
 
-> *Module* : `vectordb/src/index_manager.py`
-> *Dernière mise à jour* : 02 mai 2025
+<a name="schedule_cleanup_job"></a>
+
+## 6. `schedule_cleanup_job(interval_hours: int = 24) → None`
+
+Configure un travail périodique qui nettoie automatiquement les index orphelins.
+
+Cette fonction utilise APScheduler pour exécuter `clean_orphaned_indexes` à intervalles réguliers.
+Elle est généralement appelée au démarrage de l'application via la lifespan FastAPI.
+
+```python
+from vectordb.src.index_cleaner import schedule_cleanup_job
+
+# Configurer un nettoyage toutes les 12 heures
+schedule_cleanup_job(interval_hours=12)
+```
+
+| Paramètre        | Type  | Description                           | Défaut |
+| ---------------- | ----- | ------------------------------------- | ------ |
+| `interval_hours` | `int` | Intervalle en heures entre nettoyages | `24`   |
+
+**Exemple d'intégration dans la lifespan FastAPI** :
+
+```python
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
+from vectordb.src.index_cleaner import schedule_cleanup_job
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Démarrage de l'application
+    schedule_cleanup_job(interval_hours=24)
+    yield
+    # Arrêt de l'application - rien à faire car APScheduler s'arrête automatiquement
+
+app = FastAPI(lifespan=lifespan)
+```
+
+---
+
+## Logging & erreurs
+
+* Toutes les opérations journalisent en niveau **INFO** et **WARNING** via le logger standard.
+* En cas d'erreur, la transaction est roll-backée et `{"status":"error","message":...}` est retourné.
+* Le nettoyage des index orphelins génère des logs détaillés pour faciliter le suivi des opérations.
+
+---
+
+> *Modules* : `vectordb/src/index_manager.py`, `vectordb/src/index_cleaner.py`  
+> *Dernière mise à jour* : 05 mai 2025

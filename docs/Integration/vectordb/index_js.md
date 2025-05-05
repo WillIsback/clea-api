@@ -1,7 +1,7 @@
 
 # Intégration JavaScript / TypeScript – Gestion des index vectoriels
 
-Ce guide explique comment gérer les index **IVFFLAT** / **HNSW** de **Vectordb** depuis JavaScript ou TypeScript, en appelant directement les endpoints FastAPI :contentReference[oaicite:2]{index=2}:contentReference[oaicite:3]{index=3}.
+Ce guide explique comment gérer les index **IVFFLAT** / **HNSW** de **Vectordb** depuis JavaScript ou TypeScript, en appelant directement les endpoints FastAPI 
 
 ---
 

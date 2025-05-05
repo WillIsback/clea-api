@@ -9,8 +9,9 @@ import statistics
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 from utils import get_logger
+from datetime import datetime
 
-from .database import Chunk
+from .database import Chunk, SearchQuery
 from .embeddings import EmbeddingGenerator
 from .ranking import ResultRanker
 
@@ -128,7 +129,42 @@ class SearchEngine:
             # tous égaux mais > threshold → pertinence max
             return [1.0] * len(scores)
         return [(s - mn) / delta for s in scores]
-
+    
+    def log_search_query(self, db: Session, req: SearchRequest, response: SearchResponse) -> None:
+        """Enregistre la recherche effectuée dans l'historique.
+        
+        Cette méthode persiste les métadonnées de la requête et de ses résultats
+        pour permettre l'analyse statistique ultérieure.
+        
+        Args:
+            db: Session SQLAlchemy active.
+            req: Requête de recherche soumise.
+            response: Réponse générée contenant les résultats et métriques.
+        """
+        try:
+            # Création de l'entrée d'historique
+            search_log = SearchQuery(
+                query_text=req.query,
+                theme=req.theme,
+                document_type=req.document_type,
+                corpus_id=req.corpus_id,
+                results_count=response.totalResults,
+                confidence_level=response.confidence.level if response.confidence else 0.0,
+                created_at=datetime.now()
+                # user_id peut être ajouté si l'authentification est implémentée
+            )
+            
+            # Persistance en base
+            db.add(search_log)
+            db.commit()
+            
+            logger.debug(f"Recherche '{req.query}' historisée avec id={search_log.id}")
+            
+        except Exception as e:
+            db.rollback()
+            logger.error(f"Échec d'historisation de la recherche '{req.query}': {str(e)}")
+            # Ne pas lever d'exception pour ne pas perturber le traitement principal
+            
     def hybrid_search(self, db: Session, req: SearchRequest) -> SearchResponse:
         """Exécute une recherche hybride avec évaluation de confiance.
 
@@ -246,7 +282,7 @@ class SearchEngine:
             f"confiance={confidence.level:.2f}, {confidence.message}"
         )
 
-        return SearchResponse(
+        response = SearchResponse(
             query=req.query,
             topK=req.top_k,
             totalResults=len(raw_rows),
@@ -255,6 +291,11 @@ class SearchEngine:
             normalized=req.normalize_scores,
             message=confidence.message,
         )
+        
+        # Historisation de la recherche
+        self.log_search_query(db, req, response)
+        
+        return response
 
     @staticmethod
     def _build_sql(req: SearchRequest) -> Tuple[str, Dict[str, Any]]:

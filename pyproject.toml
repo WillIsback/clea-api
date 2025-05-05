@@ -46,16 +46,11 @@ dependencies = [
 
 [tool.pytest.ini_options]
 pythonpath = "."
-# Configuration pytest-asyncio
-asyncio_mode = "strict"
-asyncio_default_fixture_loop_scope = "function"
-asyncio_default_test_loop_scope = "function"
-# Limiter anyio à asyncio uniquement
-anyio_backend = "asyncio"
+
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["clea_doc_loader", "clea_vectordb", "clea_pipeline"]
+include = ["doc_loader", "vectordb", "pipeline", "askai", "stats", "utils"]
 exclude = ["static", "test", "docs"]
 
 [project.urls]

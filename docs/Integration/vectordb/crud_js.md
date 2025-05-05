@@ -2,7 +2,7 @@
 
 # Intégration JavaScript / TypeScript – Vectordb CRUD
 
-Ce guide montre comment appeler les endpoints CRUD de **Vectordb** (/database) depuis un client JavaScript ou TypeScript, en s’appuyant sur les schémas Pydantic et les routes FastAPI :contentReference[oaicite:0]{index=0}.
+Ce guide montre comment appeler les endpoints CRUD de **Vectordb** (/database) depuis un client JavaScript ou TypeScript, en s’appuyant sur les schémas Pydantic et les routes FastAPI 
 
 ---
 

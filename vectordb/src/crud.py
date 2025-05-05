@@ -1,5 +1,5 @@
 from .database import get_db, Document, Chunk, IndexConfig
-from .schemas import DocumentCreate, DocumentUpdate
+from .schemas import DocumentCreate, DocumentUpdate, DocumentResponse
 import uuid
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
@@ -306,13 +306,16 @@ def delete_document_chunks(
     document_id: int, chunk_ids: Optional[List[int]] = None
 ) -> Dict[str, Any]:
     """Supprime des chunks spécifiques d'un document ou tous les chunks si aucun ID n'est spécifié.
+    
+    Cette fonction supprime des chunks et met à jour les statistiques d'index du corpus.
+    L'index devient invalide après suppression de chunks et nécessite une reconstruction.
 
     Args:
         document_id: ID du document.
         chunk_ids: Liste des IDs des chunks à supprimer (si None, supprime tous les chunks).
 
     Returns:
-        Dict[str, Any]: Résultat de l'opération.
+        Dict contenant le statut de l'opération et des informations sur l'index.
     """
     db = next(get_db())
     try:
@@ -322,11 +325,8 @@ def delete_document_chunks(
             return {"error": f"Document avec ID {document_id} introuvable."}
 
         # Récupérer la configuration d'index pour ce corpus
-        cfg = (
-            db.query(IndexConfig)
-            .filter(IndexConfig.corpus_id == document.corpus_id)
-            .first()
-        )
+        corpus_id = document.corpus_id
+        cfg = db.query(IndexConfig).filter(IndexConfig.corpus_id == corpus_id).first()
 
         # Supprimer les chunks spécifiés ou tous les chunks
         if chunk_ids:
@@ -342,7 +342,7 @@ def delete_document_chunks(
 
             # Mettre à jour le compteur de chunks dans la configuration d'index
             if cfg:
-                cfg.chunk_count -= len(chunks_to_delete)
+                cfg.chunk_count = max(0, cfg.chunk_count - len(chunks_to_delete))
 
             # Supprimer les chunks spécifiés
             for chunk in chunks_to_delete:
@@ -351,16 +351,28 @@ def delete_document_chunks(
             deleted_count = len(chunks_to_delete)
         else:
             # Compter les chunks pour la mise à jour de la configuration d'index
-            chunk_count = (
-                db.query(Chunk).filter(Chunk.document_id == document_id).count()
-            )
+            chunk_count = db.query(Chunk).filter(Chunk.document_id == document_id).count()
 
             if cfg:
-                cfg.chunk_count -= chunk_count
+                cfg.chunk_count = max(0, cfg.chunk_count - chunk_count)
 
             # Supprimer tous les chunks du document
-            deleted_count = (
-                db.query(Chunk).filter(Chunk.document_id == document_id).delete()
+            deleted_count = db.query(Chunk).filter(Chunk.document_id == document_id).delete()
+
+        # Marquer l'index comme invalide si des chunks ont été supprimés
+        index_status = None
+        if deleted_count > 0 and cfg and cfg.is_indexed:
+            # L'index est maintenant obsolète - le marquer comme nécessitant une reconstruction
+            cfg.is_indexed = False
+            index_status = {
+                "status": "warning",
+                "message": f"L'index du corpus {corpus_id} est maintenant invalide suite à la suppression de chunks"
+            }
+            
+            # Marquer le document comme nécessitant une réindexation
+            db.query(Document).filter(Document.id == document_id).update(
+                {Document.index_needed: True},
+                synchronize_session=False
             )
 
         db.commit()
@@ -368,11 +380,14 @@ def delete_document_chunks(
         # Construire le résultat
         result = {
             "document_id": document_id,
+            "corpus_id": corpus_id,
             "chunks_deleted": deleted_count,
-            "remaining_chunks": db.query(Chunk)
-            .filter(Chunk.document_id == document_id)
-            .count(),
+            "remaining_chunks": db.query(Chunk).filter(Chunk.document_id == document_id).count(),
         }
+        
+        if index_status:
+            result["index_status"] = index_status
+            result["reindex_needed"] = True
 
         return result
 
@@ -388,12 +403,15 @@ def delete_document_chunks(
 
 def delete_document(document_id: int) -> Dict[str, Any]:
     """Supprime un document de la base de données avec tous ses chunks associés.
+    
+    Cette fonction supprime un document et tous ses chunks. Si le document est le dernier
+    de son corpus, l'index vectoriel associé est également supprimé.
 
     Args:
-        document_id: ID du document à supprimer.
+        document_id: Identifiant du document à supprimer.
 
     Returns:
-        Dict[str, Any]: Résultat de l'opération.
+        Dict contenant le statut de l'opération et les actions réalisées.
     """
     db = next(get_db())
     try:
@@ -402,27 +420,57 @@ def delete_document(document_id: int) -> Dict[str, Any]:
         if not document:
             return {"error": f"Document avec ID {document_id} introuvable."}
 
-        # Récupérer le corpus_id et mettre à jour la configuration d'index
+        # Récupérer le corpus_id pour les opérations sur l'index
         corpus_id = document.corpus_id
+        index_action = None
+        
         if corpus_id:
+            # Vérifier si c'est le dernier document du corpus
+            remaining_docs = db.query(Document).filter(
+                Document.corpus_id == corpus_id,
+                Document.id != document_id
+            ).count()
+            
             # Compter les chunks du document pour mettre à jour les compteurs
-            chunk_count = (
-                db.query(Chunk).filter(Chunk.document_id == document_id).count()
-            )
+            chunk_count = db.query(Chunk).filter(Chunk.document_id == document_id).count()
 
             # Mettre à jour la configuration d'index
-            cfg = (
-                db.query(IndexConfig).filter(IndexConfig.corpus_id == corpus_id).first()
-            )
+            cfg = db.query(IndexConfig).filter(IndexConfig.corpus_id == corpus_id).first()
+            
             if cfg:
-                cfg.chunk_count -= chunk_count
+                cfg.chunk_count = max(0, cfg.chunk_count - chunk_count)
+                
+                # Si c'est le dernier document du corpus, supprimer l'index vectoriel
+                if remaining_docs == 0:
+                    from .index_manager import drop_index
+                    index_result = drop_index(corpus_id)
+                    index_action = index_result
+                    
+                    # Supprimer la configuration d'index car il n'y a plus de documents
+                    db.delete(cfg)
+                else:
+                    # Sinon, marquer le corpus comme nécessitant une réindexation
+                    cfg.is_indexed = False
+                    index_action = {
+                        "status": "warning",
+                        "message": f"Corpus {corpus_id} nécessite une réindexation après suppression de document"
+                    }
 
         # Supprimer le document (et ses chunks grâce à la cascade)
         db.delete(document)
         db.commit()
 
         logger.info("Document avec ID %s supprimé avec succès.", document_id)
-        return {"success": f"Document avec ID {document_id} supprimé avec succès."}
+        
+        result = {
+            "success": f"Document avec ID {document_id} supprimé avec succès.",
+            "corpus_id": corpus_id
+        }
+        
+        if index_action:
+            result["index_action"] = index_action
+            
+        return result
 
     except Exception as e:
         db.rollback()
@@ -430,3 +478,62 @@ def delete_document(document_id: int) -> Dict[str, Any]:
             "Erreur lors de la suppression du document %s: %s", document_id, str(e)
         )
         return {"error": str(e)}
+    
+def get_documents(
+    theme: Optional[str] = None,
+    document_type: Optional[str] = None,
+    corpus_id: Optional[str] = None,
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = None,
+) -> List[DocumentResponse]:
+    """Liste l'ensemble des documents de la base de données avec leur nombre de chunks.
+
+    Cette fonction permet de récupérer un ensemble paginé de documents avec possibilité
+    de filtrage sur différents critères.
+
+    Args:
+        theme: Filtre optionnel pour le thème du document.
+        document_type: Filtre optionnel pour le type du document.
+        corpus_id: Filtre optionnel sur l'identifiant du corpus.
+        skip: Nombre de documents à ignorer (pour la pagination).
+        limit: Nombre maximal de documents à retourner.
+        db: Session de base de données fournie par dépendance.
+
+    Returns:
+        Liste des documents formatés avec leur nombre de chunks associés.
+    """
+    # Vérification plus robuste si db est None ou un générateur
+    if db is None or not hasattr(db, 'query'):
+        db = next(get_db())
+        
+    q = db.query(Document)
+    if theme:
+        q = q.filter(Document.theme == theme)
+    if document_type:
+        q = q.filter(Document.document_type == document_type)
+    if corpus_id:
+        q = q.filter(Document.corpus_id == corpus_id)
+
+    docs = q.offset(skip).limit(limit).all()
+
+    # Préparer la liste de réponses en incluant le comptage des chunks
+    result = []
+    for doc in docs:
+        # Compter les chunks pour ce document
+        chunk_count = db.query(Chunk).filter(Chunk.document_id == doc.id).count()
+
+        # Créer un objet DocumentResponse à partir du document
+        doc_response = DocumentResponse(
+            id=doc.id,
+            title=doc.title,
+            theme=doc.theme,
+            document_type=doc.document_type,
+            publish_date=doc.publish_date,
+            corpus_id=doc.corpus_id,
+            chunk_count=chunk_count,
+            index_needed=doc.index_needed,
+        )
+        result.append(doc_response)
+
+    return result

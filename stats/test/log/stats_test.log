@@ -1,0 +1,54 @@
+=== Tests d'index démarrés le 2025-05-05 19:47:16.611900 ===
+
+INFO: 2025-05-05 19:47:16.612311 -- Démarrage du test compute_document_stats
+
+INFO: 2025-05-05 19:47:16.647090 -- Voici les stats :
+
+INFO: 2025-05-05 19:47:16.647195 -- Total Count: 6
+
+INFO: 2025-05-05 19:47:16.647234 -- By Theme: {'Thème générique': 2, 'Informatique': 1, 'Finance': 1, 'Marketing': 1, 'Intelligence Artificielle': 1}
+
+INFO: 2025-05-05 19:47:16.647265 -- By Type: {'TXT': 3, 'PDF': 2, 'DOCX': 1}
+
+INFO: 2025-05-05 19:47:16.647293 -- Recently Added: 6
+
+INFO: 2025-05-05 19:47:16.647322 -- Percent Change: 100.0
+
+INFO: 2025-05-05 19:47:16.647348 -- compute_document_stats exécuté avec succès
+
+INFO: 2025-05-05 19:47:16.647377 -- Test compute_document_stats réussi
+
+INFO: 2025-05-05 19:47:16.648399 -- Démarrage du test compute_search_stats
+
+INFO: 2025-05-05 19:47:16.666803 -- Voici les stats :
+
+INFO: 2025-05-05 19:47:16.666925 -- Total Count: 3
+
+INFO: 2025-05-05 19:47:16.666962 -- last month total_count: 3
+
+INFO: 2025-05-05 19:47:16.666994 -- Percent Change: 0.0
+
+INFO: 2025-05-05 19:47:16.667032 -- Top Queries: [{'query': 'Les fils de Gomer ?', 'count': 1}, {'query': 'test_1', 'count': 1}, {'query': 'structure projet clea-api', 'count': 1}]
+
+INFO: 2025-05-05 19:47:16.667060 -- compute_search_stats exécuté avec succès
+
+INFO: 2025-05-05 19:47:16.667092 -- Test compute_search_stats réussi
+
+INFO: 2025-05-05 19:47:16.668292 -- Démarrage du test compute_system_stats
+
+INFO: 2025-05-05 19:47:16.694550 -- Voici les stats :
+
+INFO: 2025-05-05 19:47:16.694659 -- Satisfaction: 0.0
+
+INFO: 2025-05-05 19:47:16.694697 -- Avg Confidence: 0.19999999999999998
+
+INFO: 2025-05-05 19:47:16.694727 -- Percent Change: 0.0
+
+INFO: 2025-05-05 19:47:16.694754 -- Indexed Corpora: 0
+
+INFO: 2025-05-05 19:47:16.694780 -- Total Corpora: 6
+
+INFO: 2025-05-05 19:47:16.694805 -- compute_system_stats exécuté avec succès
+
+INFO: 2025-05-05 19:47:16.694834 -- Test compute_system_stats réussi
+

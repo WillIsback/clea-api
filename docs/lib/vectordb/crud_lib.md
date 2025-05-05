@@ -2,8 +2,6 @@
 
 Ce module fournit des opérations CRUD de haut niveau sur les entités **Document**, **Chunk** et **IndexConfig**, avec gestion des embeddings et des index pgvector.  
 
-Fichier source : `vectordb/src/crud.py` :contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}
-
 ---
 
 ## Installation

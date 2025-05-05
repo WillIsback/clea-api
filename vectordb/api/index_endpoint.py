@@ -112,3 +112,23 @@ def get_all_indexes():
         dict: État des index pour tous les corpus.
     """
     return check_all_indexes()
+
+
+@router.post(
+    "/cleanup-indexes",
+    summary="Nettoyer les index vectoriels orphelins",
+    response_model=dict,
+)
+def cleanup_orphaned_indexes():
+    """Nettoie les index vectoriels orphelins.
+    
+    Cette route identifie et supprime les configurations d'index et vues matérialisées
+    qui ne sont plus associées à des corpus existants dans la base de données.
+    
+    Returns:
+        dict: Résultat de l'opération avec statistiques.
+    """
+    from ..src.index_cleaner import clean_orphaned_indexes
+    
+    result = clean_orphaned_indexes()
+    return result

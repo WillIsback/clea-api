@@ -7,21 +7,22 @@ La solution repose sur **PostgreSQL** enrichi de l'extension **pgvector**, pilot
 
 ## Table des matières
 
-1. Configuration et connexion
-2. Modèles de données
-   - Document
-   - Chunk
-   - IndexConfig
-3. Indexation vectorielle
-4. Schéma global
-5. Bonnes pratiques
-6. Installation et configuration
+1. Configuration et connexion  
+2. Modèles de données  
+   - Document  
+   - Chunk  
+   - IndexConfig  
+   - **SearchQuery**  
+3. Indexation vectorielle  
+4. Schéma global  
+5. Bonnes pratiques  
+6. Installation et configuration  
 
 ---
 
 ## 1. Configuration et connexion
 
-Les paramètres de connexion sont lus depuis le fichier .env :
+Les paramètres de connexion sont lus depuis le fichier `.env` :
 
 ```python
 DB_USER     = os.getenv("DB_USER", "postgres")
@@ -31,12 +32,20 @@ DB_PORT     = os.getenv("DB_PORT", "5432")
 DB_NAME     = os.getenv("DB_NAME", "vectordb")
 
 DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-```
+````
 
 ### Composants principaux
 
 * **Engine SQLAlchemy** : `create_engine(DATABASE_URL)`
-* **Session factory** : `SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)`
+* **Session factory** :
+
+  ```python
+  SessionLocal = sessionmaker(
+      bind=engine,
+      autocommit=False,
+      autoflush=False
+  )
+  ```
 * **Base déclarative** : `Base = declarative_base()`
 
 ### Utilitaire de session
@@ -44,12 +53,9 @@ DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NA
 ```python
 def get_db():
     """Crée et retourne une session de base de données.
-    
-    Génère une session SQLAlchemy compatible avec FastAPI à utiliser 
-    comme dépendance dans les endpoints.
-    
+
     Yields:
-        Session: Session SQLAlchemy pour les opérations de base de données
+        Session: Session SQLAlchemy pour les opérations de base.
     """
     db = SessionLocal()
     try:
@@ -58,42 +64,47 @@ def get_db():
         db.close()
 ```
 
-### Initialisation
+### Initialisation et mise à jour
 
 ```python
 def init_db():
-    """Initialise la base de données avec les tables et extensions nécessaires.
-    
-    Crée l'extension pgvector si elle n'existe pas déjà et génère toutes 
-    les tables définies dans les modèles SQLAlchemy.
-    """
+    """Initialise la base avec pgvector + toutes les tables."""
     with engine.connect() as conn:
         conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
         conn.commit()
     Base.metadata.create_all(bind=engine)
 ```
 
+```python
+def update_db():
+    """Crée les tables manquantes après évolution des modèles."""
+    inspector = inspect(engine)
+    existing = inspector.get_table_names()
+    to_create = [
+        name for name in Base.metadata.tables
+        if name not in existing
+    ]
+    if to_create:
+        Base.metadata.create_all(
+            bind=engine,
+            tables=[Base.metadata.tables[n] for n in to_create]
+        )
+    return {
+        "created": to_create,
+        "existing": existing
+    }
+```
+
 ---
 
 ## 2. Modèles de données
+
+Toutes les définitions suivantes proviennent de `database.py` .
 
 ### 2.1. Document
 
 ```python
 class Document(Base):
-    """Stocke les métadonnées globales des documents.
-    
-    Attrs:
-        id (int): Identifiant unique du document
-        title (str): Titre du document
-        theme (str): Thème ou catégorie du document
-        document_type (str): Type de document (PDF, DOCX, etc.)
-        publish_date (Date): Date de publication du document
-        corpus_id (str): UUID du corpus auquel appartient ce document
-        created_at (Date): Date d'ajout à la base de données
-        index_needed (bool): Indique si une mise à jour d'index est nécessaire
-        chunks (relationship): Relation avec les fragments textuels
-    """
     __tablename__ = "documents"
 
     id            = mapped_column(Integer, primary_key=True)
@@ -106,7 +117,9 @@ class Document(Base):
     index_needed  = mapped_column(Boolean, default=False)
 
     chunks = relationship(
-        "Chunk", back_populates="document", cascade="all, delete-orphan"
+        "Chunk",
+        back_populates="document",
+        cascade="all, delete-orphan"
     )
 
     __table_args__ = (
@@ -117,9 +130,9 @@ class Document(Base):
     )
 ```
 
-* **Métadonnées** : titre, thème, type, date de publication, identifiant de corpus (UUID)
-* **Relation 1–N** vers les `Chunk` (cascade delete)
-* **Index SQL** sur les colonnes fréquemment utilisées pour le filtrage
+* Stocke les métadonnées d’un document (titre, thème, type, dates, corpus\_id).
+* `index_needed`: flag pour déclencher la (re)création de l’index vectoriel.
+* Relation **1–N** vers la table `chunks`.
 
 ---
 
@@ -127,31 +140,16 @@ class Document(Base):
 
 ```python
 class Chunk(Base):
-    """Stocke les fragments de texte avec leurs embeddings vectoriels.
-    
-    Attrs:
-        id (int): Identifiant unique du fragment
-        document_id (int): Référence au document parent
-        content (str): Texte du fragment
-        embedding (Vector): Représentation vectorielle (768 dim)
-        start_char (int): Position de début dans le document source
-        end_char (int): Position de fin dans le document source
-        hierarchy_level (int): Niveau hiérarchique (0-3)
-        parent_chunk_id (int): Référence au fragment parent
-        document (relationship): Relation avec le document parent
-        parent (relationship): Relation avec le fragment parent
-        children (relationship): Relation avec les fragments enfants
-    """
     __tablename__ = "chunks"
 
-    id             = mapped_column(Integer, primary_key=True)
-    document_id    = mapped_column(Integer, ForeignKey("documents.id", ondelete="CASCADE"), nullable=False)
-    content        = mapped_column(Text, nullable=False)
-    embedding      = mapped_column(Vector(768))
-    start_char     = mapped_column(Integer)
-    end_char       = mapped_column(Integer)
-    hierarchy_level= mapped_column(Integer, default=3)
-    parent_chunk_id= mapped_column(Integer, ForeignKey("chunks.id", ondelete="CASCADE"))
+    id              = mapped_column(Integer, primary_key=True)
+    document_id     = mapped_column(Integer, ForeignKey("documents.id", ondelete="CASCADE"), nullable=False)
+    content         = mapped_column(Text, nullable=False)
+    embedding       = mapped_column(Vector(768))
+    start_char      = mapped_column(Integer)
+    end_char        = mapped_column(Integer)
+    hierarchy_level = mapped_column(Integer, default=3)
+    parent_chunk_id = mapped_column(Integer, ForeignKey("chunks.id", ondelete="CASCADE"))
 
     document = relationship("Document", back_populates="chunks")
     parent   = relationship("Chunk", remote_side=[id], back_populates="children")
@@ -163,19 +161,9 @@ class Chunk(Base):
     )
 ```
 
-* **Contenu texte** segmenté en **chunks** hiérarchiques (niveau 0 à 3)
-* **Embedding** : vecteur de dimension 768 stocké via **pgvector**
-* **Auto-relation** parent–enfant pour reconstruire l'arborescence textuelle
-* **Index** pour accélérer les recherches par document et niveau hiérarchique
-
-#### Hiérarchie des chunks
-
-| Niveau | Description | Usage |
-|--------|-------------|-------|
-| 0 | Document entier | Aperçu global |
-| 1 | Sections | Structure principale |
-| 2 | Paragraphes | Contexte intermédiaire |
-| 3 | Fragments | Recherche précise |
+* Stocke le texte segmenté en « chunks » hiérarchisés (niveaux 0 à 3).
+* `embedding`: vecteur 768-dimensions via **pgvector**.
+* Auto-relation parent–enfant pour reconstruire la hiérarchie.
 
 ---
 
@@ -183,37 +171,48 @@ class Chunk(Base):
 
 ```python
 class IndexConfig(Base):
-    """Configure les index vectoriels par corpus.
-    
-    Attrs:
-        id (int): Identifiant unique de la configuration
-        corpus_id (str): Identifiant du corpus concerné
-        index_type (str): Type d'index vectoriel ('ivfflat' ou 'hnsw')
-        is_indexed (bool): Indique si l'index a été créé
-        chunk_count (int): Nombre de fragments dans le corpus
-        last_indexed (Date): Dernière date d'indexation
-        ivf_lists (int): Nombre de listes pour index IVFFLAT
-        hnsw_m (int): Nombre de connexions par nœud pour HNSW
-        hnsw_ef_construction (int): Facteur d'exploration pour HNSW
-    """
     __tablename__ = "index_configs"
 
-    id                = mapped_column(Integer, primary_key=True)
-    corpus_id         = mapped_column(String(36), unique=True, nullable=False)
-    index_type        = mapped_column(String(20), default="ivfflat")
-    is_indexed        = mapped_column(Boolean, default=False)
-    chunk_count       = mapped_column(Integer, default=0)
-    last_indexed      = mapped_column(Date, nullable=True)
-    ivf_lists         = mapped_column(Integer, default=100)
-    hnsw_m            = mapped_column(Integer, default=16)
-    hnsw_ef_construction = mapped_column(Integer, default=200)
+    id                 = mapped_column(Integer, primary_key=True)
+    corpus_id          = mapped_column(String(36), unique=True, nullable=False)
+    index_type         = mapped_column(String(20), default="ivfflat")
+    is_indexed         = mapped_column(Boolean, default=False)
+    chunk_count        = mapped_column(Integer, default=0)
+    last_indexed       = mapped_column(Date, nullable=True)
+    ivf_lists          = mapped_column(Integer, default=100)
+    hnsw_m             = mapped_column(Integer, default=16)
+    hnsw_ef_construction= mapped_column(Integer, default=200)
 ```
 
-* **Configuration vectorielle** par `corpus_id`
-* **Types d'index** disponibles :
-  * `ivfflat` (inverted file) - rapide pour corpus moyens, moins précis
-  * `hnsw` (graph-based) - plus précis, meilleur pour grands corpus
-* Paramètres ajustables pour optimiser vitesse et précision de recherche
+* Configure le type d’index (`ivfflat` ou `hnsw`) et ses paramètres par `corpus_id`.
+* `is_indexed` & `last_indexed` pour suivre l’état de l’index.
+
+---
+
+### 2.4. SearchQuery (nouvel historique des recherches)
+
+```python
+class SearchQuery(Base):
+    __tablename__ = "search_queries"
+
+    id                = mapped_column(Integer, primary_key=True)
+    query_text        = mapped_column(String, nullable=False)
+    theme             = mapped_column(String, nullable=True)
+    document_type     = mapped_column(String, nullable=True)
+    corpus_id         = mapped_column(String, nullable=True)
+    results_count     = mapped_column(Integer, default=0)
+    confidence_level  = mapped_column(Float, default=0.0)
+    created_at        = mapped_column(DateTime, default=datetime.now)
+    user_id           = mapped_column(String, nullable=True)
+```
+
+* **Objectif** : historiser chaque action de recherche pour analyser tendances et usage.
+* `query_text` : texte saisi par l’utilisateur.
+* Filtres optionnels : `theme`, `document_type`, `corpus_id`.
+* `results_count` : nombre de chunks retournés.
+* `confidence_level` : score agrégé ou métrique de confiance.
+* `created_at` : horodatage de la requête.
+* `user_id` : identifiant optionnel de l’utilisateur (SSO, session, etc.).
 
 ---
 

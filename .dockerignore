@@ -1,0 +1,70 @@
+# Caches et fichiers temporaires Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.pytest_cache/
+.installed.cfg
+MANIFEST
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+
+# Logs et bases de données
+*.log
+logs/
+*/log/
+*.sql
+*.sqlite
+*.db
+
+# Environnements virtuels
+.env
+.venv
+env/
+venv/
+ENV/
+.uv/
+
+# Documentation générée et tests
+site/
+mkdocs.yml
+*/test/
+
+# Fichiers Git
+.git/
+.github/
+.gitignore
+.gitattributes
+
+# Fichiers IDE/éditeurs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Fichiers Docker
+.dockerignore
+
+# Fichiers spécifiques au développement
+clea_api.egg-info/
+uv.lock
+demo/
+cliff.toml
+CHANGELOG.md
+
+# Ne pas exclure les modèles
+!askai/models/

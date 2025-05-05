@@ -3,6 +3,8 @@
 *Framework* de **chargement de documents**, **recherche hybride** et **RAG** (vectorielle + métadonnées + génération) pour PostgreSQL + pgvector.  
 Conçu **100 % local & hors-ligne** pour vos données sensibles (médicales, financières, juridiques…). 
 
+[![Licence MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/WillIsback/clea-api/blob/main/LICENSE)  
+
 ---
 
 ## Accès rapides 📚

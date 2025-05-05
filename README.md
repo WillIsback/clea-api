@@ -26,6 +26,7 @@ Il s'utilise :
 | **Pipeline end-to-end** | [Pipeline](docs/lib/pipeline/pipeline_lib.md) |
 | **Référence API Python (autogen)** | [Doc Loader](docs/api/lib/doc_loader/extractor_references.md) · [Vectordb](docs/api/lib/vectordb/crud_references.md) · [Pipeline](docs/api/lib/pipeline/pipeline_references.md) |
 | **IA génératrice (RAG)** | [AskAI](docs/lib/askai/rag_lib.md) |
+| **Stats** | [Stats](docs/lib/stats/stats_computer_lib.md) |
 | **OpenAPI / Endpoints REST** | [REST API](docs/api/rest/rest_api.md) |
 
 ---

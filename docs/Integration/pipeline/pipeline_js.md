@@ -1,6 +1,6 @@
 # Intégration **JavaScript / TypeScript** — Doc Loader
 
-Ce guide montre comment appeler l’endpoint **`/doc_loader/upload-file`** pour uploader un fichier et récupérer ses chunks extraits :contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}.
+Ce guide montre comment appeler l’endpoint **`/doc_loader/upload-file`** pour uploader un fichier et récupérer ses chunks extraits
 
 > Les exemples utilisent **`fetch`** natif (Node 18+) ou navigateur moderne.  
 > Pour Node < 18, installez un polyfill :

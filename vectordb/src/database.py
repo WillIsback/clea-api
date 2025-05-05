@@ -1,4 +1,3 @@
-import logging
 import os
 
 from datetime import datetime
@@ -15,8 +14,11 @@ from sqlalchemy import (
     Integer,
     String,
     Text,
+    Float,
+    DateTime,
     create_engine,
     text,
+    inspect,
 )
 
 from sqlalchemy.orm import (
@@ -155,7 +157,35 @@ class IndexConfig(Base):
     hnsw_m = mapped_column(Integer, default=16)
     hnsw_ef_construction = mapped_column(Integer, default=200)
 
-
+class SearchQuery(Base):
+    """Modèle pour l'historisation des recherches effectuées.
+    
+    Cette table stocke l'historique des requêtes de recherche avec des métadonnées
+    contextuelles pour permettre l'analyse statistique des tendances et usages.
+    
+    Attributes:
+        id: Identifiant unique de la recherche.
+        query_text: Texte de la requête effectuée.
+        theme: Thème optionnel sur lequel la recherche a été restreinte.
+        document_type: Type de document optionnel sur lequel la recherche a été restreinte.
+        corpus_id: Identifiant du corpus optionnel sur lequel la recherche a été restreinte.
+        results_count: Nombre de résultats retournés.
+        confidence_level: Niveau de confiance calculé pour les résultats.
+        created_at: Date et heure d'exécution de la recherche.
+        user_id: Identifiant optionnel de l'utilisateur ayant effectué la recherche.
+    """
+    __tablename__ = "search_queries"
+    
+    id = mapped_column(Integer, primary_key=True)
+    query_text = mapped_column(String, nullable=False)
+    theme = mapped_column(String, nullable=True)
+    document_type = mapped_column(String, nullable=True)
+    corpus_id = mapped_column(String, nullable=True)
+    results_count = mapped_column(Integer, default=0)
+    confidence_level = mapped_column(Float, default=0.0)
+    created_at = mapped_column(DateTime, default=datetime.now)
+    user_id = mapped_column(String, nullable=True)
+    
 # Fonction pour obtenir une session de base de données
 def get_db():
     """Crée et retourne une session de base de données.
@@ -189,342 +219,59 @@ def init_db():
 ##############################################################
 #  Fonction helper
 ##############################################################
-# def check_and_update_indexes() -> Dict[str, Any]:
-#     """Vérifie et met à jour les index vectoriels selon les besoins.
 
-#     Cette fonction analyse les corpus et détermine si des index doivent être créés
-#     ou mis à jour en fonction du nombre de chunks.
-
-#     Returns:
-#         Dict[str, Any]: Résultat de l'opération avec les index créés/mis à jour.
-#     """
-#     db = next(get_db())
-#     try:
-#         results = {"indexes_created": 0, "indexes_updated": 0, "details": []}
-
-#         # Trouver les configurations d'index sans index créé
-#         configs_without_index = (
-#             db.query(IndexConfig).filter(~IndexConfig.is_indexed).all()
-#         )
-
-#         for cfg in configs_without_index:
-#             # Créer l'index approprié pour ce corpus
-#             result = create_index_for_corpus(cfg.corpus_id, cfg.index_type)
-
-#             if "success" in result:
-#                 results["indexes_created"] += 1
-#                 results["details"].append(
-#                     {
-#                         "corpus_id": cfg.corpus_id,
-#                         "action": "create",
-#                         "index_type": cfg.index_type,
-#                         "result": "success",
-#                     }
-#                 )
-#             else:
-#                 results["details"].append(
-#                     {
-#                         "corpus_id": cfg.corpus_id,
-#                         "action": "create",
-#                         "index_type": cfg.index_type,
-#                         "result": "failed",
-#                         "error": result.get("error"),
-#                     }
-#                 )
-
-#         # Vérifier les corpus avec beaucoup de chunks utilisant IVFFLAT
-#         large_ivfflat_corpora = (
-#             db.query(IndexConfig)
-#             .filter(
-#                 IndexConfig.is_indexed,
-#                 IndexConfig.index_type == "ivfflat",
-#                 IndexConfig.chunk_count > 300_000,
-#             )
-#             .all()
-#         )
-
-#         for cfg in large_ivfflat_corpora:
-#             # Suggérer un changement d'index
-#             results["details"].append(
-#                 {
-#                     "corpus_id": cfg.corpus_id,
-#                     "action": "recommend_switch_to_hnsw",
-#                     "current_chunks": cfg.chunk_count,
-#                     "message": f"Le corpus {cfg.corpus_id} contient {cfg.chunk_count} chunks. Envisagez de migrer vers HNSW.",
-#                 }
-#             )
-
-#         return results
-
-#     except Exception as e:
-#         logger.error("Erreur lors de la vérification des index: %s", str(e))
-#         return {"error": str(e)}
+def update_db():
+    """Met à jour le schéma de la base de données pour refléter les modèles SQLAlchemy actuels.
+    
+    Cette fonction crée les tables manquantes et adapte les tables existantes aux nouveaux schémas.
+    Elle est à utiliser après ajout de nouveaux modèles ou modifications de modèles existants.
+    
+    Note:
+        L'extension pgvector doit déjà être installée.
+    
+    Returns:
+        Dict[str, Any]: Résultat des opérations de mise à jour.
+    """   
+    engine = create_engine(DATABASE_URL)
+    inspector = inspect(engine)
+    
+    # Récupération des tables existantes
+    existing_tables = inspector.get_table_names()
+    
+    # Tables à créer basées sur les modèles définis
+    tables_to_create = []
+    for table_name, table in Base.metadata.tables.items():
+        if table_name not in existing_tables:
+            tables_to_create.append(table_name)
+    
+    # Créer seulement les tables manquantes
+    if tables_to_create:
+        Base.metadata.create_all(bind=engine, tables=[
+            Base.metadata.tables[table_name] for table_name in tables_to_create
+        ])
+        print(f"Tables créées : {', '.join(tables_to_create)}")
+    else:
+        print("Aucune nouvelle table à créer.")
+    
+    return {
+        "success": True,
+        "created_tables": tables_to_create,
+        "existing_tables": existing_tables
+    }
 
 
-# def synchronize_index_flags(db=None):
-#     """Synchronise les drapeaux index_needed des documents avec l'état des index.
-
-#     Parcourt tous les documents et met à jour leur champ index_needed en fonction
-#     de l'état des configurations d'index de leur corpus.
-
-#     Args:
-#         db: Session de base de données. Si None, une nouvelle session sera créée.
-
-#     Returns:
-#         Dict[str, Any]: Statistiques sur la synchronisation effectuée.
-#     """
-#     close_db = False
-#     if db is None:
-#         db = next(get_db())
-#         close_db = True
-
-#     try:
-#         # 1. Récupérer les corpus nécessitant un index
-#         need_index_corpus_ids = [
-#             row[0]
-#             for row in db.query(IndexConfig.corpus_id)
-#             .filter(
-#                 ~IndexConfig.is_indexed
-#             )  # Correction style: ~x au lieu de x == False
-#             .all()
-#         ]
-
-#         # 2. Mettre à jour les documents de ces corpus qui n'ont pas encore le flag
-#         updated = 0
-#         if need_index_corpus_ids:
-#             updated = (
-#                 db.query(Document)
-#                 .filter(
-#                     Document.corpus_id.in_(need_index_corpus_ids),
-#                     ~Document.index_needed,  # Correction style: ~x au lieu de x == False
-#                 )
-#                 .update({Document.index_needed: True}, synchronize_session=False)
-#             )
-
-#         # 3. Réinitialiser les documents dont les corpus sont déjà indexés
-#         # Correction du problème de type - toujours utiliser une expression SQLAlchemy
-#         reset_query = db.query(Document).filter(
-#             Document.index_needed
-#         )  # Style: x au lieu de x == True
-
-#         # Si nous avons des corpus à indexer, ajouter la condition d'exclusion
-#         if need_index_corpus_ids:
-#             reset_query = reset_query.filter(
-#                 ~Document.corpus_id.in_(need_index_corpus_ids)
-#             )
-
-#         # Exécuter la mise à jour
-#         reset = reset_query.update(
-#             {Document.index_needed: False}, synchronize_session=False
-#         )
-
-#         db.commit()
-
-#         result = {
-#             "updated_count": updated,
-#             "reset_count": reset,
-#             "total_affected": updated + reset,
-#         }
-
-#         return result
-
-#     except Exception as e:
-#         db.rollback()
-#         logger.error(f"Erreur lors de la synchronisation des drapeaux d'index: {e}")
-#         return {"error": str(e)}
-
-#     finally:
-#         if close_db:
-#             db.close()
-
-
-# def create_index_for_corpus(corpus_id, index_type="ivfflat", force=False):
-#     """Crée un index vectoriel pour un corpus spécifique.
-
-#     Cette fonction crée ou met à jour un index vectoriel pour les chunks d'un corpus
-#     et met à jour les drapeaux index_needed des documents concernés.
-
-#     Args:
-#         corpus_id: Identifiant du corpus.
-#         index_type: Type d'index ('ivfflat', 'hnsw' ou 'auto').
-#         force: Si True, recréera l'index même s'il existe déjà.
-
-#     Returns:
-#         dict: Résultat de l'opération avec les informations sur l'index créé.
-#     """
-#     db = next(get_db())
-#     try:
-#         # Vérifier si le corpus existe déjà avec un index
-#         config = (
-#             db.query(IndexConfig).filter(IndexConfig.corpus_id == corpus_id).first()
-#         )
-
-#         # Compter le nombre de chunks dans ce corpus
-#         chunk_count = (
-#             db.query(Chunk)
-#             .join(Document)
-#             .filter(Document.corpus_id == corpus_id)
-#             .count()
-#         )
-
-#         if chunk_count == 0:
-#             return {"error": f"Aucun chunk trouvé pour le corpus {corpus_id}"}
-
-#         # Si aucune configuration n'existe, en créer une nouvelle
-#         if not config:
-#             # Sélectionner automatiquement le type d'index en fonction du nombre de chunks
-#             if index_type == "auto":
-#                 index_type = "hnsw" if chunk_count > 300000 else "ivfflat"
-
-#             config = IndexConfig(
-#                 corpus_id=corpus_id, index_type=index_type, chunk_count=chunk_count
-#             )
-#             db.add(config)
-#             db.flush()
-#         else:
-#             # Mise à jour du comptage de chunks
-#             config.chunk_count = chunk_count
-
-#             # Si déjà indexé et pas force=True, ne pas recréer
-#             if config.is_indexed and not force:
-#                 # Vérifier si l'index existe réellement dans PostgreSQL
-#                 index_name = f"chunks_embedding_{config.index_type}_{corpus_id.replace('-', '_')}"
-#                 index_exists = (
-#                     db.execute(
-#                         text("SELECT 1 FROM pg_indexes WHERE indexname = :idx_name"),
-#                         {"idx_name": index_name},
-#                     ).fetchone()
-#                     is not None
-#                 )
-
-#                 if index_exists:
-#                     return {
-#                         "message": f"Le corpus {corpus_id} est déjà indexé (type: {config.index_type}). "
-#                         f"Utilisez force=True pour recréer l'index.",
-#                         "corpus_id": corpus_id,
-#                         "index_type": config.index_type,
-#                     }
-#                 # Si l'index n'existe pas vraiment, on continue pour le recréer
-#                 else:
-#                     logger.warning(
-#                         f"L'index {index_name} est marqué comme existant mais n'existe pas dans PostgreSQL. Recréation..."
-#                     )
-#                     config.is_indexed = False
-
-#             # Mise à jour du type d'index si nécessaire
-#             if index_type != "auto" and config.index_type != index_type:
-#                 config.index_type = index_type
-#                 config.is_indexed = False
-
-#             # Supprimer l'ancien index si nécessaire
-#             if config.is_indexed and (
-#                 force or index_type != "auto" and config.index_type != index_type
-#             ):
-#                 try:
-#                     current_index_name = f"chunks_embedding_{config.index_type}_{corpus_id.replace('-', '_')}"
-#                     db.execute(text(f"DROP INDEX IF EXISTS {current_index_name}"))
-#                     config.is_indexed = False
-#                 except Exception as e:
-#                     logger.error(
-#                         f"Erreur lors de la suppression de l'ancien index: {e}"
-#                     )
-
-#         # Récupérer les IDs des chunks à indexer
-#         chunk_ids = [
-#             row[0]
-#             for row in db.query(Chunk.id)
-#             .join(Document)
-#             .filter(Document.corpus_id == corpus_id)
-#             .all()
-#         ]
-
-#         if not chunk_ids:
-#             return {"error": f"Aucun chunk trouvé pour le corpus {corpus_id}"}
-
-#         # Création de l'index avec une approche compatible
-#         index_name = (
-#             f"chunks_embedding_{config.index_type}_{corpus_id.replace('-', '_')}"
-#         )
-
-#         # Utilisons une table temporaire pour garantir la compatibilité avec la recherche
-#         try:
-#             # Créer une table temporaire contenant les IDs des chunks à indexer
-#             db.execute(
-#                 text(
-#                     "CREATE TEMP TABLE IF NOT EXISTS tmp_chunk_ids (id INTEGER NOT NULL)"
-#                 )
-#             )
-#             db.execute(text("TRUNCATE tmp_chunk_ids"))
-
-#             # Insérer par lots de 1000 pour éviter les problèmes de mémoire
-#             for i in range(0, len(chunk_ids), 1000):
-#                 batch = chunk_ids[i : i + 1000]
-#                 values = ", ".join(f"({id})" for id in batch)
-#                 db.execute(text(f"INSERT INTO tmp_chunk_ids (id) VALUES {values}"))
-
-#             # Créer l'index en utilisant la table temporaire
-#             if config.index_type == "ivfflat":
-#                 sql = f"""
-#                 CREATE INDEX {index_name}
-#                 ON chunks USING ivfflat (embedding vector_cosine_ops)
-#                 WITH (lists = {config.ivf_lists})
-#                 WHERE id IN (SELECT id FROM tmp_chunk_ids)
-#                 """
-#             else:  # hnsw
-#                 sql = f"""
-#                 CREATE INDEX {index_name}
-#                 ON chunks USING hnsw (embedding vector_cosine_ops)
-#                 WITH (m = {config.hnsw_m}, ef_construction = {config.hnsw_ef_construction})
-#                 WHERE id IN (SELECT id FROM tmp_chunk_ids)
-#                 """
-
-#             db.execute(text(sql))
-
-#             # Mettre à jour le statut d'indexation
-#             config.is_indexed = True
-#             config.last_indexed = datetime.now()
-
-#             # Mettre à jour le drapeau index_needed des documents
-#             db.query(Document).filter(Document.corpus_id == corpus_id).update(
-#                 {Document.index_needed: False}, synchronize_session=False
-#             )
-
-#             db.commit()
-
-#             # Créer une statistique pour améliorer les performances de recherche
-#             try:
-#                 db.execute(
-#                     text("""
-#                     ANALYZE chunks;
-#                     ANALYZE documents;
-#                 """)
-#                 )
-#             except Exception as stats_error:
-#                 logger.warning(
-#                     f"Impossible de mettre à jour les statistiques: {stats_error}"
-#                 )
-
-#             return {
-#                 "success": f"Index {config.index_type} créé avec succès pour le corpus {corpus_id}",
-#                 "corpus_id": corpus_id,
-#                 "index_type": config.index_type,
-#                 "chunk_count": chunk_count,
-#             }
-
-#         except Exception as e:
-#             db.rollback()
-#             logger.error(f"Échec de création de l'index: {e}")
-#             return {"error": f"Échec de création de l'index: {str(e)}"}
-#         finally:
-#             # Nettoyage de la table temporaire
-#             try:
-#                 db.execute(text("DROP TABLE IF EXISTS tmp_chunk_ids"))
-#             except Exception:
-#                 pass
-
-#     except Exception as e:
-#         db.rollback()
-#         logger.error(f"Erreur lors de la gestion de l'index: {e}")
-#         return {"error": f"Erreur lors de la gestion de l'index: {str(e)}"}
-#     finally:
-#         db.close()
+# Point d'entrée pour l'exécution en ligne de commande
+if __name__ == "__main__":
+    import sys
+    
+    if len(sys.argv) > 1 and sys.argv[1] == "update_db":
+        print("Mise à jour du schéma de la base de données...")
+        result = update_db()
+        print(f"Mise à jour terminée. Tables créées : {result['created_tables']}")
+        print(f"Tables existantes : {result['existing_tables']}")
+    elif len(sys.argv) > 1 and sys.argv[1] == "init_db":
+        print("Initialisation de la base de données...")
+        init_db()
+        print("Base de données initialisée avec succès.")
+    else:
+        print("Utilisation: python -m vectordb.src.database [update_db|init_db]")

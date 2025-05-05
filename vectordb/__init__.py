@@ -13,6 +13,10 @@ from vectordb.src.crud import (
     delete_document,
 )
 
+from vectordb.src.index_cleaner import (
+    clean_orphaned_indexes,
+)
+
 from vectordb.src.schemas import (
     DocumentCreate,
     ChunkCreate,
@@ -30,6 +34,8 @@ from vectordb.api import (
     search_endpoint,
     index_endpoint,
 )
+
+
 
 __all__ = [
     "get_db",
@@ -51,4 +57,5 @@ __all__ = [
     "database_endpoint",
     "search_endpoint",
     "index_endpoint",
+    "clean_orphaned_indexes",
 ]

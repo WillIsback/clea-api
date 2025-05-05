@@ -24,7 +24,9 @@ nav:
       - vectordb:
           - Opérations CRUD: lib/vectordb/crud_lib.md
           - Indexation vectorielle: lib/vectordb/index_lib.md
-          - Recherche hybride: lib/vectordb/search_lib.md
+          - Recherche hybride: lib/stats/stats_computer_lib.md
+      - stats:
+          - Statistiques: lib/stats/stats_lib.md
 
   - Références API:
       - REST API:
@@ -41,6 +43,8 @@ nav:
               - CRUD: api/lib/vectordb/crud_references.md
               - Indexation: api/lib/vectordb/index_references.md
               - Recherche: api/lib/vectordb/search_references.md
+          - stats:
+              - Statistiques: api/lib/stats/stats_computer_references.md
 
   - Intégrations:
       - JavaScript / TypeScript:
@@ -54,6 +58,8 @@ nav:
               - Opérations CRUD: Integration/vectordb/crud_js.md
               - Indexation: Integration/vectordb/index_js.md
               - Recherche: Integration/vectordb/search_js.md
+          - stats:
+              - Statistiques: Integration/stats/stats_computer_js.md
 
 theme:
   name: readthedocs

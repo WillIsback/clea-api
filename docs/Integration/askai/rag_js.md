@@ -1,7 +1,6 @@
 # Intégration **JavaScript / TypeScript** — Ask-AI (RAG)
 
-Ce guide montre comment interroger le service **RAG** (Retrieve-and-Generate) via les endpoints **`/ask`** et **`/models`** :contentReference[oaicite:2]{index=2}:contentReference[oaicite:3]{index=3}.
-
+Ce guide montre comment interroger le service **RAG** (Retrieve-and-Generate) via les endpoints **`/ask`** et **`/models`** 
 > Les exemples utilisent **`fetch`** natif (Node 18+) ou navigateur moderne.
 
 ---
