@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://WillIsback.github.io/clea-api/api/lib/askai/rag_references/" />
+      <link rel="shortcut icon" href="../../../../img/favicon.ico" />
+    <title>RAG - Cléa-API Documentation</title>
+    <link rel="stylesheet" href="../../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../../../css/mkdocsoad.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "RAG";
+        var mkdocs_page_input_path = "api/lib/askai/rag_references.md";
+        var mkdocs_page_url = "/clea-api/api/lib/askai/rag_references/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../../.." class="icon icon-home"> Cléa-API Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../..">Accueil</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../../main/">Introduction</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../../database/">Base de données</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../../schemas/">Schémas</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Documentation des librairies</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../../../lib/askai/rag_lib/">RAG</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../../../lib/doc_loader/extractor_lib/">Extracteurs</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../../../lib/doc_loader/splitter_lib/">Segmentation</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../../../lib/pipeline/pipeline_lib/">Pipeline end-to-end</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../../../lib/vectordb/crud_lib/">Opérations CRUD</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../../../lib/vectordb/index_lib/">Indexation vectorielle</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../../../lib/vectordb/search_lib/">Recherche hybride</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Références API</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" >REST API</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../../rest/rest_api/">Documentation Swagger</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" >Références Python</a>
+    <ul class="current">
+                <li class="toctree-l2 current"><a class="reference internal current" >askai</a>
+    <ul class="current">
+                <li class="toctree-l3 current"><a class="reference internal current" href="#">RAG</a>
+    <ul class="current">
+    <li class="toctree-l4"><a class="reference internal" href="#askai.src.rag">rag</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#askai.src.rag.RAGProcessor">RAGProcessor</a>
+    </li>
+    </ul>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../doc_loader/extractor_references/">Extracteurs</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../doc_loader/splitter_references/">Segmentation</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../pipeline/pipeline_references/">Pipeline</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../vectordb/crud_references/">CRUD</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../vectordb/index_references/">Indexation</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../vectordb/search_references/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Intégrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >JavaScript / TypeScript</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../../Integration/askai/rag_js/">RAG</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../../Integration/doc_loader/doc_loader_js/">Extraction de documents</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../../Integration/pipeline/pipeline_js/">Pipeline end-to-end</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../../Integration/vectordb/crud_js/">Opérations CRUD</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../../Integration/vectordb/index_js/">Indexation</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../../Integration/vectordb/search_js/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../..">Cléa-API Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Références API</li>
+          <li class="breadcrumb-item">Références Python</li>
+          <li class="breadcrumb-item">askai</li>
+      <li class="breadcrumb-item active">RAG</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/WillIsback/clea-api/edit/master/docs/api/lib/askai/rag_references.md">Edit on Cléa-API</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="references-for-rag">References for <code>RAG</code></h1>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="askai.src.rag"></a>
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="askai.src.rag.RAGProcessor" class="doc doc-heading">
+            <code>RAGProcessor</code>
+
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+
+        <p>Processeur RAG (Retrieval-Augmented Generation) optimisé pour petits LLM.</p>
+<p>Cette classe orchestre la récupération de documents pertinents et leur
+utilisation pour générer des réponses avec un petit modèle LLM Qwen3.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>model_loader</code></b>
+                  (<code><span title="askai.src.model_loader.ModelLoader">ModelLoader</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Chargeur de modèle LLM.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>search_engine</code></b>
+                  (<code><a class="autorefs autorefs-internal" title="SearchEngine (vectordb.src.search.SearchEngine)" href="../../vectordb/search_references/#vectordb.src.search.SearchEngine">SearchEngine</a></code>)
+              –
+              <div class="doc-md-description">
+                <p>Moteur de recherche vectorielle.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>db_session</code></b>
+                  (<code><span title="sqlalchemy.orm.Session">Session</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Session de base de données SQLAlchemy.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>max_tokens_per_doc</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>300</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Nombre maximum de tokens par document.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>max_docs</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>5</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Nombre maximum de documents à utiliser.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Attributes:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>model_loader</code></b>
+                  (<code><span title="askai.src.model_loader.ModelLoader">ModelLoader</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Chargeur de modèle LLM.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>search_engine</code></b>
+                  (<code><a class="autorefs autorefs-internal" title="SearchEngine (vectordb.src.search.SearchEngine)" href="../../vectordb/search_references/#vectordb.src.search.SearchEngine">SearchEngine</a></code>)
+              –
+              <div class="doc-md-description">
+                <p>Moteur de recherche vectorielle.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>db_session</code></b>
+                  (<code><span title="sqlalchemy.orm.Session">Session</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Session de base de données SQLAlchemy.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>max_tokens_per_doc</code></b>
+                  (<code><span title="int">int</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Nombre maximum de tokens par document.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>max_docs</code></b>
+                  (<code><span title="int">int</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Nombre maximum de documents à utiliser.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>logger</code></b>
+                  (<code><span title="logging.Logger">Logger</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Logger pour les messages et diagnostics.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="askai.src.rag.RAGProcessor.__init__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_loader</span><span class="p">,</span> <span class="n">search_engine</span><span class="p">,</span> <span class="n">db_session</span><span class="p">,</span> <span class="n">max_tokens_per_doc</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">max_docs</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Initialise le processeur RAG.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>model_loader</code></b>
+                  (<code><span title="askai.src.model_loader.ModelLoader">ModelLoader</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Chargeur de modèle LLM.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>search_engine</code></b>
+                  (<code><a class="autorefs autorefs-internal" title="SearchEngine (vectordb.src.search.SearchEngine)" href="../../vectordb/search_references/#vectordb.src.search.SearchEngine">SearchEngine</a></code>)
+              –
+              <div class="doc-md-description">
+                <p>Moteur de recherche vectorielle.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>db_session</code></b>
+                  (<code><span title="sqlalchemy.orm.Session">Session</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Session de base de données SQLAlchemy.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>max_tokens_per_doc</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>300</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Nombre maximum de tokens par document.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>max_docs</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>5</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Nombre maximum de documents à utiliser.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="askai.src.rag.RAGProcessor.format_context" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">format_context</span><span class="p">(</span><span class="n">search_results</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Formate les résultats de recherche en contexte structuré pour le LLM.</p>
+<p>Utilise les résultats d'une requête pour créer un contexte formaté
+qui sera utilisé dans le prompt envoyé au modèle LLM.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>search_results</code></b>
+                  (<code><span title="vectordb.src.schemas.SearchResponse">SearchResponse</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Réponse de recherche contenant les chunks pertinents.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>str</code></b>(                  <code><span title="str">str</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Contexte formaté prêt à être injecté dans le prompt.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="askai.src.rag.RAGProcessor.get_prompt_template" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_prompt_template</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">prompt_type</span><span class="o">=</span><span class="s1">&#39;standard&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Retourne un template de prompt adapté au type de requête.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>query</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Question de l'utilisateur.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>context</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Contexte documentaire formaté.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>prompt_type</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;standard&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Type de prompt à utiliser ('standard', 'summary', 'comparison').</p>
+              </div>
+            </li>
+            <li>
+              <b><code>**kwargs</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Paramètres additionnels spécifiques au type de prompt.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>PromptTemplate</code></b>(                  <code><span title="askai.src.prompt_schemas.PromptTemplate">PromptTemplate</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Template de prompt configuré avec les variables appropriées.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="ValueError">ValueError</span></code>
+              –
+              <div class="doc-md-description">
+                <p>Si le type de prompt spécifié n'est pas reconnu.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="askai.src.rag.RAGProcessor.retrieve_and_generate" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">retrieve_and_generate</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prompt_type</span><span class="o">=</span><span class="s1">&#39;standard&#39;</span><span class="p">,</span> <span class="n">generation_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">enable_thinking</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">prompt_kwargs</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Récupère les documents pertinents et génère une réponse.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>query</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Question de l'utilisateur.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>filters</code></b>
+                  (<code><span title="typing.Dict">Dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Filtres à appliquer lors de la recherche.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>prompt_type</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;standard&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Type de prompt à utiliser ('standard', 'summary', 'comparison').</p>
+              </div>
+            </li>
+            <li>
+              <b><code>generation_kwargs</code></b>
+                  (<code><span title="typing.Dict">Dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Paramètres additionnels pour la génération de texte.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>enable_thinking</code></b>
+                  (<code><span title="typing.Optional">Optional</span>[<span title="bool">bool</span>]</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Active ou désactive le mode de réflexion. Si None, utilise la configuration du modèle.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>**prompt_kwargs</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Paramètres additionnels pour le template de prompt.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>tuple</code></b>(                  <code><span title="tuple">tuple</span></code>
+)              –
+              <div class="doc-md-description">
+                <ul>
+<li>Si enable_thinking=True : (thinking, response, search_results)</li>
+<li>Si enable_thinking=False : (response, search_results)</li>
+</ul>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="askai.src.rag.RAGProcessor.retrieve_and_generate_stream" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">retrieve_and_generate_stream</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prompt_type</span><span class="o">=</span><span class="s1">&#39;standard&#39;</span><span class="p">,</span> <span class="n">generation_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">enable_thinking</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">prompt_kwargs</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Récupère les documents pertinents et génère une réponse en streaming.</p>
+<p>Cette méthode enrichit la réponse avec les documents utilisés pour la génération.
+Chaque fragment retourné est un dictionnaire identifiant son type et contenu.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>query</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Question de l'utilisateur.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>filters</code></b>
+                  (<code><span title="typing.Dict">Dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Filtres à appliquer lors de la recherche.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>prompt_type</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;standard&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Type de prompt à utiliser ('standard', 'summary', 'comparison').</p>
+              </div>
+            </li>
+            <li>
+              <b><code>generation_kwargs</code></b>
+                  (<code><span title="typing.Dict">Dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Paramètres additionnels pour la génération de texte.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>enable_thinking</code></b>
+                  (<code><span title="typing.Optional">Optional</span>[<span title="bool">bool</span>]</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Active ou désactive le mode de réflexion. Si None, utilise la configuration du modèle.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>**prompt_kwargs</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Paramètres additionnels pour le template de prompt.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Yields:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="typing.AsyncGenerator">AsyncGenerator</span>[<span title="typing.Dict">Dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>], None]</code>
+              –
+              <div class="doc-md-description">
+                <p>Dict[str, Any]: Fragments de la réponse ou métadonnées avec leur type :
+- {"type": "thinking", "content": str} pour les parties de réflexion
+- {"type": "response", "content": str} pour les parties de réponse
+- {"type": "context", "content": Dict} pour le contexte utilisé
+- {"type": "error", "content": str} en cas d'erreur
+- {"type": "done", "content": ""} à la fin du streaming</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="askai.src.rag.RAGProcessor.retrieve_documents" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">retrieve_documents</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Récupère les documents pertinents pour une requête donnée.</p>
+<p>Effectue une recherche dans la base de données vectorielle et retourne
+les résultats formatés selon le schéma standard de l'application.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>query</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Question de l'utilisateur.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>filters</code></b>
+                  (<code><span title="typing.Dict">Dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Filtres à appliquer lors de la recherche.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>SearchResponse</code></b>(                  <code><span title="vectordb.src.schemas.SearchResponse">SearchResponse</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Réponse contenant les résultats de recherche pertinents.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../../rest/rest_api/" class="btn btn-neutral float-left" title="Documentation Swagger"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../doc_loader/extractor_references/" class="btn btn-neutral float-right" title="Extracteurs">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/WillIsback/clea-api" class="fa fa-code-fork" style="color: #fcfcfc"> Cléa-API</a>
+        </span>
+    
+    
+      <span><a href="../../../rest/rest_api/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../doc_loader/extractor_references/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../../..";</script>
+    <script src="../../../../js/theme_extra.js"></script>
+    <script src="../../../../js/theme.js"></script>
+      <script src="../../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

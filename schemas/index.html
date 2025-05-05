@@ -42,7 +42,7 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../home/">Accueil</a>
+                <li class="toctree-l1"><a class="reference internal" href="..">Accueil</a>
                 </li>
               </ul>
               <ul>
@@ -74,6 +74,8 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#searchresponse">SearchResponse</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#confidencemetrics">ConfidenceMetrics</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#indexstatus">IndexStatus</a>
     </li>
     </ul>
@@ -81,6 +83,12 @@
               </ul>
               <p class="caption"><span class="caption-text">Documentation des librairies</span></p>
               <ul>
+                  <li class="toctree-l1"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../lib/askai/rag_lib/">RAG</a>
+                </li>
+    </ul>
+                  </li>
                   <li class="toctree-l1"><a class="reference internal" >doc_loader</a>
     <ul>
                 <li class="toctree-l2"><a class="reference internal" href="../lib/doc_loader/extractor_lib/">Extracteurs</a>
@@ -116,6 +124,12 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" >Références Python</a>
     <ul>
+                <li class="toctree-l2"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../api/lib/askai/rag_references/">RAG</a>
+                </li>
+    </ul>
+                </li>
                 <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
     <ul>
                 <li class="toctree-l3"><a class="reference internal" href="../api/lib/doc_loader/extractor_references/">Extracteurs</a>
@@ -147,6 +161,12 @@
               <ul>
                   <li class="toctree-l1"><a class="reference internal" >JavaScript / TypeScript</a>
     <ul>
+                <li class="toctree-l2"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../Integration/askai/rag_js/">RAG</a>
+                </li>
+    </ul>
+                </li>
                 <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
     <ul>
                 <li class="toctree-l3"><a class="reference internal" href="../Integration/doc_loader/doc_loader_js/">Extraction de documents</a>
@@ -629,7 +649,8 @@ Tous les modèles utilisent la configuration <strong><code>CamelConfig</code></s
 </table>
 <hr />
 <h2 id="searchrequest">SearchRequest</h2>
-<p>Paramètres de la recherche hybride.</p>
+<p><strong>Paramètres pour la recherche hybride.</strong><br />
+Combine la requête textuelle avec des filtres de métadonnées optionnels.</p>
 <table>
 <thead>
 <tr>
@@ -646,69 +667,84 @@ Tous les modèles utilisent la configuration <strong><code>CamelConfig</code></s
 <td><code>string</code></td>
 <td>Oui</td>
 <td><code>query</code></td>
-<td>Texte de la requête.</td>
+<td>Requête en langage naturel.</td>
 </tr>
 <tr>
 <td><code>top_k</code></td>
 <td><code>integer</code></td>
 <td>Non</td>
 <td><code>topK</code></td>
-<td>Nombre max de résultats (défaut 10).</td>
+<td>Nombre de résultats à retourner (défaut 10).</td>
 </tr>
 <tr>
 <td><code>theme</code></td>
 <td><code>string</code></td>
 <td>Non</td>
 <td><code>theme</code></td>
-<td>Filtrer sur le thème.</td>
+<td>Filtre par thème.</td>
 </tr>
 <tr>
 <td><code>document_type</code></td>
 <td><code>string</code></td>
 <td>Non</td>
 <td><code>documentType</code></td>
-<td>Filtrer sur le type de document.</td>
+<td>Filtre par type de document.</td>
 </tr>
 <tr>
 <td><code>start_date</code></td>
 <td><code>date</code></td>
 <td>Non</td>
 <td><code>startDate</code></td>
-<td>Filtrer date ≥.</td>
+<td>Date de début.</td>
 </tr>
 <tr>
 <td><code>end_date</code></td>
 <td><code>date</code></td>
 <td>Non</td>
 <td><code>endDate</code></td>
-<td>Filtrer date ≤.</td>
+<td>Date de fin.</td>
 </tr>
 <tr>
 <td><code>corpus_id</code></td>
-<td><code>string</code></td>
+<td><code>integer</code></td>
 <td>Non</td>
 <td><code>corpusId</code></td>
-<td>Filtrer sur l’UUID de corpus.</td>
-</tr>
-<tr>
-<td><code>hierarchical</code></td>
-<td><code>boolean</code></td>
-<td>Non</td>
-<td><code>hierarchical</code></td>
-<td><code>true</code> pour renvoyer le contexte hiérarchique.</td>
+<td>ID du corpus.</td>
 </tr>
 <tr>
 <td><code>hierarchy_level</code></td>
 <td><code>integer</code></td>
 <td>Non</td>
 <td><code>hierarchyLevel</code></td>
-<td>Filtrer un niveau précis (0–3).</td>
+<td>Niveau hiérarchique (0–2).</td>
+</tr>
+<tr>
+<td><code>hierarchical</code></td>
+<td><code>boolean</code></td>
+<td>Non</td>
+<td><code>hierarchical</code></td>
+<td>Récupérer le contexte hiérarchique.</td>
+</tr>
+<tr>
+<td><code>filter_by_relevance</code></td>
+<td><code>boolean</code></td>
+<td>Non</td>
+<td><code>filterByRelevance</code></td>
+<td>Filtrer les résultats sous le seuil de pertinence.</td>
+</tr>
+<tr>
+<td><code>normalize_scores</code></td>
+<td><code>boolean</code></td>
+<td>Non</td>
+<td><code>normalizeScores</code></td>
+<td>Normaliser les scores entre 0 et 1.</td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h2 id="searchresponse">SearchResponse</h2>
-<p>Réponse complète du moteur de recherche.</p>
+<p><strong>Réponse à une requête de recherche.</strong><br />
+Contient les résultats triés par pertinence avec métadonnées et évaluation de confiance.</p>
 <table>
 <thead>
 <tr>
@@ -725,14 +761,14 @@ Tous les modèles utilisent la configuration <strong><code>CamelConfig</code></s
 <td><code>string</code></td>
 <td>Oui</td>
 <td><code>query</code></td>
-<td>Texte de la requête.</td>
+<td>Requête originale.</td>
 </tr>
 <tr>
 <td><code>top_k</code></td>
 <td><code>integer</code></td>
 <td>Oui</td>
 <td><code>topK</code></td>
-<td>Nombre de résultats retournés.</td>
+<td>Nombre de résultats demandés.</td>
 </tr>
 <tr>
 <td><code>total_results</code></td>
@@ -746,10 +782,76 @@ Tous les modèles utilisent la configuration <strong><code>CamelConfig</code></s
 <td><code>ChunkResult[]</code></td>
 <td>Oui</td>
 <td><code>results</code></td>
-<td>Liste des chunks classés.</td>
+<td>Résultats de la recherche.</td>
+</tr>
+<tr>
+<td><code>confidence</code></td>
+<td><code>ConfidenceMetrics</code></td>
+<td>Non</td>
+<td><code>confidence</code></td>
+<td>Métriques de confiance sur les résultats.</td>
+</tr>
+<tr>
+<td><code>normalized</code></td>
+<td><code>boolean</code></td>
+<td>Non</td>
+<td><code>normalized</code></td>
+<td>Indique si les scores sont normalisés (0–1).</td>
+</tr>
+<tr>
+<td><code>message</code></td>
+<td><code>string</code></td>
+<td>Non</td>
+<td><code>message</code></td>
+<td>Message informatif sur les résultats.</td>
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="confidencemetrics">ConfidenceMetrics</h2>
+<p>Métriques de confiance et statistiques pour évaluer la pertinence des résultats.</p>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Type</th>
+<th>Requis</th>
+<th>Alias</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>level</code></td>
+<td><code>float</code></td>
+<td>Oui</td>
+<td><code>level</code></td>
+<td>Niveau de confiance entre 0 et 1.</td>
+</tr>
+<tr>
+<td><code>message</code></td>
+<td><code>string</code></td>
+<td>Oui</td>
+<td><code>message</code></td>
+<td>Message explicatif sur la qualité des résultats.</td>
+</tr>
+<tr>
+<td><code>stats</code></td>
+<td><code>object</code></td>
+<td>Oui</td>
+<td><code>stats</code></td>
+<td>Statistiques sur les scores.</td>
+</tr>
+</tbody>
+</table>
+<p>Exemple de <code>stats</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;min&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">-5.89</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;max&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1.23</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;avg&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">-0.45</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;median&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">-0.12</span>
+<span class="p">}</span>
+</code></pre></div>
 <hr />
 <h2 id="indexstatus">IndexStatus</h2>
 <p>Statut d’indexation d’un corpus.</p>
@@ -832,7 +934,7 @@ Dernière mise à jour : <strong>03 mai 2025</strong>.</p>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
         <a href="../database/" class="btn btn-neutral float-left" title="Base de données"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../lib/doc_loader/extractor_lib/" class="btn btn-neutral float-right" title="Extracteurs">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../lib/askai/rag_lib/" class="btn btn-neutral float-right" title="RAG">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -862,7 +964,7 @@ Dernière mise à jour : <strong>03 mai 2025</strong>.</p>
       <span><a href="../database/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../lib/doc_loader/extractor_lib/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../lib/askai/rag_lib/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

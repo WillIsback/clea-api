@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://WillIsback.github.io/clea-api/lib/askai/rag_lib/" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>RAG - Cléa-API Documentation</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../../css/mkdocsoad.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "RAG";
+        var mkdocs_page_input_path = "lib/askai/rag_lib.md";
+        var mkdocs_page_url = "/clea-api/lib/askai/rag_lib/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Cléa-API Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../..">Accueil</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../main/">Introduction</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../database/">Base de données</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../schemas/">Schémas</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Documentation des librairies</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" >askai</a>
+    <ul class="current">
+                <li class="toctree-l2 current"><a class="reference internal current" href="#">RAG</a>
+    <ul class="current">
+    <li class="toctree-l3"><a class="reference internal" href="#table-des-matieres">Table des matières</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#installation">Installation</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#modeles-schemas">Modèles (schemas)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#classe-ragprocessor">Classe RAGProcessor</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#constructeur">Constructeur</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#methode-format_context">Méthode format_context</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#methode-get_prompt_template">Méthode get_prompt_template</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#methode-retrieve_documents">Méthode retrieve_documents</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#methode-retrieve_and_generate">Méthode retrieve_and_generate</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#methode-retrieve_and_generate_stream">Méthode retrieve_and_generate_stream</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#classe-modelloader">Classe ModelLoader</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#constructeur_1">Constructeur</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#methode-load">Méthode load</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#methode-generate">Méthode generate</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#methode-generate_with_thinking">Méthode generate_with_thinking</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#classe-asyncstreamedresponse">Classe AsyncStreamedResponse</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#constructeur_2">Constructeur</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#methode-generate_stream">Méthode generate_stream</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#mode-thinking-contexte">Mode Thinking &amp; Contexte</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#raisonnement-thinking">Raisonnement (Thinking)</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#contexte-documentaire">Contexte documentaire</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#streaming-avec-types-differencies">Streaming avec types différenciés</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#exemple-dutilisation">Exemple d'utilisation</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#exemple-avec-interface-fastapi">Exemple avec interface FastAPI</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../doc_loader/extractor_lib/">Extracteurs</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../doc_loader/splitter_lib/">Segmentation</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../pipeline/pipeline_lib/">Pipeline end-to-end</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../vectordb/crud_lib/">Opérations CRUD</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../vectordb/index_lib/">Indexation vectorielle</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../vectordb/search_lib/">Recherche hybride</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Références API</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >REST API</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../../api/rest/rest_api/">Documentation Swagger</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Références Python</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/askai/rag_references/">RAG</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/doc_loader/extractor_references/">Extracteurs</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/doc_loader/splitter_references/">Segmentation</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/pipeline/pipeline_references/">Pipeline</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/vectordb/crud_references/">CRUD</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/vectordb/index_references/">Indexation</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/vectordb/search_references/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Intégrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >JavaScript / TypeScript</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/askai/rag_js/">RAG</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/doc_loader/doc_loader_js/">Extraction de documents</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/pipeline/pipeline_js/">Pipeline end-to-end</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/vectordb/crud_js/">Opérations CRUD</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/vectordb/index_js/">Indexation</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/vectordb/search_js/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Cléa-API Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Documentation des librairies</li>
+          <li class="breadcrumb-item">askai</li>
+      <li class="breadcrumb-item active">RAG</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/WillIsback/clea-api/edit/master/docs/lib/askai/rag_lib.md">Edit on Cléa-API</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="module-rag-retrieval-augmented-generation">Module <strong>rag</strong> (Retrieval-Augmented Generation)</h1>
+<p>Ce module implémente un processeur RAG optimisé pour petits LLM qui combine recherche vectorielle et génération de réponses via Qwen3. Il inclut une gestion avancée du raisonnement et du contexte pour une transparence maximale.</p>
+<hr />
+<h2 id="table-des-matieres">Table des matières</h2>
+<ol>
+<li>Installation</li>
+<li>Modèles (schemas)</li>
+<li>Classe <code>RAGProcessor</code></li>
+<li>Constructeur</li>
+<li>Méthode <code>format_context</code></li>
+<li>Méthode <code>get_prompt_template</code></li>
+<li>Méthode <code>retrieve_documents</code></li>
+<li>Méthode <code>retrieve_and_generate</code></li>
+<li>Méthode <code>retrieve_and_generate_stream</code></li>
+<li>Classe <code>ModelLoader</code></li>
+<li>Constructeur</li>
+<li>Méthode <code>load</code></li>
+<li>Méthode <code>generate</code></li>
+<li>Méthode <code>generate_with_thinking</code></li>
+<li>Classe <code>AsyncStreamedResponse</code></li>
+<li>Méthode <code>generate_stream</code></li>
+<li>Mode Thinking &amp; Contexte</li>
+<li>Exemple d'utilisation</li>
+</ol>
+<hr />
+<h2 id="installation">Installation</h2>
+<div class="highlight"><pre><span></span><code><span class="c1"># Installer les dépendances</span>
+uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+
+<span class="c1"># Prérequis pour les modèles Qwen3</span>
+uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>protobuf<span class="w"> </span>tokenizers&gt;<span class="o">=</span><span class="m">0</span>.13.3
+</code></pre></div>
+<hr />
+<h2 id="modeles-schemas">Modèles (schemas)</h2>
+<p>Les templates de prompts utilisés par le processeur RAG se trouvent dans prompt_schemas.py :</p>
+<ul>
+<li><strong><code>PromptTemplate</code></strong> : modèle de base pour les templates de prompts.</li>
+<li><strong><code>StandardRAGPrompt</code></strong> : prompt optimisé pour les requêtes RAG simples.</li>
+<li><strong><code>SummaryRAGPrompt</code></strong> : prompt pour les tâches de résumé de documents.</li>
+<li><strong><code>ComparisonRAGPrompt</code></strong> : prompt pour comparer des éléments à partir des documents.</li>
+</ul>
+<blockquote>
+<p>Pour plus de détails sur ces schémas, consultez le fichier source prompt_schemas.py.</p>
+</blockquote>
+<hr />
+<h2 id="classe-ragprocessor">Classe <code>RAGProcessor</code></h2>
+<h3 id="constructeur">Constructeur</h3>
+<div class="highlight"><pre><span></span><code><span class="n">processor</span> <span class="o">=</span> <span class="n">RAGProcessor</span><span class="p">(</span>
+    <span class="n">model_loader</span><span class="p">:</span> <span class="n">ModelLoader</span><span class="p">,</span>
+    <span class="n">search_engine</span><span class="p">:</span> <span class="n">SearchEngine</span><span class="p">,</span>
+    <span class="n">db_session</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span>
+    <span class="n">max_tokens_per_doc</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span>
+    <span class="n">max_docs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<ul>
+<li><strong>Initialise</strong> :</li>
+<li><code>model_loader</code> : chargeur de modèle LLM</li>
+<li><code>search_engine</code> : moteur de recherche vectorielle</li>
+<li><code>db_session</code> : session de base de données SQLAlchemy</li>
+<li><code>max_tokens_per_doc</code> : nombre maximum de tokens par document</li>
+<li><code>max_docs</code> : nombre maximum de documents à utiliser</li>
+</ul>
+<h3 id="methode-format_context">Méthode <code>format_context</code></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">format_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">search_results</span><span class="p">:</span> <span class="n">SearchResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Formate les résultats de recherche en contexte structuré pour le LLM.</span>
+
+<span class="sd">    Utilise les résultats d&#39;une requête pour créer un contexte formaté</span>
+<span class="sd">    qui sera utilisé dans le prompt envoyé au modèle LLM.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        search_results: Réponse de recherche contenant les chunks pertinents.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Contexte formaté prêt à être injecté dans le prompt.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="o">...</span>
+</code></pre></div>
+<ul>
+<li><strong>But</strong> : formater les résultats de recherche en contexte structuré pour le LLM</li>
+<li><strong>Arguments</strong> :</li>
+<li><code>search_results</code>: réponse de recherche contenant les chunks pertinents</li>
+<li><strong>Fonctionnement</strong> :</li>
+<li>Itère sur chaque résultat et crée une représentation structurée</li>
+<li>Inclut les métadonnées: titre, source, thème, date</li>
+<li>Ajoute le contexte hiérarchique si disponible (sections parentes)</li>
+<li>Indique le score de pertinence</li>
+<li><strong>Retour</strong> : chaîne de caractères formatée pour injecter dans le prompt</li>
+</ul>
+<h3 id="methode-get_prompt_template">Méthode <code>get_prompt_template</code></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_prompt_template</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> 
+    <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+    <span class="n">context</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+    <span class="n">prompt_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;standard&quot;</span><span class="p">,</span> 
+    <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PromptTemplate</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Retourne un template de prompt adapté au type de requête.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        query: Question de l&#39;utilisateur.</span>
+<span class="sd">        context: Contexte documentaire formaté.</span>
+<span class="sd">        prompt_type: Type de prompt à utiliser (&#39;standard&#39;, &#39;summary&#39;, &#39;comparison&#39;).</span>
+<span class="sd">        **kwargs: Paramètres additionnels spécifiques au type de prompt.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        PromptTemplate: Template de prompt configuré avec les variables appropriées.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: Si le type de prompt spécifié n&#39;est pas reconnu.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="o">...</span>
+</code></pre></div>
+<ul>
+<li><strong>But</strong> : créer un template de prompt adapté au type de requête</li>
+<li><strong>Arguments</strong> :</li>
+<li><code>query</code> : question de l'utilisateur</li>
+<li><code>context</code> : contexte documentaire formaté</li>
+<li><code>prompt_type</code> : type de prompt ('standard', 'summary', 'comparison')</li>
+<li><code>**kwargs</code> : paramètres additionnels spécifiques au type de prompt</li>
+<li><strong>Types disponibles</strong> :</li>
+<li><code>standard</code> : prompt pour questions/réponses génériques</li>
+<li><code>summary</code> : prompt pour résumé de documents</li>
+<li><code>comparison</code> : prompt pour analyse comparative</li>
+<li><strong>Retour</strong> : instance de <code>PromptTemplate</code> configurée</li>
+</ul>
+<h3 id="methode-retrieve_documents">Méthode <code>retrieve_documents</code></h3>
+<div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">retrieve_documents</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> 
+    <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+    <span class="n">filters</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SearchResponse</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Récupère les documents pertinents pour une requête donnée.</span>
+
+<span class="sd">    Effectue une recherche dans la base de données vectorielle et retourne</span>
+<span class="sd">    les résultats formatés selon le schéma standard de l&#39;application.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        query: Question de l&#39;utilisateur.</span>
+<span class="sd">        filters: Filtres à appliquer lors de la recherche.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        SearchResponse: Réponse contenant les résultats de recherche pertinents.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="o">...</span>
+</code></pre></div>
+<ul>
+<li><strong>But</strong> : récupérer les documents pertinents pour une requête donnée</li>
+<li><strong>Arguments</strong> :</li>
+<li><code>query</code> : question de l'utilisateur</li>
+<li><code>filters</code> : filtres à appliquer lors de la recherche</li>
+<li><strong>Fonctionnement</strong> :</li>
+<li>Construit une requête <code>SearchRequest</code> avec les paramètres fournis</li>
+<li>Exécute la recherche via <code>search_engine.hybrid_search</code></li>
+<li>Journalise le nombre de documents récupérés</li>
+<li><strong>Retour</strong> : réponse de recherche (<code>SearchResponse</code>) contenant les documents pertinents</li>
+</ul>
+<h3 id="methode-retrieve_and_generate">Méthode <code>retrieve_and_generate</code></h3>
+<div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">retrieve_and_generate</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> 
+    <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+    <span class="n">filters</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">prompt_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;standard&quot;</span><span class="p">,</span>
+    <span class="n">generation_kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">enable_thinking</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">prompt_kwargs</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Récupère les documents pertinents et génère une réponse.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        query: Question de l&#39;utilisateur.</span>
+<span class="sd">        filters: Filtres à appliquer lors de la recherche.</span>
+<span class="sd">        prompt_type: Type de prompt à utiliser (&#39;standard&#39;, &#39;summary&#39;, &#39;comparison&#39;).</span>
+<span class="sd">        generation_kwargs: Paramètres additionnels pour la génération de texte.</span>
+<span class="sd">        enable_thinking: Active ou désactive le mode de réflexion. Si None, utilise la configuration du modèle.</span>
+<span class="sd">        **prompt_kwargs: Paramètres additionnels pour le template de prompt.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: </span>
+<span class="sd">            - Si enable_thinking=True : (thinking, response, search_results)</span>
+<span class="sd">            - Si enable_thinking=False : (response, search_results)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="o">...</span>
+</code></pre></div>
+<ul>
+<li><strong>But</strong> : récupérer les documents pertinents et générer une réponse complète</li>
+<li><strong>Arguments</strong> :</li>
+<li><code>query</code> : question de l'utilisateur</li>
+<li><code>filters</code> : filtres à appliquer lors de la recherche</li>
+<li><code>prompt_type</code> : type de prompt à utiliser</li>
+<li><code>generation_kwargs</code> : paramètres pour la génération de texte</li>
+<li><code>enable_thinking</code> : active le mode de réflexion du modèle</li>
+<li><code>**prompt_kwargs</code> : paramètres additionnels pour le template de prompt</li>
+<li><strong>Fonctionnement</strong> :</li>
+<li>Récupère les documents pertinents via <code>retrieve_documents</code></li>
+<li>Formate le contexte documentaire avec <code>format_context</code></li>
+<li>Crée le prompt avec le template approprié</li>
+<li>Génère la réponse avec le modèle LLM</li>
+<li><strong>Retour</strong> : </li>
+<li>Avec <code>enable_thinking=True</code> : tuple (thinking, response, search_results)</li>
+<li>Avec <code>enable_thinking=False</code> : tuple (response, search_results)</li>
+</ul>
+<h3 id="methode-retrieve_and_generate_stream">Méthode <code>retrieve_and_generate_stream</code></h3>
+<div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">retrieve_and_generate_stream</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">filters</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">prompt_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;standard&quot;</span><span class="p">,</span>
+    <span class="n">generation_kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">enable_thinking</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">prompt_kwargs</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncGenerator</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Récupère les documents pertinents et génère une réponse en streaming.</span>
+
+<span class="sd">    Cette méthode enrichit la réponse avec les documents utilisés pour la génération.</span>
+<span class="sd">    Chaque fragment retourné est un dictionnaire identifiant son type et contenu.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        query: Question de l&#39;utilisateur.</span>
+<span class="sd">        filters: Filtres à appliquer lors de la recherche.</span>
+<span class="sd">        prompt_type: Type de prompt à utiliser (&#39;standard&#39;, &#39;summary&#39;, &#39;comparison&#39;).</span>
+<span class="sd">        generation_kwargs: Paramètres additionnels pour la génération de texte.</span>
+<span class="sd">        enable_thinking: Active ou désactive le mode de réflexion. Si None, utilise la configuration du modèle.</span>
+<span class="sd">        **prompt_kwargs: Paramètres additionnels pour le template de prompt.</span>
+
+<span class="sd">    Yields:</span>
+<span class="sd">        Dict[str, Any]: Fragments de la réponse ou métadonnées avec leur type :</span>
+<span class="sd">            - {&quot;type&quot;: &quot;thinking&quot;, &quot;content&quot;: str} pour les parties de réflexion</span>
+<span class="sd">            - {&quot;type&quot;: &quot;response&quot;, &quot;content&quot;: str} pour les parties de réponse</span>
+<span class="sd">            - {&quot;type&quot;: &quot;context&quot;, &quot;content&quot;: Dict} pour le contexte utilisé</span>
+<span class="sd">            - {&quot;type&quot;: &quot;error&quot;, &quot;content&quot;: str} en cas d&#39;erreur</span>
+<span class="sd">            - {&quot;type&quot;: &quot;done&quot;, &quot;content&quot;: &quot;&quot;} à la fin du streaming</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="o">...</span>
+</code></pre></div>
+<ul>
+<li><strong>But</strong> : récupérer les documents et générer une réponse en streaming (progressive)</li>
+<li><strong>Arguments</strong> : identiques à <code>retrieve_and_generate</code></li>
+<li><strong>Fonctionnement</strong> :</li>
+<li>Récupère et formate les documents comme <code>retrieve_and_generate</code></li>
+<li>Transmet immédiatement le contexte au client (<code>{"type": "context", "content": search_results.dict()}</code>)</li>
+<li>Utilise <code>AsyncStreamedResponse</code> pour générer la réponse progressivement</li>
+<li>Émet chaque fragment selon son type (réponse, réflexion, contexte)</li>
+<li>Signale la fin du streaming avec un événement <code>{"type": "done"}</code></li>
+<li><strong>Retour</strong> : générateur asynchrone de fragments typés</li>
+</ul>
+<hr />
+<h2 id="classe-modelloader">Classe <code>ModelLoader</code></h2>
+<h3 id="constructeur_1">Constructeur</h3>
+<div class="highlight"><pre><span></span><code><span class="n">loader</span> <span class="o">=</span> <span class="n">ModelLoader</span><span class="p">(</span>
+    <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Qwen/Qwen3-0.6B&quot;</span><span class="p">,</span>
+    <span class="n">device</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">load_in_8bit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">base_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;askai/models&quot;</span><span class="p">,</span>
+    <span class="n">thinking_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">auto_load</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">test_mode</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">auto_fix</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span>
+</code></pre></div>
+<ul>
+<li><strong>But</strong> : gérer le chargement et la configuration des modèles LLM</li>
+<li><strong>Arguments</strong> :</li>
+<li><code>model_name</code> : nom du modèle à charger (Qwen/Qwen3-0.6B, Qwen/Qwen3-1.7B)</li>
+<li><code>device</code> : périphérique de calcul ('cpu', 'cuda', 'auto')</li>
+<li><code>load_in_8bit</code> : active la quantification 8-bit</li>
+<li><code>base_path</code> : chemin vers le répertoire des modèles</li>
+<li><code>thinking_enabled</code> : active le mode de réflexion par défaut</li>
+<li><code>auto_load</code> : charge automatiquement le modèle à l'initialisation</li>
+<li><code>test_mode</code> : active un mode de simulation sans charger de modèle</li>
+</ul>
+<h3 id="methode-load">Méthode <code>load</code></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Charge le modèle et le tokenizer en mémoire.</span>
+
+<span class="sd">    Vérifie si le mode test est activé, puis charge le tokenizer et le modèle</span>
+<span class="sd">    depuis HuggingFace ou en local, et configure les options d&#39;optimisation.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RuntimeError: Si le chargement échoue.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="o">...</span>
+</code></pre></div>
+<ul>
+<li><strong>But</strong> : charger le modèle et le tokenizer en mémoire</li>
+<li><strong>Fonctionnement</strong> :</li>
+<li>Vérifie si le mode test est activé</li>
+<li>Charge le tokenizer et le modèle depuis HuggingFace ou local</li>
+<li>Configure les options de quantification et d'optimisation</li>
+<li><strong>Raises</strong> : <code>RuntimeError</code> si le chargement échoue</li>
+</ul>
+<h3 id="methode-generate">Méthode <code>generate</code></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">enable_thinking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">max_new_tokens</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2048</span><span class="p">,</span>
+    <span class="n">do_sample</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.6</span><span class="p">,</span>
+    <span class="n">top_p</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
+    <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Génère du texte à partir d&#39;un prompt donné.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        prompt: Texte d&#39;entrée pour la génération.</span>
+<span class="sd">        enable_thinking: Active le mode de réflexion.</span>
+<span class="sd">        max_new_tokens: Nombre maximum de tokens à générer.</span>
+<span class="sd">        do_sample: Utilise l&#39;échantillonnage pour la génération.</span>
+<span class="sd">        temperature: Contrôle la créativité (plus élevé = plus aléatoire).</span>
+<span class="sd">        top_p: Filtrage nucleus sampling.</span>
+<span class="sd">        top_k: Nombre de tokens considérés à chaque étape.</span>
+<span class="sd">        **kwargs: Paramètres additionnels pour la génération.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Texte généré par le modèle.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="o">...</span>
+</code></pre></div>
+<ul>
+<li><strong>But</strong> : générer du texte à partir d'un prompt donné</li>
+<li><strong>Arguments</strong> :</li>
+<li><code>prompt</code> : texte d'entrée pour la génération</li>
+<li><code>enable_thinking</code> : active le mode de réflexion</li>
+<li><code>max_new_tokens</code> : nombre maximum de tokens à générer</li>
+<li><code>do_sample</code> : utilise l'échantillonnage pour la génération</li>
+<li><code>temperature</code> : contrôle la créativité (plus élevé = plus aléatoire)</li>
+<li><code>top_p</code> : filtrage nucleus sampling</li>
+<li><code>top_k</code> : nombre de tokens considérés à chaque étape</li>
+<li><strong>Retour</strong> : texte généré par le modèle</li>
+</ul>
+<h3 id="methode-generate_with_thinking">Méthode <code>generate_with_thinking</code></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">generate_with_thinking</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">max_new_tokens</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2048</span><span class="p">,</span>
+    <span class="n">do_sample</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.6</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Génère du texte avec séparation explicite entre réflexion et réponse.</span>
+
+<span class="sd">    Cette méthode capture le raisonnement étape par étape du modèle et le sépare</span>
+<span class="sd">    de la réponse finale grâce à des balises spécifiques dans le prompt.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        prompt: Texte d&#39;entrée pour la génération.</span>
+<span class="sd">        max_new_tokens: Nombre maximum de tokens à générer.</span>
+<span class="sd">        do_sample: Utilise l&#39;échantillonnage pour la génération.</span>
+<span class="sd">        temperature: Contrôle la créativité (plus élevé = plus aléatoire).</span>
+<span class="sd">        **kwargs: Paramètres additionnels pour la génération.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tuple[str, str]: Tuple contenant (réflexion, réponse).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="o">...</span>
+</code></pre></div>
+<ul>
+<li><strong>But</strong> : générer du texte avec séparation entre réflexion et réponse finale</li>
+<li><strong>Arguments</strong> : similaires à <code>generate</code></li>
+<li><strong>Fonctionnement</strong> :</li>
+<li>Ajoute des instructions au modèle pour séparer réflexion et réponse</li>
+<li>Utilise des balises spéciales (<code>&lt;thinking&gt;</code>, <code>&lt;/thinking&gt;</code>, <code>&lt;answer&gt;</code>) dans le prompt</li>
+<li>Extrait et sépare la partie réflexion de la partie réponse</li>
+<li><strong>Retour</strong> : tuple (<code>thinking</code>, <code>answer</code>) contenant le raisonnement et la réponse</li>
+</ul>
+<hr />
+<h2 id="classe-asyncstreamedresponse">Classe <code>AsyncStreamedResponse</code></h2>
+<h3 id="constructeur_2">Constructeur</h3>
+<div class="highlight"><pre><span></span><code><span class="n">streamer</span> <span class="o">=</span> <span class="n">AsyncStreamedResponse</span><span class="p">(</span>
+    <span class="n">model_loader</span><span class="p">:</span> <span class="n">ModelLoader</span><span class="p">,</span>
+    <span class="n">filter_thinking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span>
+</code></pre></div>
+<ul>
+<li><strong>But</strong> : gérer les réponses en streaming pour les interactions avec le LLM</li>
+<li><strong>Arguments</strong> :</li>
+<li><code>model_loader</code> : chargeur de modèle LLM</li>
+<li><code>filter_thinking</code> : si True, filtre le contenu de réflexion des réponses</li>
+</ul>
+<h3 id="methode-generate_stream">Méthode <code>generate_stream</code></h3>
+<div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">generate_stream</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">enable_thinking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncGenerator</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Génère une réponse en streaming progressif avec différenciation des types.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        prompt: Texte d&#39;entrée pour la génération.</span>
+<span class="sd">        enable_thinking: Active le mode de réflexion.</span>
+<span class="sd">        chunk_size: Nombre de mots par fragment en mode simulation.</span>
+<span class="sd">        **kwargs: Paramètres additionnels pour la génération.</span>
+
+<span class="sd">    Yields:</span>
+<span class="sd">        Dict[str, Any]: Fragments typés de la génération:</span>
+<span class="sd">            - {&quot;type&quot;: &quot;thinking&quot;, &quot;content&quot;: str} pour les parties de réflexion</span>
+<span class="sd">            - {&quot;type&quot;: &quot;response&quot;, &quot;content&quot;: str} pour les parties de réponse</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="o">...</span>
+</code></pre></div>
+<ul>
+<li><strong>But</strong> : générer une réponse en streaming progressif avec différenciation des types</li>
+<li><strong>Arguments</strong> :</li>
+<li><code>prompt</code> : texte d'entrée pour la génération</li>
+<li><code>enable_thinking</code> : active le mode de réflexion</li>
+<li><code>chunk_size</code> : nombre de mots par fragment en mode simulation</li>
+<li><code>**kwargs</code> : paramètres additionnels pour la génération</li>
+<li><strong>Fonctionnement</strong> :</li>
+<li>Détecte si le modèle supporte nativement le streaming</li>
+<li>Si oui, utilise le streaming natif du modèle</li>
+<li>Sinon, simule le streaming par découpage progressif</li>
+<li>Identifie et type chaque fragment (réflexion ou réponse)</li>
+<li><strong>Retour</strong> : générateur asynchrone de fragments typés</li>
+</ul>
+<hr />
+<h2 id="mode-thinking-contexte">Mode Thinking &amp; Contexte</h2>
+<p>Le module RAG implémente une approche transparente qui permet aux utilisateurs d'accéder:</p>
+<ol>
+<li>Au <strong>raisonnement complet</strong> du modèle (mode "thinking")</li>
+<li>Au <strong>contexte documentaire</strong> utilisé pour générer la réponse</li>
+</ol>
+<h3 id="raisonnement-thinking">Raisonnement (Thinking)</h3>
+<p>Le mode thinking permet de visualiser:</p>
+<ul>
+<li>Le processus de réflexion étape par étape du modèle</li>
+<li>L'analyse des documents fournis</li>
+<li>Le raisonnement pour arriver à la conclusion</li>
+<li>Les références explicites aux sources</li>
+</ul>
+<h4 id="exemple-dactivation">Exemple d'activation:</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Mode normal</span>
+<span class="n">response</span><span class="p">,</span> <span class="n">search_results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">rag_processor</span><span class="o">.</span><span class="n">retrieve_and_generate</span><span class="p">(</span>
+    <span class="n">query</span><span class="o">=</span><span class="s2">&quot;Comment réduire les émissions de CO2?&quot;</span><span class="p">,</span>
+    <span class="n">enable_thinking</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+
+<span class="c1"># Mode avec raisonnement visible</span>
+<span class="n">thinking</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">search_results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">rag_processor</span><span class="o">.</span><span class="n">retrieve_and_generate</span><span class="p">(</span>
+    <span class="n">query</span><span class="o">=</span><span class="s2">&quot;Comment réduire les émissions de CO2?&quot;</span><span class="p">,</span>
+    <span class="n">enable_thinking</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Raisonnement du modèle:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">thinking</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="contexte-documentaire">Contexte documentaire</h3>
+<p>Le contexte documentaire permet à l'utilisateur de:</p>
+<ul>
+<li>Vérifier les sources utilisées pour générer la réponse</li>
+<li>Évaluer la pertinence des documents récupérés</li>
+<li>Accéder aux métadonnées complètes (source, date, score)</li>
+<li>Explorer le contexte hiérarchique (sections parentes)</li>
+</ul>
+<h4 id="exploitation-du-contexte">Exploitation du contexte:</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Récupération de la réponse et du contexte</span>
+<span class="n">response</span><span class="p">,</span> <span class="n">search_results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">rag_processor</span><span class="o">.</span><span class="n">retrieve_and_generate</span><span class="p">(</span>
+    <span class="n">query</span><span class="o">=</span><span class="s2">&quot;Quelles sont les réglementations sur l&#39;isolation thermique?&quot;</span><span class="p">,</span>
+    <span class="n">enable_thinking</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+
+<span class="c1"># Affichage des sources utilisées</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Réponse basée sur </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">search_results</span><span class="o">.</span><span class="n">results</span><span class="p">)</span><span class="si">}</span><span class="s2"> source(s):&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">search_results</span><span class="o">.</span><span class="n">results</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">. </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> (score: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">score</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Thème: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">theme</span><span class="si">}</span><span class="s2">, Type: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">document_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Date: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">publish_date</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Extrait: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">content</span><span class="p">[:</span><span class="mi">100</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="streaming-avec-types-differencies">Streaming avec types différenciés</h3>
+<p>En mode streaming, chaque fragment émis est typé pour permettre:</p>
+<ul>
+<li>L'affichage différencié du raisonnement et de la réponse</li>
+<li>L'accès immédiat au contexte dès sa récupération</li>
+<li>La mise en forme adaptée selon le type dans l'interface</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">rag_processor</span><span class="o">.</span><span class="n">retrieve_and_generate_stream</span><span class="p">(</span>
+    <span class="n">query</span><span class="o">=</span><span class="s2">&quot;Expliquez les normes de sécurité incendie&quot;</span><span class="p">,</span>
+    <span class="n">enable_thinking</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;context&quot;</span><span class="p">:</span>
+        <span class="c1"># Afficher les sources dans l&#39;interface</span>
+        <span class="n">display_sources</span><span class="p">(</span><span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">][</span><span class="s2">&quot;results&quot;</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;thinking&quot;</span><span class="p">:</span>
+        <span class="c1"># Afficher en italique gris dans une zone dédiée</span>
+        <span class="n">append_to_thinking_area</span><span class="p">(</span><span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;response&quot;</span><span class="p">:</span>
+        <span class="c1"># Afficher en texte normal dans la zone de réponse</span>
+        <span class="n">append_to_response_area</span><span class="p">(</span><span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">])</span>
+</code></pre></div>
+<hr />
+<h2 id="exemple-dutilisation">Exemple d'utilisation</h2>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_engine</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy.orm</span><span class="w"> </span><span class="kn">import</span> <span class="n">sessionmaker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">vectordb.src.search</span><span class="w"> </span><span class="kn">import</span> <span class="n">SearchEngine</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">askai.src.model_loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelLoader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">askai.src.rag</span><span class="w"> </span><span class="kn">import</span> <span class="n">RAGProcessor</span>
+
+<span class="c1"># Fonction asynchrone principale</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># 1. Préparer la session de base de données</span>
+    <span class="n">engine_db</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s2">&quot;postgresql://user:password@localhost/clea&quot;</span><span class="p">)</span>
+    <span class="n">SessionLocal</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">engine_db</span><span class="p">)</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">SessionLocal</span><span class="p">()</span>
+
+    <span class="c1"># 2. Initialiser le moteur de recherche</span>
+    <span class="n">search_engine</span> <span class="o">=</span> <span class="n">SearchEngine</span><span class="p">()</span>
+
+    <span class="c1"># 3. Initialiser le chargeur de modèle (en mode test pour la démo)</span>
+    <span class="n">model_loader</span> <span class="o">=</span> <span class="n">ModelLoader</span><span class="p">(</span>
+        <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;Qwen/Qwen3-0.6B&quot;</span><span class="p">,</span>
+        <span class="n">test_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># Remplacer par False en production</span>
+        <span class="n">thinking_enabled</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="c1"># 4. Créer le processeur RAG</span>
+    <span class="n">rag_processor</span> <span class="o">=</span> <span class="n">RAGProcessor</span><span class="p">(</span>
+        <span class="n">model_loader</span><span class="o">=</span><span class="n">model_loader</span><span class="p">,</span>
+        <span class="n">search_engine</span><span class="o">=</span><span class="n">search_engine</span><span class="p">,</span>
+        <span class="n">db_session</span><span class="o">=</span><span class="n">db</span><span class="p">,</span>
+        <span class="n">max_docs</span><span class="o">=</span><span class="mi">5</span>
+    <span class="p">)</span>
+
+    <span class="c1"># 5. Exemple de requête avec génération complète et accès au raisonnement</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;Comment réduire l&#39;empreinte carbone d&#39;une entreprise industrielle?&quot;</span>
+    <span class="n">filters</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;theme&quot;</span><span class="p">:</span> <span class="s2">&quot;RSE&quot;</span><span class="p">,</span> <span class="s2">&quot;normalize_scores&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+
+    <span class="n">thinking</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">search_results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">rag_processor</span><span class="o">.</span><span class="n">retrieve_and_generate</span><span class="p">(</span>
+        <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span>
+        <span class="n">filters</span><span class="o">=</span><span class="n">filters</span><span class="p">,</span>
+        <span class="n">prompt_type</span><span class="o">=</span><span class="s2">&quot;standard&quot;</span><span class="p">,</span>
+        <span class="n">enable_thinking</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Afficher la réponse</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Réponse finale:</span><span class="se">\n</span><span class="si">{</span><span class="n">response</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Afficher le raisonnement si nécessaire</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Raisonnement du modèle:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">thinking</span><span class="p">)</span>
+
+    <span class="c1"># Afficher les sources utilisées</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Sources utilisées:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">search_results</span><span class="o">.</span><span class="n">results</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">. </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> (score: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">score</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+    <span class="c1"># 6. Exemple de requête avec génération en streaming typé</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Génération en streaming avec types:&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Conteneurs pour collecter différents types de contenu</span>
+    <span class="n">thinking_content</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">response_content</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">async</span> <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">rag_processor</span><span class="o">.</span><span class="n">retrieve_and_generate_stream</span><span class="p">(</span>
+        <span class="n">query</span><span class="o">=</span><span class="s2">&quot;Quelles sont les meilleures pratiques de gestion des déchets?&quot;</span><span class="p">,</span>
+        <span class="n">filters</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;theme&quot;</span><span class="p">:</span> <span class="s2">&quot;Environnement&quot;</span><span class="p">},</span>
+        <span class="n">enable_thinking</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;thinking&quot;</span><span class="p">:</span>
+            <span class="n">thinking_content</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[Thinking] &quot;</span><span class="p">,</span> <span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;response&quot;</span><span class="p">:</span>
+            <span class="n">response_content</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[Réponse] &quot;</span><span class="p">,</span> <span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;context&quot;</span><span class="p">:</span>
+            <span class="n">context</span> <span class="o">=</span> <span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[Contexte récupéré: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">context</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2"> documents]&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;done&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[Génération terminée]&quot;</span><span class="p">)</span>
+
+<span class="c1"># Exécuter la fonction asynchrone</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<h3 id="exemple-avec-interface-fastapi">Exemple avec interface FastAPI</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span><span class="p">,</span> <span class="n">Depends</span><span class="p">,</span> <span class="n">HTTPException</span><span class="p">,</span> <span class="n">BackgroundTasks</span><span class="p">,</span> <span class="n">WebSocket</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastapi.responses</span><span class="w"> </span><span class="kn">import</span> <span class="n">StreamingResponse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy.orm</span><span class="w"> </span><span class="kn">import</span> <span class="n">Session</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">askai.src.model_loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelLoader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">askai.src.rag</span><span class="w"> </span><span class="kn">import</span> <span class="n">RAGProcessor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">vectordb.src.search</span><span class="w"> </span><span class="kn">import</span> <span class="n">SearchEngine</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">vectordb.src.database</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_db</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">()</span>
+
+<span class="c1"># Singleton pour le modèle (partagé entre requêtes)</span>
+<span class="n">model_loader</span> <span class="o">=</span> <span class="n">ModelLoader</span><span class="p">(</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;Qwen/Qwen3-0.6B&quot;</span><span class="p">,</span>
+    <span class="n">auto_load</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># Charge le modèle au démarrage</span>
+    <span class="n">thinking_enabled</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">search_engine</span> <span class="o">=</span> <span class="n">SearchEngine</span><span class="p">()</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/askai/query&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span>
+    <span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">theme</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">enable_thinking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">get_db</span><span class="p">)</span>
+<span class="p">):</span>
+    <span class="c1"># Créer un processeur RAG pour cette requête</span>
+    <span class="n">rag_processor</span> <span class="o">=</span> <span class="n">RAGProcessor</span><span class="p">(</span>
+        <span class="n">model_loader</span><span class="o">=</span><span class="n">model_loader</span><span class="p">,</span>
+        <span class="n">search_engine</span><span class="o">=</span><span class="n">search_engine</span><span class="p">,</span>
+        <span class="n">db_session</span><span class="o">=</span><span class="n">db</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Générer la réponse avec ou sans raisonnement</span>
+    <span class="k">if</span> <span class="n">enable_thinking</span><span class="p">:</span>
+        <span class="n">thinking</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">search_results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">rag_processor</span><span class="o">.</span><span class="n">retrieve_and_generate</span><span class="p">(</span>
+            <span class="n">query</span><span class="o">=</span><span class="n">question</span><span class="p">,</span>
+            <span class="n">filters</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;theme&quot;</span><span class="p">:</span> <span class="n">theme</span><span class="p">}</span> <span class="k">if</span> <span class="n">theme</span> <span class="k">else</span> <span class="p">{},</span>
+            <span class="n">enable_thinking</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="c1"># Retourner à la fois la réponse, le raisonnement et les sources</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">,</span>
+            <span class="s2">&quot;answer&quot;</span><span class="p">:</span> <span class="n">response</span><span class="p">,</span>
+            <span class="s2">&quot;thinking&quot;</span><span class="p">:</span> <span class="n">thinking</span><span class="p">,</span>
+            <span class="s2">&quot;sources&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
+                    <span class="s2">&quot;theme&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">theme</span><span class="p">,</span>
+                    <span class="s2">&quot;document_type&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">document_type</span><span class="p">,</span>
+                    <span class="s2">&quot;publish_date&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">publish_date</span><span class="p">,</span>
+                    <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">score</span>
+                <span class="p">}</span>
+                <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">search_results</span><span class="o">.</span><span class="n">results</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Version sans raisonnement</span>
+        <span class="n">response</span><span class="p">,</span> <span class="n">search_results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">rag_processor</span><span class="o">.</span><span class="n">retrieve_and_generate</span><span class="p">(</span>
+            <span class="n">query</span><span class="o">=</span><span class="n">question</span><span class="p">,</span>
+            <span class="n">filters</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;theme&quot;</span><span class="p">:</span> <span class="n">theme</span><span class="p">}</span> <span class="k">if</span> <span class="n">theme</span> <span class="k">else</span> <span class="p">{},</span>
+            <span class="n">enable_thinking</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">,</span>
+            <span class="s2">&quot;answer&quot;</span><span class="p">:</span> <span class="n">response</span><span class="p">,</span>
+            <span class="s2">&quot;sources&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
+                    <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">score</span>
+                <span class="p">}</span>
+                <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">search_results</span><span class="o">.</span><span class="n">results</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">websocket</span><span class="p">(</span><span class="s2">&quot;/askai/ws&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">websocket_endpoint</span><span class="p">(</span><span class="n">websocket</span><span class="p">:</span> <span class="n">WebSocket</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">get_db</span><span class="p">)):</span>
+    <span class="k">await</span> <span class="n">websocket</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
+
+    <span class="c1"># Recevoir la requête initiale</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">websocket</span><span class="o">.</span><span class="n">receive_text</span><span class="p">()</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="c1"># Créer un processeur RAG</span>
+    <span class="n">rag_processor</span> <span class="o">=</span> <span class="n">RAGProcessor</span><span class="p">(</span>
+        <span class="n">model_loader</span><span class="o">=</span><span class="n">model_loader</span><span class="p">,</span>
+        <span class="n">search_engine</span><span class="o">=</span><span class="n">search_engine</span><span class="p">,</span>
+        <span class="n">db_session</span><span class="o">=</span><span class="n">db</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Transmettre les fragments typés via le WebSocket</span>
+    <span class="k">async</span> <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">rag_processor</span><span class="o">.</span><span class="n">retrieve_and_generate_stream</span><span class="p">(</span>
+        <span class="n">query</span><span class="o">=</span><span class="n">request</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">],</span>
+        <span class="n">filters</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;theme&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;theme&quot;</span><span class="p">)}</span> <span class="k">if</span> <span class="s2">&quot;theme&quot;</span> <span class="ow">in</span> <span class="n">request</span> <span class="k">else</span> <span class="p">{},</span>
+        <span class="n">enable_thinking</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;enable_thinking&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="p">):</span>
+        <span class="k">await</span> <span class="n">websocket</span><span class="o">.</span><span class="n">send_json</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<blockquote>
+<p><strong>Voir aussi</strong> : les <strong>endpoints</strong> FastAPI dans <code>askai_endpoint.py</code>
+– <code>POST /askai/query</code> → génère une réponse complète avec raisonnement et contexte optionnels</p>
+</blockquote>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../../schemas/" class="btn btn-neutral float-left" title="Schémas"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../doc_loader/extractor_lib/" class="btn btn-neutral float-right" title="Extracteurs">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/WillIsback/clea-api" class="fa fa-code-fork" style="color: #fcfcfc"> Cléa-API</a>
+        </span>
+    
+    
+      <span><a href="../../../schemas/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../doc_loader/extractor_lib/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+      <script src="../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

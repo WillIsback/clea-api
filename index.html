@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="None" /><link rel="canonical" href="https://WillIsback.github.io/clea-api/" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>Cléa-API Documentation</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="css/mkdocsoad.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Accueil";
+        var mkdocs_page_input_path = "index.md";
+        var mkdocs_page_url = "/clea-api/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="." class="icon icon-home"> Cléa-API Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Accueil</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#acces-rapides">Accès rapides 📚</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#caracteristiques-principales">Caractéristiques principales</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#structure-du-depot">Structure du dépôt</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#installation-rapide">Installation rapide</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="main/">Introduction</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="database/">Base de données</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="schemas/">Schémas</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Documentation des librairies</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="lib/askai/rag_lib/">RAG</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="lib/doc_loader/extractor_lib/">Extracteurs</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="lib/doc_loader/splitter_lib/">Segmentation</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="lib/pipeline/pipeline_lib/">Pipeline end-to-end</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="lib/vectordb/crud_lib/">Opérations CRUD</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="lib/vectordb/index_lib/">Indexation vectorielle</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="lib/vectordb/search_lib/">Recherche hybride</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Références API</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >REST API</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="api/rest/rest_api/">Documentation Swagger</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Références Python</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="api/lib/askai/rag_references/">RAG</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="api/lib/doc_loader/extractor_references/">Extracteurs</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="api/lib/doc_loader/splitter_references/">Segmentation</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="api/lib/pipeline/pipeline_references/">Pipeline</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="api/lib/vectordb/crud_references/">CRUD</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="api/lib/vectordb/index_references/">Indexation</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="api/lib/vectordb/search_references/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Intégrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >JavaScript / TypeScript</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="Integration/askai/rag_js/">RAG</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="Integration/doc_loader/doc_loader_js/">Extraction de documents</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="Integration/pipeline/pipeline_js/">Pipeline end-to-end</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="Integration/vectordb/crud_js/">Opérations CRUD</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="Integration/vectordb/index_js/">Indexation</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="Integration/vectordb/search_js/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href=".">Cléa-API Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Accueil</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/WillIsback/clea-api/edit/master/docs/index.md">Edit on Cléa-API</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="clea-api">Cléa-API</h1>
+<p><em>Framework</em> de <strong>chargement de documents</strong>, <strong>recherche hybride</strong> et <strong>RAG</strong> (vectorielle + métadonnées + génération) pour PostgreSQL + pgvector.<br />
+Conçu <strong>100 % local &amp; hors-ligne</strong> pour vos données sensibles (médicales, financières, juridiques…). </p>
+<hr />
+<h2 id="acces-rapides">Accès rapides 📚</h2>
+<table>
+<thead>
+<tr>
+<th>Sujet</th>
+<th>Documentation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Chargement &amp; extraction</strong></td>
+<td><a href="lib/doc_loader/extractor_lib/">Extracteurs</a> · <a href="lib/doc_loader/splitter_lib/">Segmentation</a></td>
+</tr>
+<tr>
+<td><strong>Base de données &amp; index vectoriels</strong></td>
+<td><a href="database/">Database</a></td>
+</tr>
+<tr>
+<td><strong>Moteur de recherche hybride</strong></td>
+<td><a href="lib/vectordb/search_lib/">Search</a></td>
+</tr>
+<tr>
+<td><strong>Pipeline end-to-end</strong></td>
+<td><a href="lib/pipeline/pipeline_lib/">Pipeline</a></td>
+</tr>
+<tr>
+<td><strong>IA générative &amp; RAG (AskAI)</strong></td>
+<td><a href="lib/askai/rag_lib/">AskAI</a></td>
+</tr>
+<tr>
+<td><strong>Référence API Python (autogen)</strong></td>
+<td><a href="api/lib/doc_loader/extractor_references/">Doc Loader</a> · <a href="api/lib/vectordb/crud_references/">Vectordb</a> · <a href="api/lib/pipeline/pipeline_references/">Pipeline</a></td>
+</tr>
+<tr>
+<td><strong>OpenAPI / Endpoints REST</strong></td>
+<td><a href="api/rest/rest_api/">REST API</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="caracteristiques-principales">Caractéristiques principales</h2>
+<ul>
+<li>🔒 <strong>100 % local &amp; hors-ligne</strong> : aucun appel à des services externes, parfait pour les données confidentielles  </li>
+<li>📂 <strong>Chargement multi-formats</strong> : PDF, DOCX, HTML, JSON, TXT…  </li>
+<li>🧩 <strong>Segmentation hiérarchique</strong> : Section → Paragraphe → Chunk  </li>
+<li>🔍 <strong>Recherche hybride</strong> : <em>ivfflat</em> ou <em>HNSW</em> + filtres SQL + re-ranking Cross-Encoder  </li>
+<li>🤖 <strong>RAG avec petits LLMs (AskAI)</strong> : génération augmentée en local (Qwen3-0.6B/1.7B)  </li>
+<li>⚡ <strong>Pipeline "one-liner"</strong> :  </li>
+</ul>
+<div class="highlight"><pre><span></span><code>  <span class="kn">from</span><span class="w"> </span><span class="nn">pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_and_store</span>
+  <span class="n">process_and_store</span><span class="p">(</span><span class="s2">&quot;report.pdf&quot;</span><span class="p">,</span> <span class="n">theme</span><span class="o">=</span><span class="s2">&quot;R&amp;D&quot;</span><span class="p">)</span>
+</code></pre></div>
+<ul>
+<li>🛠️ <strong>Extensible</strong> : ajoutez un extracteur ou un modèle en quelques lignes</li>
+<li>🐳 <strong>Docker-ready</strong> &amp; <strong>CI-friendly</strong> (tests PyTest, MkDocs)&#x20;</li>
+</ul>
+<hr />
+<h2 id="structure-du-depot">Structure du dépôt</h2>
+<div class="highlight"><pre><span></span><code>.
+├── doc_loader/   # Extraction &amp; chargement
+├── vectordb/     # Modèles &amp; recherche
+├── pipeline/     # Orchestration end-to-end
+├── askai/        # RAG &amp; génération locale
+├── docs/         # Documentation MkDocs ← vous êtes ici
+├── demo/         # Exemples de fichiers
+└── main.py       # Démarreur FastAPI + configuration
+</code></pre></div>
+<hr />
+<h2 id="installation-rapide">Installation rapide</h2>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/votre-repo/clea-api.git
+<span class="nb">cd</span><span class="w"> </span>clea-api
+
+<span class="c1"># Dépendances Python</span>
+uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>askai/requirements_askai.txt<span class="w">   </span><span class="c1"># pour AskAI</span>
+
+<span class="c1"># Variables d’environnement</span>
+cp<span class="w"> </span>.env.sample<span class="w"> </span>.env
+<span class="c1"># (éditez DB_USER, DB_PASSWORD, etc.)</span>
+
+<span class="c1"># Initialiser la DB + extension pgvector</span>
+uv<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>vectordb.src.database<span class="w"> </span>init_db
+
+<span class="c1"># Lancer l’API</span>
+./start.sh<span class="w">   </span><span class="c1"># ou uv run main.py</span>
+</code></pre></div>
+<p>L’API sera disponible sur <a href="http://localhost:8080">http://localhost:8080</a>.</p>
+<hr />
+<blockquote>
+<p>Conçu pour un usage <strong>local</strong> et <strong>sécurisé</strong>, sans fuite de données vers le cloud.
+Voir le <a href="../README.md">README principal</a> pour plus de détails.</p>
+</blockquote>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="main/" class="btn btn-neutral float-right" title="Introduction">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/WillIsback/clea-api" class="fa fa-code-fork" style="color: #fcfcfc"> Cléa-API</a>
+        </span>
+    
+    
+    
+      <span><a href="main/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.6.1
+Build Date UTC : 2025-05-05 00:16:11.815807+00:00
+-->

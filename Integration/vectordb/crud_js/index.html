@@ -42,7 +42,7 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../../home/">Accueil</a>
+                <li class="toctree-l1"><a class="reference internal" href="../../..">Accueil</a>
                 </li>
               </ul>
               <ul>
@@ -59,6 +59,12 @@
               </ul>
               <p class="caption"><span class="caption-text">Documentation des librairies</span></p>
               <ul>
+                  <li class="toctree-l1"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../../lib/askai/rag_lib/">RAG</a>
+                </li>
+    </ul>
+                  </li>
                   <li class="toctree-l1"><a class="reference internal" >doc_loader</a>
     <ul>
                 <li class="toctree-l2"><a class="reference internal" href="../../../lib/doc_loader/extractor_lib/">Extracteurs</a>
@@ -94,6 +100,12 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" >Références Python</a>
     <ul>
+                <li class="toctree-l2"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/askai/rag_references/">RAG</a>
+                </li>
+    </ul>
+                </li>
                 <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
     <ul>
                 <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/doc_loader/extractor_references/">Extracteurs</a>
@@ -125,6 +137,12 @@
               <ul class="current">
                   <li class="toctree-l1 current"><a class="reference internal current" >JavaScript / TypeScript</a>
     <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../askai/rag_js/">RAG</a>
+                </li>
+    </ul>
+                </li>
                 <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
     <ul>
                 <li class="toctree-l3"><a class="reference internal" href="../../doc_loader/doc_loader_js/">Extraction de documents</a>
@@ -140,6 +158,18 @@
                 <li class="toctree-l2 current"><a class="reference internal current" >vectordb</a>
     <ul class="current">
                 <li class="toctree-l3 current"><a class="reference internal current" href="#">Opérations CRUD</a>
+    <ul class="current">
+    <li class="toctree-l4"><a class="reference internal" href="#1-configuration-du-client">1. Configuration du client</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#3-ajouter-un-document-chunks">3. Ajouter un document + chunks</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#4-mettre-a-jour-un-document">4. Mettre à jour un document</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#5-supprimer-un-document-ou-ses-chunks">5. Supprimer un document ou ses chunks</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#6-lister-recuperer">6. Lister &amp; récupérer</a>
+    </li>
+    </ul>
                 </li>
                 <li class="toctree-l3"><a class="reference internal" href="../index_js/">Indexation</a>
                 </li>
@@ -177,7 +207,186 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                
+                <!-- File: docs/Integration/vectordb/crud_js.md -->
+
+<h1 id="integration-javascript-typescript-vectordb-crud">Intégration JavaScript / TypeScript – Vectordb CRUD</h1>
+<p>Ce guide montre comment appeler les endpoints CRUD de <strong>Vectordb</strong> (/database) depuis un client JavaScript ou TypeScript, en s’appuyant sur les schémas Pydantic et les routes FastAPI :contentReference[oaicite:0]{index=0}.</p>
+<hr />
+<h2 id="1-configuration-du-client">1. Configuration du client</h2>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">axios</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;axios&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">API_URL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CLEA_API</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s1">&#39;http://localhost:8080&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">dbClient</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">axios</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">baseURL</span><span class="o">:</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">API_URL</span><span class="si">}</span><span class="sb">/database`</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;application/json&#39;</span><span class="w"> </span><span class="p">},</span>
+<span class="p">});</span>
+<span class="sb">````</span>
+
+<span class="o">---</span>
+
+<span class="err">##</span><span class="w"> </span><span class="mf">2.</span><span class="w"> </span><span class="nx">Types</span><span class="w"> </span><span class="nx">TypeScript</span>
+
+<span class="sb">```ts</span>
+<span class="sb">/* schémas HTTP (Pydantic → TS) */</span>
+<span class="sb">export interface DocumentCreate {</span>
+<span class="sb">  title: string;</span>
+<span class="sb">  theme: string;</span>
+<span class="sb">  document_type: string;</span>
+<span class="sb">  publish_date: string;      // ISO (YYYY-MM-DD)</span>
+<span class="sb">  corpus_id?: string | null;</span>
+<span class="sb">}</span>
+
+<span class="sb">export interface ChunkCreate {</span>
+<span class="sb">  id?: number;</span>
+<span class="sb">  content: string;</span>
+<span class="sb">  start_char: number;</span>
+<span class="sb">  end_char: number;</span>
+<span class="sb">  hierarchy_level: number;</span>
+<span class="sb">  parent_chunk_id?: number | null;</span>
+<span class="sb">}</span>
+
+<span class="sb">export interface DocumentWithChunks {</span>
+<span class="sb">  document: DocumentCreate;</span>
+<span class="sb">  chunks: ChunkCreate[];</span>
+<span class="sb">}</span>
+
+<span class="sb">export interface DocumentResponse {</span>
+<span class="sb">  id: number;</span>
+<span class="sb">  title: string;</span>
+<span class="sb">  theme: string;</span>
+<span class="sb">  document_type: string;</span>
+<span class="sb">  publish_date: string;</span>
+<span class="sb">  corpus_id: string | null;</span>
+<span class="sb">  chunk_count: number;</span>
+<span class="sb">  index_needed: boolean;</span>
+<span class="sb">}</span>
+
+<span class="sb">export interface UpdateWithChunks {</span>
+<span class="sb">  document: { id: number } &amp; Partial&lt;DocumentCreate&gt;;</span>
+<span class="sb">  new_chunks?: ChunkCreate[];</span>
+<span class="sb">}</span>
+</code></pre></div>
+<hr />
+<h2 id="3-ajouter-un-document-chunks">3. Ajouter un document + chunks</h2>
+<div class="highlight"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">addDocument</span><span class="p">(</span>
+<span class="w">  </span><span class="nx">payload</span><span class="o">:</span><span class="w"> </span><span class="kt">DocumentWithChunks</span>
+<span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">DocumentResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">dbClient</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;/documents&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">payload</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">.</span><span class="nx">toString</span><span class="p">().</span><span class="nx">startsWith</span><span class="p">(</span><span class="s1">&#39;2&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="sb">`Add failed: </span><span class="si">${</span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="si">}</span><span class="sb"> </span><span class="si">${</span><span class="nx">res</span><span class="p">.</span><span class="nx">statusText</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">data</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">DocumentResponse</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Exemple d’usage</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">payload</span><span class="o">:</span><span class="w"> </span><span class="kt">DocumentWithChunks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nb">document</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Rapport Q2 2025&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">theme</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Finance&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">document_type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;PDF&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">publish_date</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;2025-06-30&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">chunks</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Résumé…&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">start_char</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span><span class="p">,</span><span class="w"> </span><span class="nx">end_char</span><span class="o">:</span><span class="w"> </span><span class="kt">100</span><span class="p">,</span><span class="w"> </span><span class="nx">hierarchy_level</span><span class="o">:</span><span class="w"> </span><span class="kt">3</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Détails…&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">start_char</span><span class="o">:</span><span class="w"> </span><span class="kt">101</span><span class="p">,</span><span class="w"> </span><span class="nx">end_char</span><span class="o">:</span><span class="w"> </span><span class="kt">300</span><span class="p">,</span><span class="w"> </span><span class="nx">hierarchy_level</span><span class="o">:</span><span class="w"> </span><span class="kt">3</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="p">};</span>
+
+<span class="nx">addDocument</span><span class="p">(</span><span class="nx">payload</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">doc</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Créé ID ➜&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">doc</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;avec&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">doc</span><span class="p">.</span><span class="nx">chunk_count</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;chunks&#39;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">);</span>
+</code></pre></div>
+<hr />
+<h2 id="4-mettre-a-jour-un-document">4. Mettre à jour un document</h2>
+<div class="highlight"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">updateDocument</span><span class="p">(</span>
+<span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">patch</span><span class="o">:</span><span class="w"> </span><span class="kt">Partial</span><span class="o">&lt;</span><span class="nx">DocumentCreate</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">newChunks</span><span class="o">:</span><span class="w"> </span><span class="kt">ChunkCreate</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[]</span>
+<span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">DocumentResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">payload</span><span class="o">:</span><span class="w"> </span><span class="kt">UpdateWithChunks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">document</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="p">...</span><span class="nx">patch</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">new_chunks</span><span class="o">:</span><span class="w"> </span><span class="kt">newChunks.length</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">newChunks</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kt">undefined</span><span class="p">,</span>
+<span class="w">  </span><span class="p">};</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">dbClient</span><span class="p">.</span><span class="nx">put</span><span class="p">(</span><span class="sb">`/documents/</span><span class="si">${</span><span class="nx">id</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span><span class="w"> </span><span class="nx">payload</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">.</span><span class="nx">toString</span><span class="p">().</span><span class="nx">startsWith</span><span class="p">(</span><span class="s1">&#39;2&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="sb">`Update failed: </span><span class="si">${</span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">data</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">DocumentResponse</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Exemple d’usage</span>
+<span class="nx">updateDocument</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Titre mis à jour&#39;</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Nouveau chunk&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">start_char</span><span class="o">:</span><span class="w"> </span><span class="kt">300</span><span class="p">,</span><span class="w"> </span><span class="nx">end_char</span><span class="o">:</span><span class="w"> </span><span class="kt">350</span><span class="p">,</span><span class="w"> </span><span class="nx">hierarchy_level</span><span class="o">:</span><span class="w"> </span><span class="kt">3</span><span class="w"> </span><span class="p">},</span>
+<span class="p">])</span>
+<span class="w">  </span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">doc</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Mis à jour ➜&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">doc</span><span class="p">))</span>
+<span class="w">  </span><span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">);</span>
+</code></pre></div>
+<hr />
+<h2 id="5-supprimer-un-document-ou-ses-chunks">5. Supprimer un document ou ses chunks</h2>
+<div class="highlight"><pre><span></span><code><span class="c1">// Supprimer tout le document</span>
+<span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">deleteDocument</span><span class="p">(</span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="ow">void</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">dbClient</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="sb">`/documents/</span><span class="si">${</span><span class="nx">id</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="mf">200</span><span class="p">)</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="sb">`Delete doc failed: </span><span class="si">${</span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Supprimer des chunks spécifiques</span>
+<span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">deleteChunks</span><span class="p">(</span>
+<span class="w">  </span><span class="nx">documentId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">chunkIds</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">[]</span>
+<span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="p">{</span><span class="w"> </span><span class="nx">document_id</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span><span class="w"> </span><span class="nx">chunks_deleted</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span><span class="w"> </span><span class="nx">remaining_chunks</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="w"> </span><span class="p">}</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">chunkIds</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">id</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="sb">`chunk_ids=</span><span class="si">${</span><span class="nx">id</span><span class="si">}</span><span class="sb">`</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&amp;&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">dbClient</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="sb">`/documents/</span><span class="si">${</span><span class="nx">documentId</span><span class="si">}</span><span class="sb">/chunks?</span><span class="si">${</span><span class="nx">params</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="mf">200</span><span class="p">)</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="sb">`Delete chunks failed: </span><span class="si">${</span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Exemple d’usage</span>
+<span class="nx">deleteChunks</span><span class="p">(</span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mf">5</span><span class="p">,</span><span class="w"> </span><span class="mf">6</span><span class="p">])</span>
+<span class="w">  </span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">info</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Chunks supprimés ➜&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">info</span><span class="p">.</span><span class="nx">chunks_deleted</span><span class="p">))</span>
+<span class="w">  </span><span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">);</span>
+</code></pre></div>
+<hr />
+<h2 id="6-lister-recuperer">6. Lister &amp; récupérer</h2>
+<div class="highlight"><pre><span></span><code><span class="c1">// Lister avec pagination et filtres</span>
+<span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">listDocuments</span><span class="p">(</span>
+<span class="w">  </span><span class="nx">filters</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">theme?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="nx">document_type?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="nx">corpus_id?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">skip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">50</span>
+<span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">DocumentResponse</span><span class="p">[]</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">dbClient</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/documents&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">filters</span><span class="p">,</span><span class="w"> </span><span class="nx">skip</span><span class="p">,</span><span class="w"> </span><span class="nx">limit</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">});</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">data</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">DocumentResponse</span><span class="p">[];</span>
+<span class="p">}</span>
+
+<span class="c1">// Récupérer un document par ID</span>
+<span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">getDocument</span><span class="p">(</span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">DocumentResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">dbClient</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="sb">`/documents/</span><span class="si">${</span><span class="nx">id</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">data</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">DocumentResponse</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Récupérer les chunks d’un document</span>
+<span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">getDocumentChunks</span><span class="p">(</span>
+<span class="w">  </span><span class="nx">documentId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">hierarchyLevel?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span><span class="w"> </span><span class="nx">parentChunkId?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span><span class="w"> </span><span class="nx">skip?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span><span class="w"> </span><span class="nx">limit?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ChunkCreate</span><span class="p">[]</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">dbClient</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="sb">`/documents/</span><span class="si">${</span><span class="nx">documentId</span><span class="si">}</span><span class="sb">/chunks`</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">params</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">});</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">data</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">ChunkCreate</span><span class="p">[];</span>
+<span class="p">}</span>
+
+<span class="c1">// Exemple d’usage</span>
+<span class="nx">listDocuments</span><span class="p">({</span><span class="w"> </span><span class="nx">theme</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Finance&#39;</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">10</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">docs</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">docs</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">d</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">d</span><span class="p">.</span><span class="nx">title</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">);</span>
+</code></pre></div>
+<hr />
+<blockquote>
+<p>Pour plus de détails sur les schémas et les réponses, voir <code>src/schemas.py</code> et <code>api/database_endpoint.py</code>&#x20;
+Guide généré automatiquement — 05 mai 2025</p>
+</blockquote>
               
             </div>
           </div><footer>

@@ -42,7 +42,7 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../../../home/">Accueil</a>
+                <li class="toctree-l1"><a class="reference internal" href="../../../..">Accueil</a>
                 </li>
               </ul>
               <ul>
@@ -59,6 +59,12 @@
               </ul>
               <p class="caption"><span class="caption-text">Documentation des librairies</span></p>
               <ul>
+                  <li class="toctree-l1"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../../../lib/askai/rag_lib/">RAG</a>
+                </li>
+    </ul>
+                  </li>
                   <li class="toctree-l1"><a class="reference internal" >doc_loader</a>
     <ul>
                 <li class="toctree-l2"><a class="reference internal" href="../../../../lib/doc_loader/extractor_lib/">Extracteurs</a>
@@ -94,6 +100,12 @@
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" >Références Python</a>
     <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../askai/rag_references/">RAG</a>
+                </li>
+    </ul>
+                </li>
                 <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
     <ul>
                 <li class="toctree-l3"><a class="reference internal" href="../../doc_loader/extractor_references/">Extracteurs</a>
@@ -131,6 +143,12 @@
               <ul>
                   <li class="toctree-l1"><a class="reference internal" >JavaScript / TypeScript</a>
     <ul>
+                <li class="toctree-l2"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../../Integration/askai/rag_js/">RAG</a>
+                </li>
+    </ul>
+                </li>
                 <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
     <ul>
                 <li class="toctree-l3"><a class="reference internal" href="../../../../Integration/doc_loader/doc_loader_js/">Extraction de documents</a>
@@ -193,8 +211,8 @@
 <a id="vectordb.src.search"></a>
     <div class="doc doc-contents first">
 
-        <p>search.py – Hybrid semantic / metadata search.</p>
-<p>Hybrid document-search framework for PostgreSQL + pgvector</p>
+        <p>search.py – Recherche hybride sémantique et par métadonnées.</p>
+<p>Framework de recherche documentaire hybride pour PostgreSQL + pgvector</p>
 
 
 
@@ -228,7 +246,8 @@
 
 
         <p>Moteur de recherche hybride (métadonnées + vecteur) avec rerank optionnel via Cross-Encoder.</p>
-<p>Utilise à la fois une recherche par similarité vectorielle et un rerank avec un modèle Cross-Encoder.</p>
+<p>Utilise à la fois une recherche par similarité vectorielle et un rerank avec un modèle Cross-Encoder.
+Inclut une évaluation de la pertinence des résultats et détection des requêtes hors domaine.</p>
 
 
 
@@ -253,15 +272,118 @@
 
 
 <h3 id="vectordb.src.search.SearchEngine.__init__" class="doc doc-heading">
-            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">()</span></code>
+            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">min_relevance_threshold</span><span class="o">=-</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">high_confidence_threshold</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span></code>
 
 </h3>
 
 
     <div class="doc doc-contents ">
 
-        <p>Initialise le moteur de recherche avec son générateur d’embeddings et son ranker.</p>
+        <p>Initialise le moteur de recherche avec son générateur d'embeddings et son ranker.</p>
 
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>min_relevance_threshold</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>-0.0</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Score minimal pour qu'un résultat soit considéré pertinent.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>high_confidence_threshold</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0.0</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Score minimal pour une confiance élevée.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="vectordb.src.search.SearchEngine.evaluate_confidence" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">evaluate_confidence</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Évalue la confiance globale dans les résultats de recherche.</p>
+<p>Analyse les scores du ranker pour déterminer la pertinence globale des résultats
+et détecter les requêtes potentiellement hors domaine.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>scores</code></b>
+                  (<code><span title="typing.List">List</span>[<span title="float">float</span>]</code>)
+              –
+              <div class="doc-md-description">
+                <p>Liste des scores de pertinence.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="vectordb.src.schemas.ConfidenceMetrics">ConfidenceMetrics</span></code>
+              –
+              <div class="doc-md-description">
+                <p>Métriques de confiance avec niveau, message explicatif et statistiques.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
     </div>
 
@@ -278,7 +400,9 @@
 
     <div class="doc doc-contents ">
 
-        <p>Exécute une recherche hybride et renvoie une réponse formatée selon le modèle SearchResponse.</p>
+        <p>Exécute une recherche hybride avec évaluation de confiance.</p>
+<p>Combine recherche vectorielle et filtrage SQL, puis applique un reranking
+avec un modèle Cross-Encoder et évalue la pertinence des résultats.</p>
 
 
 <table class="field-list">
@@ -324,17 +448,75 @@
       <td class="field-body">
         <ul class="first simple">
             <li>
-<b><code>SearchResponse</code></b>(                  <code><span title="vectordb.src.schemas.SearchResponse">SearchResponse</span></code>
-)              –
-              <div class="doc-md-description">
-                <p>Réponse contenant la requête, le nombre de résultats demandés,</p>
-              </div>
-            </li>
-            <li>
                   <code><span title="vectordb.src.schemas.SearchResponse">SearchResponse</span></code>
               –
               <div class="doc-md-description">
-                <p>le nombre total de résultats et une liste de chunks exposés en camelCase.</p>
+                <p>Réponse formatée avec résultats triés, métriques de confiance et statistiques.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="vectordb.src.search.SearchEngine.normalize_scores" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">normalize_scores</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Normalise les scores en valeurs entre 0 et 1.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>scores</code></b>
+                  (<code><span title="typing.List">List</span>[<span title="float">float</span>]</code>)
+              –
+              <div class="doc-md-description">
+                <p>Liste des scores bruts du modèle.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="typing.List">List</span>[<span title="float">float</span>]</code>
+              –
+              <div class="doc-md-description">
+                <p>Liste de scores normalisés entre 0 et 1.</p>
               </div>
             </li>
         </ul>
@@ -368,7 +550,7 @@
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
         <a href="../index_references/" class="btn btn-neutral float-left" title="Indexation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../../../../Integration/doc_loader/doc_loader_js/" class="btn btn-neutral float-right" title="Extraction de documents">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../../../../Integration/askai/rag_js/" class="btn btn-neutral float-right" title="RAG">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -398,7 +580,7 @@
       <span><a href="../index_references/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../../../../Integration/doc_loader/doc_loader_js/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../../../../Integration/askai/rag_js/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

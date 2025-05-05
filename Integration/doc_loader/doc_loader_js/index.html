@@ -42,7 +42,7 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../../home/">Accueil</a>
+                <li class="toctree-l1"><a class="reference internal" href="../../..">Accueil</a>
                 </li>
               </ul>
               <ul>
@@ -59,6 +59,12 @@
               </ul>
               <p class="caption"><span class="caption-text">Documentation des librairies</span></p>
               <ul>
+                  <li class="toctree-l1"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../../lib/askai/rag_lib/">RAG</a>
+                </li>
+    </ul>
+                  </li>
                   <li class="toctree-l1"><a class="reference internal" >doc_loader</a>
     <ul>
                 <li class="toctree-l2"><a class="reference internal" href="../../../lib/doc_loader/extractor_lib/">Extracteurs</a>
@@ -94,6 +100,12 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" >Références Python</a>
     <ul>
+                <li class="toctree-l2"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/askai/rag_references/">RAG</a>
+                </li>
+    </ul>
+                </li>
                 <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
     <ul>
                 <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/doc_loader/extractor_references/">Extracteurs</a>
@@ -125,9 +137,25 @@
               <ul class="current">
                   <li class="toctree-l1 current"><a class="reference internal current" >JavaScript / TypeScript</a>
     <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../askai/rag_js/">RAG</a>
+                </li>
+    </ul>
+                </li>
                 <li class="toctree-l2 current"><a class="reference internal current" >doc_loader</a>
     <ul class="current">
                 <li class="toctree-l3 current"><a class="reference internal current" href="#">Extraction de documents</a>
+    <ul class="current">
+    <li class="toctree-l4"><a class="reference internal" href="#pre-requis">Pré-requis</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#types-typescript">Types TypeScript</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#uploader-un-fichier-et-recuperer-les-chunks">Uploader un fichier et récupérer les chunks</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#bonnes-pratiques">Bonnes pratiques</a>
+    </li>
+    </ul>
                 </li>
     </ul>
                 </li>
@@ -177,12 +205,108 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                
+                <h1 id="integration-javascript-typescript-doc-loader">Intégration <strong>JavaScript / TypeScript</strong> — Doc Loader</h1>
+<p>Ce guide montre comment appeler l’endpoint <strong><code>/doc_loader/upload-file</code></strong> pour uploader un fichier et récupérer ses chunks extraits :contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}.</p>
+<blockquote>
+<p>Les exemples utilisent <strong><code>fetch</code></strong> natif (Node 18+) ou navigateur moderne.<br />
+Pour Node &lt; 18, installez un polyfill :<br />
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>cross-fetch
+</code></pre></div></p>
+</blockquote>
+<hr />
+<h2 id="pre-requis">Pré-requis</h2>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>cross-fetch<span class="w">   </span><span class="c1"># polyfill fetch pour Node &lt;18</span>
+npm<span class="w"> </span>install<span class="w"> </span>-D<span class="w"> </span>typescript<span class="w"> </span><span class="c1"># si vous souhaitez typer</span>
+<span class="sb">````</span>
+
+Définissez<span class="w"> </span>l’URL<span class="w"> </span>de<span class="w"> </span>l’API<span class="w"> </span>:
+
+<span class="sb">```</span>ts
+<span class="nb">export</span><span class="w"> </span>const<span class="w"> </span><span class="nv">CLEA_API</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>process.env.CLEA_API<span class="w"> </span>??<span class="w"> </span><span class="s2">&quot;http://localhost:8080&quot;</span><span class="p">;</span>
+</code></pre></div>
+<hr />
+<h2 id="types-typescript">Types TypeScript</h2>
+<div class="highlight"><pre><span></span><code><span class="cm">/** Chunk brut extrait d’un document */</span>
+<span class="k">export</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="nx">ExtractedDocument</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">theme</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">documentType</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">publishDate</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w">  </span><span class="c1">// ISO (YYYY-MM-DD)</span>
+<span class="w">  </span><span class="nx">embedding?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="uploader-un-fichier-et-recuperer-les-chunks">Uploader un fichier et récupérer les chunks</h2>
+<div class="highlight"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">uploadFile</span><span class="p">(</span>
+<span class="w">  </span><span class="nx">file</span><span class="o">:</span><span class="w"> </span><span class="kt">File</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">maxLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1000</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">theme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Thème générique&quot;</span>
+<span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ExtractedDocument</span><span class="p">[]</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Préparer le formulaire</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">form</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">FormData</span><span class="p">();</span>
+<span class="w">  </span><span class="nx">form</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;file&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">file</span><span class="p">);</span>
+<span class="w">  </span><span class="nx">form</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;max_length&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">maxLength</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
+<span class="w">  </span><span class="nx">form</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;theme&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">theme</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// Appeler l&#39;endpoint</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">CLEA_API</span><span class="si">}</span><span class="sb">/doc_loader/upload-file`</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="kt">form</span><span class="p">,</span>
+<span class="w">  </span><span class="p">});</span>
+
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">res</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="sb">`Upload failed: </span><span class="si">${</span><span class="k">await</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">text</span><span class="p">()</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="exemple-rapide">Exemple rapide</h3>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="o">&lt;</span><span class="nx">HTMLInputElement</span><span class="o">&gt;</span><span class="p">(</span><span class="s2">&quot;#fileInput&quot;</span><span class="p">)</span><span class="o">!</span><span class="p">;</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">input</span><span class="p">.</span><span class="nx">files</span><span class="o">!</span><span class="p">[</span><span class="mf">0</span><span class="p">];</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">docs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">uploadFile</span><span class="p">(</span><span class="nx">file</span><span class="p">,</span><span class="w"> </span><span class="mf">2000</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Finance&quot;</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Chunks reçus :&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">docs</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
+<span class="nx">docs</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">d</span><span class="p">,</span><span class="w"> </span><span class="nx">i</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`#</span><span class="si">${</span><span class="nx">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span><span class="w"> </span><span class="nx">d</span><span class="p">.</span><span class="nx">title</span><span class="p">,</span><span class="w"> </span><span class="nx">d</span><span class="p">.</span><span class="nx">content</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">50</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">&quot;…&quot;</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div>
+<details>
+<summary>📜 Log réel (extrait)</summary>
+
+<div class="highlight"><pre><span></span><code><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;demo.txt&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ligne 1\nLigne 2\n…&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;theme&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Finance&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;documentType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TXT&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;publishDate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-05-01&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;embedding&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;demo.txt (part 2)&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Suite du document…&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;theme&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Finance&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;documentType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TXT&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;publishDate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-05-01&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;embedding&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div>
+
+</details>
+
+<hr />
+<h2 id="bonnes-pratiques">Bonnes pratiques</h2>
+<ul>
+<li><strong>Taille des chunks</strong> : ajustez <code>max_length</code> selon la granularité souhaitée.</li>
+<li><strong>Nettoyage</strong> : supprimez les fichiers temporaires côté client si nécessaire.</li>
+<li><strong>Gestion des erreurs</strong> : surveillez les codes <code>4xx</code> / <code>5xx</code> et affichez <code>res.statusText</code> ou <code>await res.text()</code>.</li>
+</ul>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../../../api/lib/vectordb/search_references/" class="btn btn-neutral float-left" title="Recherche"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../askai/rag_js/" class="btn btn-neutral float-left" title="RAG"><span class="icon icon-circle-arrow-left"></span> Previous</a>
         <a href="../../pipeline/pipeline_js/" class="btn btn-neutral float-right" title="Pipeline end-to-end">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
@@ -210,7 +334,7 @@
         </span>
     
     
-      <span><a href="../../../api/lib/vectordb/search_references/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../../askai/rag_js/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
       <span><a href="../../pipeline/pipeline_js/" style="color: #fcfcfc">Next &raquo;</a></span>

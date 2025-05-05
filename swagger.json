@@ -3,7 +3,7 @@
     "info": {
     "title": "Cléa API",
     "description": "API pour gérer les documents et effectuer des recherches sémantiques.",
-    "version": "0.1.1"
+    "version": "VERSION"
     },
     "paths": {
     "/database/documents": {
@@ -464,7 +464,7 @@
     "Search"
     ],
     "summary": "Recherche hybride (vecteur + filtres)",
-    "description": "Retourne les *top k* chunks les plus pertinents.\n\nLe moteur combine :\n\n* **Filtres SQL** (theme, `document_type`, dates, `corpus_id`)\n* **Index vectoriel pgvector** *(IVFFLAT ou HNSW)*\n* **Rerank Cross-Encoder** sur un sous-ensemble élargi (*top k × 3*)",
+    "description": "Retourne les *top k* chunks les plus pertinents avec évaluation de confiance.\n\nLe moteur combine :\n\n* **Filtres SQL** (theme, `document_type`, dates, `corpus_id`)\n* **Index vectoriel pgvector** *(IVFFLAT ou HNSW)*\n* **Rerank Cross-Encoder** sur un sous-ensemble élargi (*top k × 3*)\n* **Évaluation de confiance** analyse la pertinence globale des résultats\n* **Filtrage de pertinence** élimine les résultats sous le seuil minimal\n* **Normalisation des scores** facilite l'interprétation (0-1)\n\nLes résultats incluent des métriques de confiance qui permettent\nd'identifier les requêtes hors du domaine de connaissances.",
     "operationId": "hybrid_search_search_hybrid_search_post",
     "requestBody": {
     "content": {
@@ -600,7 +600,7 @@
     "Index"
     ],
     "summary": "Vérifier l'état de l'index pour un corpus",
-    "description": "Vérifie l'état de l'index pour un corpus spécifique.\n\nArgs:\n    corpus_id: Identifiant UUID du corpus.\n\nReturns:\n    dict: État de l'index et métadonnées.",
+    "description": "Vérifie l'état de l'index pour un corpus spécifique.\n\nArgs:\n    corpus_id: Identifiant UUID du corpus.\n\nReturns:\n    IndexStatus: État de l'index et métadonnées.\n\nRaises:\n    HTTPException: Si une erreur survient lors de la vérification de l'état.",
     "operationId": "get_index_status_index_index_status__corpus_id__get",
     "parameters": [
     {
@@ -621,9 +621,7 @@
     "content": {
     "application/json": {
     "schema": {
-    "type": "object",
-    "additionalProperties": true,
-    "title": "Response Get Index Status Index Index Status  Corpus Id  Get"
+    "$ref": "#/components/schemas/IndexStatus"
     }
     }
     }
@@ -739,7 +737,7 @@
     "Pipeline"
     ],
     "summary": "Charger un fichier, l'extraire et l'insérer dans la base de données avec segmentation adaptative",
-    "description": "Charge un fichier, l'extrait avec segmentation hiérarchique et l'insère dans la base de données.\n\nLe fichier est temporairement sauvegardé sur le disque, traité pour en extraire le\ncontenu textuel, segmenté selon une approche hiérarchique, puis inséré dans la base\nde données avec génération automatique d'embeddings.\n\nArgs:\n    file: Fichier uploadé par l'utilisateur.\n    max_length: Taille maximale d'un chunk final.\n    overlap: Chevauchement entre les chunks.\n    theme: Thème à appliquer au document.\n    document_type: Type de document (déterminé automatiquement si non spécifié).\n    corpus_id: Identifiant du corpus (généré si non spécifié).\n\nReturns:\n    Résultats de l'opération avec l'ID du document et les statistiques de segmentation.\n\nRaises:\n    HTTPException: Si une erreur survient pendant le traitement du document.",
+    "description": "Charge un fichier, l'extrait avec segmentation hiérarchique et l'insère dans la base de données.\n\nLe fichier est temporairement sauvegardé sur le disque, traité pour en extraire le\ncontenu textuel, segmenté selon une approche hiérarchique, puis inséré dans la base\nde données avec génération automatique d'embeddings.\n\nArgs:\n    file: Fichier uploadé par l'utilisateur.\n    max_length: Taille maximale d'un chunk final.\n    overlap: Chevauchement entre les chunks.\n    theme: Thème à appliquer au document.\n    corpus_id: Identifiant du corpus (généré si non spécifié).\n\nReturns:\n    Dict: Résultats de l'opération avec l'ID du document et les statistiques de segmentation.\n\nRaises:\n    HTTPException: Si une erreur survient pendant le traitement du document.",
     "operationId": "process_and_store_endpoint_pipeline_process_and_store_post",
     "parameters": [
     {
@@ -839,7 +837,7 @@
     "Pipeline"
     ],
     "summary": "Traiter un fichier en arrière-plan et l'insérer dans la base de données",
-    "description": "Traite un fichier en arrière-plan et l'insère dans la base de données.\n\nSimilaire à process-and-store mais s'exécute de manière asynchrone pour les fichiers\nvolumineux. Le client reçoit immédiatement une réponse avec un identifiant de tâche\npendant que le traitement se poursuit en arrière-plan.\n\nArgs:\n    background_tasks: Gestionnaire de tâches en arrière-plan de FastAPI.\n    file: Fichier uploadé par l'utilisateur.\n    max_length: Taille maximale d'un chunk final.\n    overlap: Chevauchement entre les chunks.\n    theme: Thème à appliquer au document.\n    document_type: Type de document (déterminé automatiquement si non spécifié).\n    corpus_id: Identifiant du corpus (généré si non spécifié).\n\nReturns:\n    Informations sur la tâche en arrière-plan créée.",
+    "description": "Traite un fichier en arrière-plan et l'insère dans la base de données.\n\nSimilaire à process-and-store mais s'exécute de manière asynchrone pour les fichiers\nvolumineux. Le client reçoit immédiatement une réponse avec un identifiant de tâche\npendant que le traitement se poursuit en arrière-plan.\n\nArgs:\n    background_tasks: Gestionnaire de tâches en arrière-plan de FastAPI.\n    file: Fichier uploadé par l'utilisateur.\n    max_length: Taille maximale d'un chunk final.\n    overlap: Chevauchement entre les chunks.\n    theme: Thème à appliquer au document.\n    corpus_id: Identifiant du corpus (généré si non spécifié).\n\nReturns:\n    Dict: Informations sur la tâche en arrière-plan créée.",
     "operationId": "process_and_store_async_endpoint_pipeline_process_and_store_async_post",
     "parameters": [
     {
@@ -933,6 +931,106 @@
     }
     }
     },
+    "/pipeline/query-rag": {
+    "post": {
+    "tags": [
+    "Pipeline"
+    ],
+    "summary": "Interroger la base de connaissances avec RAG (Retrieval-Augmented Generation)",
+    "description": "Interroge la base de connaissances avec RAG pour générer une réponse contextualisée.\n\nCette fonction utilise le système RAG (Retrieval-Augmented Generation) pour:\n1. Rechercher les documents les plus pertinents pour la requête\n2. Générer une réponse synthétique basée sur ces documents avec un modèle LLM\n\nArgs:\n    request: Paramètres de la requête RAG (question, filtres, modèle, etc.)\n    \nReturns:\n    JSONResponse ou StreamingResponse: Réponse générée par le LLM, sous forme\n    de dictionnaire JSON ou de flux de données selon le paramètre stream.\n    \nRaises:\n    HTTPException: Si une erreur survient lors du traitement de la requête.",
+    "operationId": "query_rag_endpoint_pipeline_query_rag_post",
+    "requestBody": {
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/RagQueryRequest"
+    }
+    }
+    },
+    "required": true
+    },
+    "responses": {
+    "200": {
+    "description": "Réponse générée basée sur les documents pertinents",
+    "content": {
+    "application/json": {
+    "schema": {}
+    }
+    }
+    },
+    "422": {
+    "description": "Validation Error",
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/HTTPValidationError"
+    }
+    }
+    }
+    }
+    }
+    }
+    },
+    "/askai/ask": {
+    "post": {
+    "tags": [
+    "AskAI"
+    ],
+    "summary": "Ask Ai",
+    "description": "Endpoint pour poser une question et obtenir une réponse basée sur les documents.\n\nCette fonction interroge la base documentaire avec la question fournie,\nrécupère les documents pertinents et utilise un modèle LLM pour générer\nune réponse contextuelle.\n\nArgs:\n    request: Paramètres de la requête (query, filters, etc.).\n    db: Session de base de données SQLAlchemy.\n    search_engine: Instance du moteur de recherche vectorielle.\n    \nReturns:\n    Dict[str, Any] ou StreamingResponse: Réponse générée avec contexte.\n        \nRaises:\n    HTTPException: Si une erreur survient lors du traitement.",
+    "operationId": "ask_ai_askai_ask_post",
+    "requestBody": {
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/AskRequest"
+    }
+    }
+    },
+    "required": true
+    },
+    "responses": {
+    "200": {
+    "description": "Successful Response",
+    "content": {
+    "application/json": {
+    "schema": {}
+    }
+    }
+    },
+    "422": {
+    "description": "Validation Error",
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/HTTPValidationError"
+    }
+    }
+    }
+    }
+    }
+    }
+    },
+    "/askai/models": {
+    "get": {
+    "tags": [
+    "AskAI"
+    ],
+    "summary": "Get Models",
+    "description": "Endpoint pour récupérer la liste des modèles disponibles.\n\nReturns:\n    List[str]: Liste des noms de modèles disponibles.",
+    "operationId": "get_models_askai_models_get",
+    "responses": {
+    "200": {
+    "description": "Successful Response",
+    "content": {
+    "application/json": {
+    "schema": {}
+    }
+    }
+    }
+    }
+    }
+    },
     "/": {
     "get": {
     "summary": "Root",
@@ -953,6 +1051,77 @@
     },
     "components": {
     "schemas": {
+    "AskRequest": {
+    "properties": {
+    "query": {
+    "type": "string",
+    "title": "Query",
+    "description": "Question à poser au système"
+    },
+    "filters": {
+    "anyOf": [
+    {
+    "additionalProperties": true,
+    "type": "object"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Filters",
+    "description": "Filtres pour la recherche"
+    },
+    "theme": {
+    "anyOf": [
+    {
+    "type": "string"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Theme",
+    "description": "Thème pour filtrer les documents"
+    },
+    "modelName": {
+    "anyOf": [
+    {
+    "type": "string"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Modelname",
+    "description": "Modèle à utiliser",
+    "default": "Qwen3-0.6B"
+    },
+    "stream": {
+    "type": "boolean",
+    "title": "Stream",
+    "description": "Réponse en streaming",
+    "default": false
+    },
+    "promptType": {
+    "type": "string",
+    "title": "Prompttype",
+    "description": "Type de prompt (standard, summary, comparison)",
+    "default": "standard"
+    },
+    "enableThinking": {
+    "type": "boolean",
+    "title": "Enablethinking",
+    "description": "Activer le mode 'think' pour le modèle",
+    "default": false
+    }
+    },
+    "type": "object",
+    "required": [
+    "query"
+    ],
+    "title": "AskRequest",
+    "description": "Requête pour poser une question au système RAG.\n\nArgs:\n    query: Question à poser au système.\n    filters: Filtres pour la recherche documentaire.\n    theme: Thème pour filtrer les documents.\n    model_name: Nom du modèle à utiliser.\n    stream: Indique si la réponse doit être streamée.\n    prompt_type: Type de prompt à utiliser.\n\nAttributes:\n    query (str): Question ou requête de l'utilisateur.\n    filters (Optional[Dict[str, Any]]): Filtres pour la recherche documentaire.\n    theme (Optional[str]): Thème pour filtrer les documents.\n    model_name (Optional[str]): Nom du modèle à utiliser.\n    stream (bool): Indique si la réponse doit être streamée.\n    prompt_type (str): Type de prompt à utiliser ('standard', 'summary', 'comparison')."
+    },
     "Body_process_and_store_async_endpoint_pipeline_process_and_store_async_post": {
     "properties": {
     "file": {
@@ -1116,6 +1285,36 @@
     ],
     "title": "ChunkResult",
     "description": "Un chunk classé dans la réponse de recherche."
+    },
+    "ConfidenceMetrics": {
+    "properties": {
+    "level": {
+    "type": "number",
+    "title": "Level",
+    "description": "Niveau de confiance entre 0 et 1"
+    },
+    "message": {
+    "type": "string",
+    "title": "Message",
+    "description": "Message explicatif sur la pertinence"
+    },
+    "stats": {
+    "additionalProperties": {
+    "type": "number"
+    },
+    "type": "object",
+    "title": "Stats",
+    "description": "Statistiques des scores (min, max, avg, median)"
+    }
+    },
+    "type": "object",
+    "required": [
+    "level",
+    "message",
+    "stats"
+    ],
+    "title": "ConfidenceMetrics",
+    "description": "Métriques de confiance pour les résultats de recherche.\n\nFournit des informations sur la pertinence des résultats et des statistiques\npour aider l'utilisateur à évaluer la qualité des réponses."
     },
     "DocumentCreate": {
     "properties": {
@@ -1362,64 +1561,8 @@
     "title": "HierarchicalContext",
     "description": "Parents (level 0 – 2) d’un chunk lorsque `hierarchical=True`."
     },
-    "SearchRequest": {
+    "IndexStatus": {
     "properties": {
-    "query": {
-    "type": "string",
-    "title": "Query"
-    },
-    "topK": {
-    "type": "integer",
-    "minimum": 1,
-    "title": "Topk",
-    "default": 10
-    },
-    "theme": {
-    "anyOf": [
-    {
-    "type": "string"
-    },
-    {
-    "type": "null"
-    }
-    ],
-    "title": "Theme"
-    },
-    "documentType": {
-    "anyOf": [
-    {
-    "type": "string"
-    },
-    {
-    "type": "null"
-    }
-    ],
-    "title": "Documenttype"
-    },
-    "startDate": {
-    "anyOf": [
-    {
-    "type": "string",
-    "format": "date"
-    },
-    {
-    "type": "null"
-    }
-    ],
-    "title": "Startdate"
-    },
-    "endDate": {
-    "anyOf": [
-    {
-    "type": "string",
-    "format": "date"
-    },
-    {
-    "type": "null"
-    }
-    ],
-    "title": "Enddate"
-    },
     "corpusId": {
     "anyOf": [
     {
@@ -1431,10 +1574,190 @@
     ],
     "title": "Corpusid"
     },
-    "hierarchical": {
+    "indexExists": {
     "type": "boolean",
-    "title": "Hierarchical",
+    "title": "Indexexists"
+    },
+    "configExists": {
+    "type": "boolean",
+    "title": "Configexists"
+    },
+    "isIndexed": {
+    "type": "boolean",
+    "title": "Isindexed"
+    },
+    "indexType": {
+    "anyOf": [
+    {
+    "type": "string"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Indextype"
+    },
+    "chunkCount": {
+    "type": "integer",
+    "title": "Chunkcount"
+    },
+    "indexedChunks": {
+    "type": "integer",
+    "title": "Indexedchunks"
+    },
+    "lastIndexed": {
+    "anyOf": [
+    {
+    "type": "string",
+    "format": "date"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Lastindexed"
+    }
+    },
+    "type": "object",
+    "required": [
+    "corpusId",
+    "indexExists",
+    "configExists",
+    "isIndexed",
+    "indexType",
+    "chunkCount",
+    "indexedChunks",
+    "lastIndexed"
+    ],
+    "title": "IndexStatus",
+    "description": "Statut de l'indexation d'un document."
+    },
+    "RagQueryRequest": {
+    "properties": {
+    "query": {
+    "type": "string",
+    "title": "Query",
+    "description": "Question en langage naturel"
+    },
+    "filters": {
+    "anyOf": [
+    {
+    "additionalProperties": true,
+    "type": "object"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Filters",
+    "description": "Filtres pour la recherche"
+    },
+    "model_name": {
+    "type": "string",
+    "title": "Model Name",
+    "description": "Modèle LLM à utiliser",
+    "default": "Qwen3-0.6B"
+    },
+    "prompt_type": {
+    "type": "string",
+    "title": "Prompt Type",
+    "description": "Type de prompt (standard, summary, comparison)",
+    "default": "standard"
+    },
+    "stream": {
+    "type": "boolean",
+    "title": "Stream",
+    "description": "Réponse en streaming",
     "default": false
+    },
+    "max_docs": {
+    "type": "integer",
+    "title": "Max Docs",
+    "description": "Nombre maximum de documents à utiliser",
+    "default": 5
+    }
+    },
+    "type": "object",
+    "required": [
+    "query"
+    ],
+    "title": "RagQueryRequest",
+    "description": "Requête pour interroger la base de connaissances avec RAG.\n\nArgs:\n    query: Question en langage naturel à poser au système.\n    filters: Filtres optionnels pour la recherche documentaire.\n    model_name: Nom du modèle LLM à utiliser.\n    prompt_type: Type de prompt à utiliser.\n    stream: Indique si la réponse doit être générée en streaming.\n    max_docs: Nombre maximum de documents à utiliser.\n    \nAttributes:\n    query: Question en langage naturel.\n    filters: Filtres pour la recherche (thème, type de document, dates...).\n    model_name: Nom du modèle LLM à utiliser.\n    prompt_type: Type de prompt ('standard', 'summary', 'comparison').\n    stream: Si True, la réponse est générée progressivement.\n    max_docs: Nombre maximum de documents à utiliser pour le contexte."
+    },
+    "SearchRequest": {
+    "properties": {
+    "query": {
+    "type": "string",
+    "title": "Query",
+    "description": "Requête en langage naturel"
+    },
+    "topK": {
+    "type": "integer",
+    "title": "Topk",
+    "description": "Nombre de résultats à retourner",
+    "default": 10
+    },
+    "theme": {
+    "anyOf": [
+    {
+    "type": "string"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Theme",
+    "description": "Filtre par thème"
+    },
+    "documentType": {
+    "anyOf": [
+    {
+    "type": "string"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Documenttype",
+    "description": "Filtre par type de document"
+    },
+    "startDate": {
+    "anyOf": [
+    {
+    "type": "string",
+    "format": "date-time"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Startdate",
+    "description": "Date de début"
+    },
+    "endDate": {
+    "anyOf": [
+    {
+    "type": "string",
+    "format": "date-time"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Enddate",
+    "description": "Date de fin"
+    },
+    "corpusId": {
+    "anyOf": [
+    {
+    "type": "integer"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Corpusid",
+    "description": "ID du corpus"
     },
     "hierarchyLevel": {
     "anyOf": [
@@ -1445,7 +1768,26 @@
     "type": "null"
     }
     ],
-    "title": "Hierarchylevel"
+    "title": "Hierarchylevel",
+    "description": "Niveau hiérarchique (0-2)"
+    },
+    "hierarchical": {
+    "type": "boolean",
+    "title": "Hierarchical",
+    "description": "Récupérer le contexte hiérarchique",
+    "default": false
+    },
+    "filterByRelevance": {
+    "type": "boolean",
+    "title": "Filterbyrelevance",
+    "description": "Filtrer les résultats sous le seuil de pertinence",
+    "default": false
+    },
+    "normalizeScores": {
+    "type": "boolean",
+    "title": "Normalizescores",
+    "description": "Normaliser les scores entre 0 et 1",
+    "default": false
     }
     },
     "type": "object",
@@ -1453,28 +1795,61 @@
     "query"
     ],
     "title": "SearchRequest",
-    "description": "Paramètres acceptés par `POST /search/hybrid_search`."
+    "description": "Paramètres pour la recherche hybride.\n\nCombine la requête textuelle avec des filtres de métadonnées optionnels."
     },
     "SearchResponse": {
     "properties": {
     "query": {
     "type": "string",
-    "title": "Query"
+    "title": "Query",
+    "description": "Requête originale"
     },
     "topK": {
     "type": "integer",
-    "title": "Topk"
+    "title": "Topk",
+    "description": "Nombre de résultats demandés"
     },
     "totalResults": {
     "type": "integer",
-    "title": "Totalresults"
+    "title": "Totalresults",
+    "description": "Nombre total de résultats trouvés"
     },
     "results": {
     "items": {
     "$ref": "#/components/schemas/ChunkResult"
     },
     "type": "array",
-    "title": "Results"
+    "title": "Results",
+    "description": "Résultats de la recherche"
+    },
+    "confidence": {
+    "anyOf": [
+    {
+    "$ref": "#/components/schemas/ConfidenceMetrics"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "description": "Métriques de confiance sur les résultats"
+    },
+    "normalized": {
+    "type": "boolean",
+    "title": "Normalized",
+    "description": "Indique si les scores sont normalisés (0-1)",
+    "default": false
+    },
+    "message": {
+    "anyOf": [
+    {
+    "type": "string"
+    },
+    {
+    "type": "null"
+    }
+    ],
+    "title": "Message",
+    "description": "Message informatif sur les résultats"
     }
     },
     "type": "object",
@@ -1485,7 +1860,7 @@
     "results"
     ],
     "title": "SearchResponse",
-    "description": "Réponse complète du moteur de recherche."
+    "description": "Réponse à une requête de recherche.\n\nContient les résultats triés par pertinence avec métadonnées et évaluation de confiance."
     },
     "UpdateWithChunks": {
     "properties": {

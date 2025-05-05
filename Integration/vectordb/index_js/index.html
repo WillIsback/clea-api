@@ -42,7 +42,7 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../../home/">Accueil</a>
+                <li class="toctree-l1"><a class="reference internal" href="../../..">Accueil</a>
                 </li>
               </ul>
               <ul>
@@ -59,6 +59,12 @@
               </ul>
               <p class="caption"><span class="caption-text">Documentation des librairies</span></p>
               <ul>
+                  <li class="toctree-l1"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../../lib/askai/rag_lib/">RAG</a>
+                </li>
+    </ul>
+                  </li>
                   <li class="toctree-l1"><a class="reference internal" >doc_loader</a>
     <ul>
                 <li class="toctree-l2"><a class="reference internal" href="../../../lib/doc_loader/extractor_lib/">Extracteurs</a>
@@ -94,6 +100,12 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" >Références Python</a>
     <ul>
+                <li class="toctree-l2"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/askai/rag_references/">RAG</a>
+                </li>
+    </ul>
+                </li>
                 <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
     <ul>
                 <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/doc_loader/extractor_references/">Extracteurs</a>
@@ -125,6 +137,12 @@
               <ul class="current">
                   <li class="toctree-l1 current"><a class="reference internal current" >JavaScript / TypeScript</a>
     <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../askai/rag_js/">RAG</a>
+                </li>
+    </ul>
+                </li>
                 <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
     <ul>
                 <li class="toctree-l3"><a class="reference internal" href="../../doc_loader/doc_loader_js/">Extraction de documents</a>
@@ -142,6 +160,18 @@
                 <li class="toctree-l3"><a class="reference internal" href="../crud_js/">Opérations CRUD</a>
                 </li>
                 <li class="toctree-l3 current"><a class="reference internal current" href="#">Indexation</a>
+    <ul class="current">
+    <li class="toctree-l4"><a class="reference internal" href="#1-configuration-du-client">1. Configuration du client</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#3-creer-un-index-pour-un-corpus">3. Créer un index pour un corpus</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#4-supprimer-un-index">4. Supprimer un index</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#5-verifier-letat-dun-index">5. Vérifier l’état d’un index</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#6-verifier-tous-les-index">6. Vérifier tous les index</a>
+    </li>
+    </ul>
                 </li>
                 <li class="toctree-l3"><a class="reference internal" href="../search_js/">Recherche</a>
                 </li>
@@ -177,7 +207,112 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                
+                <h1 id="integration-javascript-typescript-gestion-des-index-vectoriels">Intégration JavaScript / TypeScript – Gestion des index vectoriels</h1>
+<p>Ce guide explique comment gérer les index <strong>IVFFLAT</strong> / <strong>HNSW</strong> de <strong>Vectordb</strong> depuis JavaScript ou TypeScript, en appelant directement les endpoints FastAPI :contentReference[oaicite:2]{index=2}:contentReference[oaicite:3]{index=3}.</p>
+<hr />
+<h2 id="1-configuration-du-client">1. Configuration du client</h2>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">axios</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;axios&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">API_URL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CLEA_API</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s1">&#39;http://localhost:8080&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">idxClient</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">axios</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">baseURL</span><span class="o">:</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">API_URL</span><span class="si">}</span><span class="sb">/index`</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;application/json&#39;</span><span class="w"> </span><span class="p">},</span>
+<span class="p">});</span>
+<span class="sb">````</span>
+
+<span class="o">---</span>
+
+<span class="err">##</span><span class="w"> </span><span class="mf">2.</span><span class="w"> </span><span class="nx">Types</span><span class="w"> </span><span class="nx">TypeScript</span>
+
+<span class="sb">```ts</span>
+<span class="sb">export interface IndexSimpleResult {</span>
+<span class="sb">  status: &#39;ok&#39; | &#39;error&#39;;</span>
+<span class="sb">  message: string;</span>
+<span class="sb">}</span>
+
+<span class="sb">export interface IndexStatus {</span>
+<span class="sb">  corpusId: string;</span>
+<span class="sb">  indexExists: boolean;</span>
+<span class="sb">  configExists: boolean;</span>
+<span class="sb">  isIndexed: boolean;</span>
+<span class="sb">  indexType: string;</span>
+<span class="sb">  chunkCount: number;</span>
+<span class="sb">  indexedChunks: number;</span>
+<span class="sb">  lastIndexed: string | null;</span>
+<span class="sb">}</span>
+
+<span class="sb">export interface AllIndexesStatus {</span>
+<span class="sb">  [corpusId: string]: IndexStatus;</span>
+<span class="sb">}</span>
+</code></pre></div>
+<hr />
+<h2 id="3-creer-un-index-pour-un-corpus">3. Créer un index pour un corpus</h2>
+<div class="highlight"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">createIndex</span><span class="p">(</span>
+<span class="w">  </span><span class="nx">corpusId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">IndexSimpleResult</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">idxClient</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="sb">`/create-index/</span><span class="si">${</span><span class="nx">corpusId</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">.</span><span class="nx">toString</span><span class="p">().</span><span class="nx">startsWith</span><span class="p">(</span><span class="s1">&#39;2&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="sb">`Create index failed: </span><span class="si">${</span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">data</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">IndexSimpleResult</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Exemple d’usage</span>
+<span class="nx">createIndex</span><span class="p">(</span><span class="s1">&#39;ae12f3e4-5678-90ab-cdef-1234567890ab&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">r</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Index créé:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nx">message</span><span class="p">))</span>
+<span class="w">  </span><span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">);</span>
+</code></pre></div>
+<hr />
+<h2 id="4-supprimer-un-index">4. Supprimer un index</h2>
+<div class="highlight"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">dropIndex</span><span class="p">(</span>
+<span class="w">  </span><span class="nx">corpusId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">IndexSimpleResult</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">idxClient</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="sb">`/drop-index/</span><span class="si">${</span><span class="nx">corpusId</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">.</span><span class="nx">toString</span><span class="p">().</span><span class="nx">startsWith</span><span class="p">(</span><span class="s1">&#39;2&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="sb">`Drop index failed: </span><span class="si">${</span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">data</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">IndexSimpleResult</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Exemple d’usage</span>
+<span class="nx">dropIndex</span><span class="p">(</span><span class="s1">&#39;ae12f3e4-5678-90ab-cdef-1234567890ab&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">r</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Index supprimé:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nx">message</span><span class="p">))</span>
+<span class="w">  </span><span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">);</span>
+</code></pre></div>
+<hr />
+<h2 id="5-verifier-letat-dun-index">5. Vérifier l’état d’un index</h2>
+<div class="highlight"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">getIndexStatus</span><span class="p">(</span>
+<span class="w">  </span><span class="nx">corpusId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">IndexStatus</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">idxClient</span><span class="p">.</span><span class="nx">get</span><span class="o">&lt;</span><span class="nx">IndexStatus</span><span class="o">&gt;</span><span class="p">(</span><span class="sb">`/index-status/</span><span class="si">${</span><span class="nx">corpusId</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Exemple d’usage</span>
+<span class="nx">getIndexStatus</span><span class="p">(</span><span class="s1">&#39;ae12f3e4-5678-90ab-cdef-1234567890ab&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">status</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Index exists: </span><span class="si">${</span><span class="nx">status</span><span class="p">.</span><span class="nx">isIndexed</span><span class="si">}</span><span class="sb">, type: </span><span class="si">${</span><span class="nx">status</span><span class="p">.</span><span class="nx">indexType</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="w">  </span><span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">);</span>
+</code></pre></div>
+<hr />
+<h2 id="6-verifier-tous-les-index">6. Vérifier tous les index</h2>
+<div class="highlight"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">getAllIndexes</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">AllIndexesStatus</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">idxClient</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/indexes&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">data</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">AllIndexesStatus</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Exemple d’usage</span>
+<span class="nx">getAllIndexes</span><span class="p">()</span>
+<span class="w">  </span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">all</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">table</span><span class="p">(</span><span class="nx">all</span><span class="p">))</span>
+<span class="w">  </span><span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">);</span>
+</code></pre></div>
+<hr />
+<blockquote>
+<p>Pour plus de détails, voir les routes définies dans <code>api/index_endpoint.py</code> et les DTO Pydantic dans <code>src/schemas.py</code>&#x20;
+Guide généré automatiquement — 05 mai 2025</p>
+</blockquote>
               
             </div>
           </div><footer>

@@ -42,7 +42,7 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../../home/">Accueil</a>
+                <li class="toctree-l1"><a class="reference internal" href="../../..">Accueil</a>
                 </li>
               </ul>
               <ul>
@@ -59,6 +59,12 @@
               </ul>
               <p class="caption"><span class="caption-text">Documentation des librairies</span></p>
               <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../askai/rag_lib/">RAG</a>
+                </li>
+    </ul>
+                  </li>
                   <li class="toctree-l1"><a class="reference internal" >doc_loader</a>
     <ul>
                 <li class="toctree-l2"><a class="reference internal" href="../../doc_loader/extractor_lib/">Extracteurs</a>
@@ -97,7 +103,13 @@
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#methode-privee-_get_context">Méthode privée _get_context</a>
     </li>
+    <li class="toctree-l4"><a class="reference internal" href="#methode-evaluate_confidence">Méthode evaluate_confidence</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#methode-normalize_scores">Méthode normalize_scores</a>
+    </li>
         </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#exemple-dutilisation-avancee">Exemple d'utilisation avancée</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#exemple-dutilisation">Exemple d’utilisation</a>
     </li>
@@ -116,6 +128,12 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" >Références Python</a>
     <ul>
+                <li class="toctree-l2"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/askai/rag_references/">RAG</a>
+                </li>
+    </ul>
+                </li>
                 <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
     <ul>
                 <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/doc_loader/extractor_references/">Extracteurs</a>
@@ -147,6 +165,12 @@
               <ul>
                   <li class="toctree-l1"><a class="reference internal" >JavaScript / TypeScript</a>
     <ul>
+                <li class="toctree-l2"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/askai/rag_js/">RAG</a>
+                </li>
+    </ul>
+                </li>
                 <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
     <ul>
                 <li class="toctree-l3"><a class="reference internal" href="../../../Integration/doc_loader/doc_loader_js/">Extraction de documents</a>
@@ -207,17 +231,13 @@
 <h2 id="table-des-matieres">Table des matières</h2>
 <ol>
 <li><a href="#installation">Installation</a></li>
-<li><a href="#modèles-schemas">Modèles (schemas)</a></li>
-<li>
-<p><a href="#classe-searchengine">Classe <code>SearchEngine</code></a></p>
-</li>
-<li>
-<p><a href="#constructeur">Constructeur</a></p>
-</li>
-<li><a href="#méthode-hybrid_search">Méthode <code>hybrid_search</code></a></li>
-<li><a href="#méthode-privée-_build_sql">Méthode privée <code>_build_sql</code></a></li>
-<li><a href="#méthode-privée-_get_context">Méthode privée <code>_get_context</code></a></li>
-<li><a href="#exemple-dutilisation">Exemple d’utilisation</a></li>
+<li><a href="#modeles-schemas">Modèles (schemas)</a></li>
+<li><a href="#classe-searchengine">Classe <code>SearchEngine</code></a></li>
+<li><a href="#constructeur">Constructeur</a></li>
+<li><a href="#methode-hybrid_search">Méthode <code>hybrid_search</code></a> </li>
+<li><a href="#methode-privee-_build_sql">Méthode privée <code>_build_sql</code></a></li>
+<li><a href="#methode-privee-_get_context">Méthode privée <code>_get_context</code></a> </li>
+<li><a href="#exemple-dutilisation">Exemple d'utilisation</a></li>
 </ol>
 <hr />
 <h2 id="installation">Installation</h2>
@@ -249,6 +269,7 @@
 </li>
 <li>un ranker Cross-Encoder (<code>ResultRanker</code>)</li>
 </ul>
+<p><a id="methode-hybrid_search"></a></p>
 <h3 id="methode-hybrid_search">Méthode <code>hybrid_search</code></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">hybrid_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="n">req</span><span class="p">:</span> <span class="n">SearchRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SearchResponse</span><span class="p">:</span>
     <span class="o">...</span>
@@ -290,6 +311,7 @@
 </ul>
 </li>
 </ul>
+<p><a id="methode-privee-_build_sql"></a></p>
 <h3 id="methode-privee-_build_sql">Méthode privée <code>_build_sql</code></h3>
 <div class="highlight"><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">_build_sql</span><span class="p">(</span><span class="n">req</span><span class="p">:</span> <span class="n">SearchRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
@@ -320,6 +342,7 @@
 <span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">ranked</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">distance</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="p">:</span><span class="n">top_k</span><span class="p">;</span>
 </code></pre></div>
 * <strong>Retour</strong> : tuple <code>(sql: str, params: dict)</code> .</p>
+<p><a id="methode-privee-_get_context"></a></p>
 <h3 id="methode-privee-_get_context">Méthode privée <code>_get_context</code></h3>
 <div class="highlight"><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_context</span><span class="p">(</span><span class="n">db</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="n">chunk_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">HierarchicalContext</span><span class="p">]:</span>
@@ -329,6 +352,65 @@
 <li><strong>But</strong> : pour un chunk donné, remonter récursivement ses parents (niveaux 0–2)</li>
 <li><strong>Retour</strong> : instanciation de <code>HierarchicalContext</code> ou <code>None</code> si pas de parent .</li>
 </ul>
+<hr />
+<h3 id="methode-evaluate_confidence">Méthode <code>evaluate_confidence</code></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">evaluate_confidence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scores</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ConfidenceMetrics</span><span class="p">:</span>
+    <span class="o">...</span>
+</code></pre></div>
+<ul>
+<li><strong>But</strong> : analyser les scores des résultats pour déterminer la pertinence globale et détecter les requêtes hors domaine.</li>
+<li><strong>Arguments</strong> : </li>
+<li><code>scores: List[float]</code> – liste des scores de pertinence issus du ranker</li>
+<li><strong>Fonctionnement</strong> :</li>
+<li>Calcule les statistiques de base (min, max, moyenne, médiane)</li>
+<li>Détermine le niveau de confiance (0.1 à 0.9) et le message associé</li>
+<li>Les seuils utilisés sont <code>min_relevance_threshold</code> et <code>high_confidence_threshold</code></li>
+<li><strong>Niveaux de confiance</strong> :</li>
+<li><code>0.1</code> – "Requête probablement hors du domaine de connaissances"</li>
+<li><code>0.4</code> – "Pertinence moyenne: résultats disponibles mais peu spécifiques"</li>
+<li><code>0.7</code> – "Bonne pertinence: résultats généralement pertinents"</li>
+<li><code>0.9</code> – "Haute pertinence: résultats fiables trouvés"</li>
+<li><strong>Retour</strong> : <code>ConfidenceMetrics</code> contenant le niveau, le message et les statistiques</li>
+</ul>
+<h3 id="methode-normalize_scores">Méthode <code>normalize_scores</code></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">normalize_scores</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scores</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+    <span class="o">...</span>
+</code></pre></div>
+<ul>
+<li><strong>But</strong> : transformer les scores bruts (potentiellement négatifs) en valeurs entre 0 et 1</li>
+<li><strong>Arguments</strong> : </li>
+<li><code>scores: List[float]</code> – liste des scores bruts du modèle</li>
+<li><strong>Retour</strong> : liste de scores normalisés entre 0 et 1, facilitant l'interprétation</li>
+</ul>
+<h2 id="exemple-dutilisation-avancee">Exemple d'utilisation avancée</h2>
+<div class="highlight"><pre><span></span><code><span class="c1"># Requête avec options avancées</span>
+<span class="n">req</span> <span class="o">=</span> <span class="n">SearchRequest</span><span class="p">(</span>
+    <span class="n">query</span><span class="o">=</span><span class="s2">&quot;analyse risques climatiques&quot;</span><span class="p">,</span>
+    <span class="n">top_k</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">theme</span><span class="o">=</span><span class="s2">&quot;RSE&quot;</span><span class="p">,</span>
+    <span class="n">filter_by_relevance</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># Filtrer les résultats peu pertinents</span>
+    <span class="n">normalize_scores</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>     <span class="c1"># Normaliser les scores entre 0 et 1</span>
+    <span class="n">hierarchical</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Exécuter la recherche</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">searcher</span><span class="o">.</span><span class="n">hybrid_search</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">req</span><span class="p">)</span>
+
+<span class="c1"># Analyser la confiance dans les résultats</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Confiance: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">confidence</span><span class="o">.</span><span class="n">level</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">confidence</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Statistiques: min=</span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">confidence</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, &quot;</span>
+      <span class="sa">f</span><span class="s2">&quot;max=</span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">confidence</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;max&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, &quot;</span>
+      <span class="sa">f</span><span class="s2">&quot;avg=</span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">confidence</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Vérifier si des résultats ont été trouvés</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">response</span><span class="o">.</span><span class="n">results</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Aucun résultat pertinent trouvé&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">confidence</span><span class="o">.</span><span class="n">level</span> <span class="o">&lt;</span> <span class="mf">0.3</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;La requête semble hors du domaine de connaissances&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">results</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">chunk</span><span class="o">.</span><span class="n">score</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">chunk</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">chunk</span><span class="o">.</span><span class="n">content</span><span class="p">[:</span><span class="mi">60</span><span class="p">]</span><span class="si">}</span><span class="s2">…&quot;</span><span class="p">)</span>
+</code></pre></div>
 <hr />
 <h2 id="exemple-dutilisation">Exemple d’utilisation</h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_engine</span>

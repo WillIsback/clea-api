@@ -42,7 +42,7 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../home/">Accueil</a>
+                <li class="toctree-l1"><a class="reference internal" href="..">Accueil</a>
                 </li>
               </ul>
               <ul class="current">
@@ -50,13 +50,35 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#1-chargement-de-la-configuration">1. Chargement de la configuration</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#6-middleware-et-routeurs">6. Middleware et routeurs</a>
+    <li class="toctree-l2"><a class="reference internal" href="#3-arguments-en-ligne-de-commande">3. Arguments en ligne de commande</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#7-gestion-des-erreurs-globales">7. Gestion des erreurs globales</a>
+    <li class="toctree-l2"><a class="reference internal" href="#4-verification-et-demarrage-de-postgresql">4. Vérification et démarrage de PostgreSQL</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#start_postgres-bool">start_postgres() → bool</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#8-endpoints-de-sante">8. Endpoints de santé</a>
+        </ul>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#9-lancement-du-serveur">9. Lancement du serveur</a>
+    <li class="toctree-l2"><a class="reference internal" href="#5-initialisation-de-la-base-de-donnees">5. Initialisation de la base de données</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#setup_database-bool">setup_database() → bool</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#6-cycle-de-vie-de-lapplication">6. Cycle de vie de l'application</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#lifespanapp-fastapi-asyncgeneratornone-none">lifespan(app: FastAPI) → AsyncGenerator[None, None]</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#7-creation-de-lapplication-fastapi">7. Création de l'application FastAPI</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#8-middleware-et-routeurs">8. Middleware et routeurs</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#9-gestion-des-erreurs-globales">9. Gestion des erreurs globales</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#10-endpoints-de-sante">10. Endpoints de santé</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#11-lancement-du-serveur">11. Lancement du serveur</a>
     </li>
     </ul>
                 </li>
@@ -71,6 +93,12 @@
               </ul>
               <p class="caption"><span class="caption-text">Documentation des librairies</span></p>
               <ul>
+                  <li class="toctree-l1"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../lib/askai/rag_lib/">RAG</a>
+                </li>
+    </ul>
+                  </li>
                   <li class="toctree-l1"><a class="reference internal" >doc_loader</a>
     <ul>
                 <li class="toctree-l2"><a class="reference internal" href="../lib/doc_loader/extractor_lib/">Extracteurs</a>
@@ -106,6 +134,12 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" >Références Python</a>
     <ul>
+                <li class="toctree-l2"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../api/lib/askai/rag_references/">RAG</a>
+                </li>
+    </ul>
+                </li>
                 <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
     <ul>
                 <li class="toctree-l3"><a class="reference internal" href="../api/lib/doc_loader/extractor_references/">Extracteurs</a>
@@ -137,6 +171,12 @@
               <ul>
                   <li class="toctree-l1"><a class="reference internal" >JavaScript / TypeScript</a>
     <ul>
+                <li class="toctree-l2"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../Integration/askai/rag_js/">RAG</a>
+                </li>
+    </ul>
+                </li>
                 <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
     <ul>
                 <li class="toctree-l3"><a class="reference internal" href="../Integration/doc_loader/doc_loader_js/">Extraction de documents</a>
@@ -186,12 +226,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="point-dentree-principal-mainpy">Point d’entrée principal : <code>main.py</code></h1>
-<p>Le fichier <strong><code>main.py</code></strong> constitue le <strong>démarreur</strong> de tout le framework <strong>Cléa-API</strong>, initialisant l’environnement, la base de données, les extensions, puis lançant l’application FastAPI via Uvicorn.</p>
+                <h1 id="point-dentree-principal-mainpy">Point d'entrée principal : <code>main.py</code></h1>
+<p>Le fichier <strong><code>main.py</code></strong> constitue le <strong>démarreur</strong> de tout le framework <strong>Cléa-API</strong>, initialisant l'environnement, la base de données, les extensions, puis lançant l'application FastAPI via Uvicorn.</p>
 <hr />
 <h2 id="1-chargement-de-la-configuration">1. Chargement de la configuration</h2>
 <ul>
-<li>Charge les variables d’environnement depuis <code>.env</code> (via <code>python-dotenv</code>)  </li>
+<li>Charge les variables d'environnement depuis <code>.env</code> (via <code>python-dotenv</code>)  </li>
 <li>Configure le <strong>logger</strong> global  </li>
 <li>Lit les paramètres PostgreSQL et API (hôte, port, workers, niveau de log) :contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}</li>
 </ul>
@@ -207,47 +247,109 @@
 
 <span class="o">---</span>
 
-<span class="c1">## 2. Vérification et démarrage de PostgreSQL</span>
+<span class="c1">## 2. Gestion centralisée du logging</span>
 
-<span class="c1">### `start_postgres() → bool`</span>
+<span class="c1">### `configure_logging(debug_mode: bool = False) → None`</span>
 
-<span class="mf">1.</span> <span class="n">Récupère</span> <span class="n">l</span><span class="err">’</span><span class="n">utilisateur</span> <span class="n">courant</span> <span class="p">(</span><span class="err">`</span><span class="n">get_current_user</span><span class="err">`</span><span class="p">)</span><span class="o">.</span>
-<span class="mf">2.</span> <span class="n">Vérifie</span> <span class="n">la</span> <span class="n">disponibilité</span> <span class="n">de</span> <span class="n">PostgreSQL</span> <span class="p">(</span><span class="err">`</span><span class="n">check_postgres_status</span><span class="err">`</span><span class="p">)</span><span class="o">.</span>
-<span class="mf">3.</span> <span class="n">Si</span> <span class="n">indisponible</span><span class="p">,</span> <span class="n">affiche</span> <span class="n">des</span> <span class="o">**</span><span class="n">suggestions</span> <span class="n">d</span><span class="err">’</span><span class="n">installation</span><span class="o">**</span> <span class="n">pour</span> <span class="n">Linux</span><span class="p">,</span> <span class="n">notamment</span> <span class="n">OpenSUSE</span> <span class="n">Tumbleweed</span><span class="o">.</span>
-<span class="mf">4.</span> <span class="n">Retourne</span> <span class="err">`</span><span class="kc">True</span><span class="err">`</span> <span class="n">si</span> <span class="n">PostgreSQL</span> <span class="n">est</span> <span class="n">accessible</span><span class="p">,</span> <span class="err">`</span><span class="kc">False</span><span class="err">`</span> <span class="n">sinon</span><span class="o">.&amp;</span><span class="c1">#x20;</span>
+<span class="n">Configure</span> <span class="n">le</span> <span class="n">système</span> <span class="n">de</span> <span class="n">journalisation</span> <span class="n">pour</span> <span class="n">toute</span> <span class="n">l</span><span class="s1">&#39;application:</span>
 
-<span class="o">---</span>
-
-<span class="c1">## 3. Initialisation de la base de données</span>
-
-<span class="c1">### `setup_database() → bool`</span>
-
-<span class="mf">1.</span> <span class="n">Crée</span> <span class="n">les</span> <span class="n">tables</span> <span class="n">SQLAlchemy</span> <span class="p">(</span><span class="err">`</span><span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">create_all</span><span class="err">`</span><span class="p">)</span> <span class="n">et</span> <span class="n">l</span><span class="err">’</span><span class="n">extension</span> <span class="o">**</span><span class="n">vector</span><span class="o">**.</span>
-<span class="mf">2.</span> <span class="n">Appelle</span> <span class="err">`</span><span class="n">init_db</span><span class="p">()</span><span class="err">`</span> <span class="n">pour</span> <span class="n">installer</span> <span class="n">pgvector</span> <span class="n">et</span> <span class="n">valider</span> <span class="n">la</span> <span class="n">création</span> <span class="n">des</span> <span class="n">tables</span><span class="o">.</span>
-<span class="mf">3.</span> <span class="n">Renvoie</span> <span class="err">`</span><span class="kc">True</span><span class="err">`</span> <span class="n">si</span> <span class="n">l</span><span class="err">’</span><span class="n">extension</span> <span class="n">et</span> <span class="n">les</span> <span class="n">tables</span> <span class="n">sont</span> <span class="n">correctement</span> <span class="n">créées</span><span class="o">.&amp;</span><span class="c1">#x20;</span>
-
-<span class="o">---</span>
-
-<span class="c1">## 4. Cycle de vie de l’application</span>
-
-<span class="c1">### `lifespan(app: FastAPI)`</span>
-
-<span class="n">Gestionnaire</span> <span class="o">**</span><span class="n">asynchrone</span><span class="o">**</span> <span class="n">exécuté</span> <span class="n">au</span> <span class="n">démarrage</span> <span class="n">et</span> <span class="n">à</span> <span class="n">l</span><span class="err">’</span><span class="n">arrêt</span> <span class="p">:</span>
-
-<span class="o">*</span> <span class="o">**</span><span class="n">Au</span> <span class="n">démarrage</span><span class="o">**</span> <span class="p">:</span>
-
-  <span class="mf">1.</span> <span class="n">Démarre</span><span class="o">/</span><span class="n">vérifie</span> <span class="n">PostgreSQL</span> <span class="n">via</span> <span class="err">`</span><span class="n">start_postgres</span><span class="err">`</span><span class="o">.</span>
-  <span class="mf">2.</span> <span class="n">Vérifie</span> <span class="n">l</span><span class="err">’</span><span class="n">existence</span> <span class="n">des</span> <span class="n">tables</span> <span class="p">(</span><span class="err">`</span><span class="n">verify_database_tables</span><span class="err">`</span><span class="p">),</span> <span class="n">et</span> <span class="n">lance</span> <span class="err">`</span><span class="n">setup_database</span><span class="err">`</span> <span class="n">si</span> <span class="n">nécessaire</span><span class="o">.</span>
-<span class="o">*</span> <span class="o">**</span><span class="n">À</span> <span class="n">l</span><span class="err">’</span><span class="n">arrêt</span><span class="o">**</span> <span class="p">:</span>
-
-  <span class="o">*</span> <span class="n">Vide</span> <span class="n">le</span> <span class="n">cache</span> <span class="n">de</span> <span class="n">ressources</span> <span class="n">globales</span><span class="o">.&amp;</span><span class="c1">#x20;</span>
-
-<span class="o">---</span>
-
-<span class="c1">## 5. Création de l’application FastAPI</span>
+<span class="mf">1.</span> <span class="n">Définit</span> <span class="n">le</span> <span class="n">niveau</span> <span class="n">de</span> <span class="n">log</span> <span class="n">en</span> <span class="n">fonction</span> <span class="n">du</span> <span class="n">mode</span> <span class="n">debug</span> <span class="p">(</span><span class="err">`</span><span class="n">DEBUG</span><span class="err">`</span> <span class="n">ou</span> <span class="err">`</span><span class="n">INFO</span><span class="err">`</span><span class="p">)</span>
+<span class="mf">2.</span> <span class="n">Configure</span> <span class="n">le</span> <span class="n">logger</span> <span class="n">racine</span> <span class="n">avec</span> <span class="n">un</span> <span class="nb">format</span> <span class="n">standardisé</span><span class="p">:</span>
 
 <span class="err">```</span><span class="n">python</span>
-<span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span>
+<span class="o">%</span><span class="p">(</span><span class="n">asctime</span><span class="p">)</span><span class="n">s</span> <span class="o">-</span> <span class="o">%</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="n">s</span> <span class="o">-</span> <span class="o">%</span><span class="p">(</span><span class="n">levelname</span><span class="p">)</span><span class="n">s</span> <span class="o">-</span> <span class="o">%</span><span class="p">(</span><span class="n">message</span><span class="p">)</span><span class="n">s</span>
+</code></pre></div>
+<ol>
+<li>Ajuste la verbosité des loggers tiers (uvicorn, sqlalchemy) pour réduire le bruit</li>
+</ol>
+<p>Ce système permet d'utiliser dans tous les modules:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_logger</span>
+
+<span class="c1"># Obtenir un logger préfixé automatiquement</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="s2">&quot;mon_module.sous_module&quot;</span><span class="p">)</span>
+
+<span class="c1"># Utiliser selon le contexte</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Détail technique&quot;</span><span class="p">)</span> <span class="c1"># Visible uniquement en mode debug</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Information importante&quot;</span><span class="p">)</span> <span class="c1"># Visible en mode normal</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Problème critique&quot;</span><span class="p">)</span> <span class="c1"># Toujours visible</span>
+</code></pre></div>
+<p>La centralisation évite de redéfinir le niveau dans chaque module.</p>
+<hr />
+<h2 id="3-arguments-en-ligne-de-commande">3. Arguments en ligne de commande</h2>
+<p>L'application accepte plusieurs arguments pour personnaliser son lancement:</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Description</th>
+<th>Défaut</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--debug</code></td>
+<td>Active les logs détaillés</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--port</code></td>
+<td>Port d'écoute du serveur</td>
+<td>Valeur de .env ou <code>8080</code></td>
+</tr>
+<tr>
+<td><code>--host</code></td>
+<td>Hôte d'écoute du serveur</td>
+<td>Valeur de .env ou <code>localhost</code></td>
+</tr>
+<tr>
+<td><code>--workers</code></td>
+<td>Nombre de processus workers</td>
+<td>Valeur de .env ou <code>1</code></td>
+</tr>
+</tbody>
+</table>
+<p>Exemple d'utilisation:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>main.py<span class="w"> </span>--debug<span class="w"> </span>--port<span class="w"> </span><span class="m">9000</span><span class="w"> </span>--workers<span class="w"> </span><span class="m">4</span>
+</code></pre></div>
+<hr />
+<h2 id="4-verification-et-demarrage-de-postgresql">4. Vérification et démarrage de PostgreSQL</h2>
+<h3 id="start_postgres-bool"><code>start_postgres() → bool</code></h3>
+<ol>
+<li>Récupère l'utilisateur courant (<code>get_current_user</code>).</li>
+<li>Vérifie la disponibilité de PostgreSQL (<code>check_postgres_status</code>).</li>
+<li>Si indisponible, affiche des <strong>suggestions d'installation</strong> pour Linux, notamment OpenSUSE Tumbleweed.</li>
+<li>Retourne <code>True</code> si PostgreSQL est accessible, <code>False</code> sinon.&#x20;</li>
+</ol>
+<hr />
+<h2 id="5-initialisation-de-la-base-de-donnees">5. Initialisation de la base de données</h2>
+<h3 id="setup_database-bool"><code>setup_database() → bool</code></h3>
+<ol>
+<li>Crée les tables SQLAlchemy (<code>Base.metadata.create_all</code>) et l'extension <strong>vector</strong>.</li>
+<li>Appelle <code>init_db()</code> pour installer pgvector et valider la création des tables.</li>
+<li>Renvoie <code>True</code> si l'extension et les tables sont correctement créées.&#x20;</li>
+</ol>
+<hr />
+<h2 id="6-cycle-de-vie-de-lapplication">6. Cycle de vie de l'application</h2>
+<h3 id="lifespanapp-fastapi-asyncgeneratornone-none"><code>lifespan(app: FastAPI) → AsyncGenerator[None, None]</code></h3>
+<p>Gestionnaire <strong>asynchrone</strong> exécuté au démarrage et à l'arrêt :</p>
+<ul>
+<li>
+<p><strong>Au démarrage</strong> :</p>
+</li>
+<li>
+<p>Démarre/vérifie PostgreSQL via <code>start_postgres</code>.</p>
+</li>
+<li>Vérifie l'existence des tables (<code>verify_database_tables</code>), et lance <code>setup_database</code> si nécessaire.</li>
+<li>
+<p><strong>À l'arrêt</strong> :</p>
+</li>
+<li>
+<p>Vide le cache de ressources globales.&#x20;</p>
+</li>
+</ul>
+<hr />
+<h2 id="7-creation-de-lapplication-fastapi">7. Création de l'application FastAPI</h2>
+<div class="highlight"><pre><span></span><code><span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span>
     <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Cléa API&quot;</span><span class="p">,</span>
     <span class="n">description</span><span class="o">=</span><span class="s2">&quot;API pour gérer les documents et effectuer des recherches sémantiques.&quot;</span><span class="p">,</span>
     <span class="n">version</span><span class="o">=</span><span class="s2">&quot;0.1.1&quot;</span><span class="p">,</span>
@@ -257,11 +359,11 @@
 <span class="p">)</span>
 </code></pre></div>
 <ul>
-<li>Active <strong>Swagger UI</strong> (<code>/docs</code>) et <strong>ReDoc</strong> (<code>/redoc</code>).</li>
+<li>Active <strong>Swagger UI</strong> (docs) et <strong>ReDoc</strong> (<code>/redoc</code>).</li>
 <li>Associe le <strong>lifespan</strong> défini ci-dessus.&#x20;</li>
 </ul>
 <hr />
-<h2 id="6-middleware-et-routeurs">6. Middleware et routeurs</h2>
+<h2 id="8-middleware-et-routeurs">8. Middleware et routeurs</h2>
 <ul>
 <li><strong>CORS</strong> : autorise toutes les origines, méthodes et headers (<code>CORSMiddleware</code>).</li>
 <li>
@@ -272,44 +374,48 @@
 </li>
 <li><code>/search</code>   → recherche hybride</li>
 <li><code>/index</code>    → gestion des index vectoriels</li>
-<li><code>/doc_loader</code> → upload et extraction de documents</li>
-<li><code>/pipeline</code> → traitement complet (extract → segment → insert)&#x20;</li>
+<li>doc_loader → upload et extraction de documents</li>
+<li>pipeline → traitement complet (extract → segment → insert)&#x20;</li>
 </ul>
 <hr />
-<h2 id="7-gestion-des-erreurs-globales">7. Gestion des erreurs globales</h2>
+<h2 id="9-gestion-des-erreurs-globales">9. Gestion des erreurs globales</h2>
 <ul>
 <li><strong><code>StarletteHTTPException</code></strong> → renvoie <code>{ "error": detail }</code></li>
 <li><strong><code>RequestValidationError</code></strong> → renvoie <code>{ "error": "Invalid request", "details": [...] }</code></li>
 <li><strong><code>Exception</code></strong> → capture toute erreur non gérée et renvoie <code>500 Internal server error</code>.&#x20;</li>
 </ul>
 <hr />
-<h2 id="8-endpoints-de-sante">8. Endpoints de santé</h2>
+<h2 id="10-endpoints-de-sante">10. Endpoints de santé</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">root</span><span class="p">():</span>
     <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Cléa API is running&quot;</span><span class="p">}</span>
 </code></pre></div>
-<p>– Vérifie simplement que l’API est en ligne.&#x20;</p>
+<p>– Vérifie simplement que l'API est en ligne.&#x20;</p>
 <hr />
-<h2 id="9-lancement-du-serveur">9. Lancement du serveur</h2>
-<p>Lorsque <code>main.py</code> est exécuté directement (<code>if __name__ == "__main__"</code>), il :</p>
+<h2 id="11-lancement-du-serveur">11. Lancement du serveur</h2>
+<p>Lorsque main.py est exécuté directement (<code>if __name__ == "__main__"</code>), il :</p>
 <ol>
-<li>Crée une configuration <strong>Uvicorn</strong> optimisée (reload, workers, proxy headers, choix auto de loop/http).</li>
+<li>Parse les arguments en ligne de commande (debug, host, port, workers)</li>
+<li>Configure le logging via <code>configure_logging()</code></li>
+<li>Crée une configuration <strong>Uvicorn</strong> optimisée (reload, workers, proxy headers, choix auto de loop/http)</li>
 <li>Démarre le serveur avec <code>uvicorn.Server(config).run()</code>.&#x20;</li>
 </ol>
 <div class="highlight"><pre><span></span><code>python<span class="w"> </span>main.py
-<span class="c1"># ou</span>
+<span class="c1"># ou avec options</span>
+python<span class="w"> </span>main.py<span class="w"> </span>--debug<span class="w"> </span>--port<span class="w"> </span><span class="m">9000</span>
+<span class="c1"># ou via uvicorn directement</span>
 uvicorn<span class="w"> </span>main:app<span class="w"> </span>--host<span class="w"> </span><span class="nv">$API_HOST</span><span class="w"> </span>--port<span class="w"> </span><span class="nv">$API_PORT</span><span class="w"> </span>--workers<span class="w"> </span><span class="nv">$API_WORKERS</span>
 </code></pre></div>
 <hr />
 <blockquote>
-<p><strong>Fichier source</strong> : <code>main.py</code>&#x20;
-<strong>Dernière mise à jour</strong> : 03 mai 2025</p>
+<p><strong>Fichier source</strong> : main.py&#x20;
+<strong>Dernière mise à jour</strong> : 04 mai 2025</p>
 </blockquote>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../home/" class="btn btn-neutral float-left" title="Accueil"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href=".." class="btn btn-neutral float-left" title="Accueil"><span class="icon icon-circle-arrow-left"></span> Previous</a>
         <a href="../database/" class="btn btn-neutral float-right" title="Base de données">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
@@ -337,7 +443,7 @@ uvicorn<span class="w"> </span>main:app<span class="w"> </span>--host<span class
         </span>
     
     
-      <span><a href="../home/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href=".." style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
       <span><a href="../database/" style="color: #fcfcfc">Next &raquo;</a></span>
