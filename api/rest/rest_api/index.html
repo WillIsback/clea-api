@@ -85,7 +85,13 @@
                 </li>
                 <li class="toctree-l2"><a class="reference internal" href="../../../lib/vectordb/index_lib/">Indexation vectorielle</a>
                 </li>
-                <li class="toctree-l2"><a class="reference internal" href="../../../lib/vectordb/search_lib/">Recherche hybride</a>
+                <li class="toctree-l2"><a class="reference internal" href="../../../lib/stats/stats_computer_lib/">Recherche hybride</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >stats</a>
+    <ul>
+                <li class="toctree-l2"><a class="" href="../../../lib/stats/stats_lib.md">Statistiques</a>
                 </li>
     </ul>
                   </li>
@@ -132,6 +138,12 @@
                 </li>
     </ul>
                 </li>
+                <li class="toctree-l2"><a class="reference internal" >stats</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../lib/stats/stats_computer_references/">Statistiques</a>
+                </li>
+    </ul>
+                </li>
     </ul>
                   </li>
               </ul>
@@ -164,6 +176,12 @@
                 <li class="toctree-l3"><a class="reference internal" href="../../../Integration/vectordb/index_js/">Indexation</a>
                 </li>
                 <li class="toctree-l3"><a class="reference internal" href="../../../Integration/vectordb/search_js/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >stats</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/stats/stats_computer_js/">Statistiques</a>
                 </li>
     </ul>
                 </li>
@@ -1946,6 +1964,38 @@ vectorielles sur le corpus spécifié.</p>
 </div>
 </div>
 </div>
+<hr class="operation-separator" />
+
+<h3 id="post-indexcleanup-indexes"><span class="http-post">POST</span> /index/cleanup-indexes</h3>
+<p>Nettoyer les index vectoriels orphelins</p>
+<details class="note">
+<summary>Description</summary>
+<p>Nettoie les index vectoriels orphelins.</p>
+<p>Cette route identifie et supprime les configurations d'index et vues
+matérialisées
+qui ne sont plus associées à des corpus existants dans la base de données.</p>
+<p>Returns:
+    dict: Résultat de l'opération avec statistiques.</p>
+</details>
+<p class="response-title">
+    <strong>Response <span class="response-code code-200">200</span>&nbsp;<span class="status-phrase">OK</span></strong>
+</p>
+
+<div class="tabbed-set tabbed-alternate" data-tabs="27:1"><input checked="checked" id="__tabbed_27_1" name="__tabbed_27" type="radio" /><div class="tabbed-labels"><label for="__tabbed_27_1">application/json</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<details class="hint">
+<summary>Schema of the response body</summary>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Response Cleanup Orphaned Indexes Index Cleanup Indexes Post&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+</details>
+</div>
+</div>
+</div>
 <h2 id="docloader"><span class="api-tag">DocLoader</span></h2>
 <hr class="operation-separator" />
 
@@ -1997,7 +2047,7 @@ contenu n'est extrait.</p>
 </table>
 <p class="request-body-title"><strong>Request body</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="27:1"><input checked="checked" id="__tabbed_27_1" name="__tabbed_27" type="radio" /><div class="tabbed-labels"><label for="__tabbed_27_1">multipart/form-data</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="28:1"><input checked="checked" id="__tabbed_28_1" name="__tabbed_28" type="radio" /><div class="tabbed-labels"><label for="__tabbed_28_1">multipart/form-data</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><div class="highlight"><pre><span></span><code><span class="p">{</span>
@@ -2031,7 +2081,7 @@ contenu n'est extrait.</p>
     <strong>Response <span class="response-code code-200">200</span>&nbsp;<span class="status-phrase">OK</span></strong>
 </p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="28:1"><input checked="checked" id="__tabbed_28_1" name="__tabbed_28" type="radio" /><div class="tabbed-labels"><label for="__tabbed_28_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="29:1"><input checked="checked" id="__tabbed_29_1" name="__tabbed_29" type="radio" /><div class="tabbed-labels"><label for="__tabbed_29_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><div class="highlight"><pre><span></span><code><span class="p">{</span>
@@ -2087,7 +2137,7 @@ contenu n'est extrait.</p>
     <strong>Response <span class="response-code code-422">422</span>&nbsp;<span class="status-phrase">Unprocessable Content</span></strong>
 </p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="29:1"><input checked="checked" id="__tabbed_29_1" name="__tabbed_29" type="radio" /><div class="tabbed-labels"><label for="__tabbed_29_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="30:1"><input checked="checked" id="__tabbed_30_1" name="__tabbed_30" type="radio" /><div class="tabbed-labels"><label for="__tabbed_30_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><div class="highlight"><pre><span></span><code><span class="p">{</span>
@@ -2199,7 +2249,7 @@ de segmentation.</p>
 </table>
 <p class="request-body-title"><strong>Request body</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="30:1"><input checked="checked" id="__tabbed_30_1" name="__tabbed_30" type="radio" /><div class="tabbed-labels"><label for="__tabbed_30_1">multipart/form-data</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="31:1"><input checked="checked" id="__tabbed_31_1" name="__tabbed_31" type="radio" /><div class="tabbed-labels"><label for="__tabbed_31_1">multipart/form-data</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><div class="highlight"><pre><span></span><code><span class="p">{</span>
@@ -2233,7 +2283,7 @@ de segmentation.</p>
     <strong>Response <span class="response-code code-200">200</span>&nbsp;<span class="status-phrase">OK</span></strong>
 </p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="31:1"><input checked="checked" id="__tabbed_31_1" name="__tabbed_31" type="radio" /><div class="tabbed-labels"><label for="__tabbed_31_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="32:1"><input checked="checked" id="__tabbed_32_1" name="__tabbed_32" type="radio" /><div class="tabbed-labels"><label for="__tabbed_32_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <details class="hint">
@@ -2252,7 +2302,7 @@ de segmentation.</p>
     <strong>Response <span class="response-code code-422">422</span>&nbsp;<span class="status-phrase">Unprocessable Content</span></strong>
 </p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="32:1"><input checked="checked" id="__tabbed_32_1" name="__tabbed_32" type="radio" /><div class="tabbed-labels"><label for="__tabbed_32_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="33:1"><input checked="checked" id="__tabbed_33_1" name="__tabbed_33" type="radio" /><div class="tabbed-labels"><label for="__tabbed_33_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><div class="highlight"><pre><span></span><code><span class="p">{</span>
@@ -2359,7 +2409,7 @@ pendant que le traitement se poursuit en arrière-plan.</p>
 </table>
 <p class="request-body-title"><strong>Request body</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="33:1"><input checked="checked" id="__tabbed_33_1" name="__tabbed_33" type="radio" /><div class="tabbed-labels"><label for="__tabbed_33_1">multipart/form-data</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="34:1"><input checked="checked" id="__tabbed_34_1" name="__tabbed_34" type="radio" /><div class="tabbed-labels"><label for="__tabbed_34_1">multipart/form-data</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><div class="highlight"><pre><span></span><code><span class="p">{</span>
@@ -2393,7 +2443,7 @@ pendant que le traitement se poursuit en arrière-plan.</p>
     <strong>Response <span class="response-code code-200">200</span>&nbsp;<span class="status-phrase">OK</span></strong>
 </p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="34:1"><input checked="checked" id="__tabbed_34_1" name="__tabbed_34" type="radio" /><div class="tabbed-labels"><label for="__tabbed_34_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="35:1"><input checked="checked" id="__tabbed_35_1" name="__tabbed_35" type="radio" /><div class="tabbed-labels"><label for="__tabbed_35_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <details class="hint">
@@ -2412,157 +2462,7 @@ pendant que le traitement se poursuit en arrière-plan.</p>
     <strong>Response <span class="response-code code-422">422</span>&nbsp;<span class="status-phrase">Unprocessable Content</span></strong>
 </p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="35:1"><input checked="checked" id="__tabbed_35_1" name="__tabbed_35" type="radio" /><div class="tabbed-labels"><label for="__tabbed_35_1">application/json</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<p><div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;loc&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                </span><span class="kc">null</span>
-<span class="w">            </span><span class="p">],</span>
-<span class="w">            </span><span class="nt">&quot;msg&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">]</span>
-<span class="p">}</span>
-</code></pre></div>
-<span class="small-note">⚠️</span>&nbsp;<em class="small-note warning">This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.</em></p>
-<details class="hint">
-<summary>Schema of the response body</summary>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/components/schemas/ValidationError&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Detail&quot;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;HTTPValidationError&quot;</span>
-<span class="p">}</span>
-</code></pre></div>
-</details>
-</div>
-</div>
-</div>
-<hr class="operation-separator" />
-
-<h3 id="post-pipelinequery-rag"><span class="http-post">POST</span> /pipeline/query-rag</h3>
-<p>Interroger la base de connaissances avec RAG (Retrieval-Augmented Generation)</p>
-<details class="note">
-<summary>Description</summary>
-<p>Interroge la base de connaissances avec RAG pour générer une réponse
-contextualisée.</p>
-<p>Cette fonction utilise le système RAG (Retrieval-Augmented Generation) pour:
-1. Rechercher les documents les plus pertinents pour la requête
-2. Générer une réponse synthétique basée sur ces documents avec un modèle
-LLM</p>
-<p>Args:
-    request: Paramètres de la requête RAG (question, filtres, modèle, etc.)</p>
-<p>Returns:
-    JSONResponse ou StreamingResponse: Réponse générée par le LLM, sous
-forme
-    de dictionnaire JSON ou de flux de données selon le paramètre stream.</p>
-<p>Raises:
-    HTTPException: Si une erreur survient lors du traitement de la requête.</p>
-</details>
-<p class="request-body-title"><strong>Request body</strong></p>
-
 <div class="tabbed-set tabbed-alternate" data-tabs="36:1"><input checked="checked" id="__tabbed_36_1" name="__tabbed_36" type="radio" /><div class="tabbed-labels"><label for="__tabbed_36_1">application/json</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<p><div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;filters&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;model_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;prompt_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;stream&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;max_docs&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
-<span class="p">}</span>
-</code></pre></div>
-<span class="small-note">⚠️</span>&nbsp;<em class="small-note warning">This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.</em></p>
-<details class="hint">
-<summary>Schema of the request body</summary>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Query&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Question en langage naturel&quot;</span>
-<span class="w">        </span><span class="p">},</span>
-<span class="w">        </span><span class="nt">&quot;filters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                </span><span class="p">{</span>
-<span class="w">                    </span><span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">                    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
-<span class="w">                </span><span class="p">},</span>
-<span class="w">                </span><span class="p">{</span>
-<span class="w">                    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">            </span><span class="p">],</span>
-<span class="w">            </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Filters&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Filtres pour la recherche&quot;</span>
-<span class="w">        </span><span class="p">},</span>
-<span class="w">        </span><span class="nt">&quot;model_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Model Name&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Modèle LLM à utiliser&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Qwen3-0.6B&quot;</span>
-<span class="w">        </span><span class="p">},</span>
-<span class="w">        </span><span class="nt">&quot;prompt_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Prompt Type&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Type de prompt (standard, summary, comparison)&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;standard&quot;</span>
-<span class="w">        </span><span class="p">},</span>
-<span class="w">        </span><span class="nt">&quot;stream&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Stream&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Réponse en streaming&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
-<span class="w">        </span><span class="p">},</span>
-<span class="w">        </span><span class="nt">&quot;max_docs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Max Docs&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Nombre maximum de documents à utiliser&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="s2">&quot;query&quot;</span>
-<span class="w">    </span><span class="p">],</span>
-<span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;RagQueryRequest&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Requête pour interroger la base de connaissances avec RAG.\n\nArgs:\n    query: Question en langage naturel à poser au système.\n    filters: Filtres optionnels pour la recherche documentaire.\n    model_name: Nom du modèle LLM à utiliser.\n    prompt_type: Type de prompt à utiliser.\n    stream: Indique si la réponse doit être générée en streaming.\n    max_docs: Nombre maximum de documents à utiliser.\n    \nAttributes:\n    query: Question en langage naturel.\n    filters: Filtres pour la recherche (thème, type de document, dates...).\n    model_name: Nom du modèle LLM à utiliser.\n    prompt_type: Type de prompt (&#39;standard&#39;, &#39;summary&#39;, &#39;comparison&#39;).\n    stream: Si True, la réponse est générée progressivement.\n    max_docs: Nombre maximum de documents à utiliser pour le contexte.&quot;</span>
-<span class="p">}</span>
-</code></pre></div>
-</details>
-</div>
-</div>
-</div>
-<p class="response-title">
-    <strong>Response <span class="response-code code-200">200</span>&nbsp;<span class="status-phrase">OK</span></strong>
-</p>
-
-<div class="tabbed-set tabbed-alternate" data-tabs="37:1"><input checked="checked" id="__tabbed_37_1" name="__tabbed_37" type="radio" /><div class="tabbed-labels"><label for="__tabbed_37_1">application/json</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<details class="hint">
-<summary>Schema of the response body</summary>
-<div class="highlight"><pre><span></span><code>
-</code></pre></div>
-</details>
-</div>
-</div>
-</div>
-<p class="response-title">
-    <strong>Response <span class="response-code code-422">422</span>&nbsp;<span class="status-phrase">Unprocessable Content</span></strong>
-</p>
-
-<div class="tabbed-set tabbed-alternate" data-tabs="38:1"><input checked="checked" id="__tabbed_38_1" name="__tabbed_38" type="radio" /><div class="tabbed-labels"><label for="__tabbed_38_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><div class="highlight"><pre><span></span><code><span class="p">{</span>
@@ -2621,7 +2521,7 @@ une réponse contextuelle.</p>
 </details>
 <p class="request-body-title"><strong>Request body</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="39:1"><input checked="checked" id="__tabbed_39_1" name="__tabbed_39" type="radio" /><div class="tabbed-labels"><label for="__tabbed_39_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="37:1"><input checked="checked" id="__tabbed_37_1" name="__tabbed_37" type="radio" /><div class="tabbed-labels"><label for="__tabbed_37_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><div class="highlight"><pre><span></span><code><span class="p">{</span>
@@ -2717,7 +2617,7 @@ une réponse contextuelle.</p>
     <strong>Response <span class="response-code code-200">200</span>&nbsp;<span class="status-phrase">OK</span></strong>
 </p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="40:1"><input checked="checked" id="__tabbed_40_1" name="__tabbed_40" type="radio" /><div class="tabbed-labels"><label for="__tabbed_40_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="38:1"><input checked="checked" id="__tabbed_38_1" name="__tabbed_38" type="radio" /><div class="tabbed-labels"><label for="__tabbed_38_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <details class="hint">
@@ -2732,7 +2632,7 @@ une réponse contextuelle.</p>
     <strong>Response <span class="response-code code-422">422</span>&nbsp;<span class="status-phrase">Unprocessable Content</span></strong>
 </p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="41:1"><input checked="checked" id="__tabbed_41_1" name="__tabbed_41" type="radio" /><div class="tabbed-labels"><label for="__tabbed_41_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="39:1"><input checked="checked" id="__tabbed_39_1" name="__tabbed_39" type="radio" /><div class="tabbed-labels"><label for="__tabbed_39_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><div class="highlight"><pre><span></span><code><span class="p">{</span>
@@ -2782,12 +2682,505 @@ une réponse contextuelle.</p>
     <strong>Response <span class="response-code code-200">200</span>&nbsp;<span class="status-phrase">OK</span></strong>
 </p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="42:1"><input checked="checked" id="__tabbed_42_1" name="__tabbed_42" type="radio" /><div class="tabbed-labels"><label for="__tabbed_42_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="40:1"><input checked="checked" id="__tabbed_40_1" name="__tabbed_40" type="radio" /><div class="tabbed-labels"><label for="__tabbed_40_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <details class="hint">
 <summary>Schema of the response body</summary>
 <div class="highlight"><pre><span></span><code>
+</code></pre></div>
+</details>
+</div>
+</div>
+</div>
+<h2 id="stats"><span class="api-tag">Stats</span></h2>
+<hr class="operation-separator" />
+
+<h3 id="get-statsdocuments"><span class="http-get">GET</span> /stats/documents</h3>
+<p>Statistiques sur les documents</p>
+<details class="note">
+<summary>Description</summary>
+<p>Récupère les statistiques sur les documents présents dans la base de
+données.</p>
+<p>Cette route calcule différentes métriques sur les documents indexés,
+notamment
+la distribution par thème, par type de document, ainsi que les tendances
+récentes d'ajout de documents.</p>
+<p>Args:
+    skip: Nombre d'éléments à ignorer pour la pagination.
+    limit: Nombre maximal d'éléments à retourner.
+    db: Session de base de données fournie par dépendance.</p>
+<p>Returns:
+    DocumentStats: Objet contenant les statistiques sur les documents.</p>
+<p>Raises:
+    HTTPException: Si une erreur survient lors du calcul des statistiques.</p>
+</details>
+<p><strong>Input parameters</strong></p>
+<table>
+    <thead>
+        <tr>
+            <th>Parameter</th>
+            <th>In</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Nullable</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="parameter-name"><code>limit</code></td>
+            <td>query</td>
+            <td>integer</td>
+            <td>100</td>
+            <td>No</td>
+            <td>Nombre maximal d'éléments à retourner</td>
+        </tr>
+        <tr>
+            <td class="parameter-name"><code>skip</code></td>
+            <td>query</td>
+            <td>integer</td>
+            <td>0</td>
+            <td>No</td>
+            <td>Nombre d'éléments à ignorer</td>
+        </tr>
+    </tbody>
+</table>
+
+<p class="response-title">
+    <strong>Response <span class="response-code code-200">200</span>&nbsp;<span class="status-phrase">OK</span></strong>
+</p>
+
+<div class="tabbed-set tabbed-alternate" data-tabs="41:1"><input checked="checked" id="__tabbed_41_1" name="__tabbed_41" type="radio" /><div class="tabbed-labels"><label for="__tabbed_41_1">application/json</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;totalCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;byTheme&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="w">    </span><span class="nt">&quot;byType&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="w">    </span><span class="nt">&quot;recentlyAdded&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;percentChange&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span>
+<span class="p">}</span>
+</code></pre></div>
+<span class="small-note">⚠️</span>&nbsp;<em class="small-note warning">This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.</em></p>
+<details class="hint">
+<summary>Schema of the response body</summary>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;totalCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Totalcount&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;byTheme&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Bytheme&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;byType&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Bytype&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;recentlyAdded&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Recentlyadded&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;percentChange&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;number&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Percentchange&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;totalCount&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;byTheme&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;byType&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;recentlyAdded&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;percentChange&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DocumentStats&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Corps pour créer un chunk (texte + méta hiérarchiques).&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+</details>
+</div>
+</div>
+</div>
+<p class="response-title">
+    <strong>Response <span class="response-code code-422">422</span>&nbsp;<span class="status-phrase">Unprocessable Content</span></strong>
+</p>
+
+<div class="tabbed-set tabbed-alternate" data-tabs="42:1"><input checked="checked" id="__tabbed_42_1" name="__tabbed_42" type="radio" /><div class="tabbed-labels"><label for="__tabbed_42_1">application/json</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;loc&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="kc">null</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="nt">&quot;msg&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<span class="small-note">⚠️</span>&nbsp;<em class="small-note warning">This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.</em></p>
+<details class="hint">
+<summary>Schema of the response body</summary>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/components/schemas/ValidationError&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Detail&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;HTTPValidationError&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+</details>
+</div>
+</div>
+</div>
+<hr class="operation-separator" />
+
+<h3 id="get-statssearches"><span class="http-get">GET</span> /stats/searches</h3>
+<p>Statistiques sur les recherches effectuées</p>
+<details class="note">
+<summary>Description</summary>
+<p>Récupère les statistiques sur les recherches effectuées dans le système.</p>
+<p>Cette route analyse l'historique des recherches pour fournir des métriques
+comme le nombre total de recherches, l'activité récente et les requêtes
+les plus populaires.</p>
+<p>Args:
+    skip: Nombre d'éléments à ignorer pour la pagination.
+    limit: Nombre maximal d'éléments à retourner.
+    db: Session de base de données fournie par dépendance.</p>
+<p>Returns:
+    SearchStats: Objet contenant les statistiques sur les recherches.</p>
+<p>Raises:
+    HTTPException: Si une erreur survient lors du calcul des statistiques.</p>
+</details>
+<p><strong>Input parameters</strong></p>
+<table>
+    <thead>
+        <tr>
+            <th>Parameter</th>
+            <th>In</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Nullable</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="parameter-name"><code>limit</code></td>
+            <td>query</td>
+            <td>integer</td>
+            <td>100</td>
+            <td>No</td>
+            <td>Nombre maximal d'éléments à retourner</td>
+        </tr>
+        <tr>
+            <td class="parameter-name"><code>skip</code></td>
+            <td>query</td>
+            <td>integer</td>
+            <td>0</td>
+            <td>No</td>
+            <td>Nombre d'éléments à ignorer</td>
+        </tr>
+    </tbody>
+</table>
+
+<p class="response-title">
+    <strong>Response <span class="response-code code-200">200</span>&nbsp;<span class="status-phrase">OK</span></strong>
+</p>
+
+<div class="tabbed-set tabbed-alternate" data-tabs="43:1"><input checked="checked" id="__tabbed_43_1" name="__tabbed_43" type="radio" /><div class="tabbed-labels"><label for="__tabbed_43_1">application/json</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;totalCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;lastMonthCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;percentChange&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;topQueries&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<span class="small-note">⚠️</span>&nbsp;<em class="small-note warning">This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.</em></p>
+<details class="hint">
+<summary>Schema of the response body</summary>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;totalCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Totalcount&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;lastMonthCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Lastmonthcount&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;percentChange&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;number&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Percentchange&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;topQueries&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Topqueries&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;totalCount&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;lastMonthCount&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;percentChange&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;topQueries&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SearchStats&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Payload complet pour `POST /database/documents`.&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+</details>
+</div>
+</div>
+</div>
+<p class="response-title">
+    <strong>Response <span class="response-code code-422">422</span>&nbsp;<span class="status-phrase">Unprocessable Content</span></strong>
+</p>
+
+<div class="tabbed-set tabbed-alternate" data-tabs="44:1"><input checked="checked" id="__tabbed_44_1" name="__tabbed_44" type="radio" /><div class="tabbed-labels"><label for="__tabbed_44_1">application/json</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;loc&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="kc">null</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="nt">&quot;msg&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<span class="small-note">⚠️</span>&nbsp;<em class="small-note warning">This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.</em></p>
+<details class="hint">
+<summary>Schema of the response body</summary>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/components/schemas/ValidationError&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Detail&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;HTTPValidationError&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+</details>
+</div>
+</div>
+</div>
+<hr class="operation-separator" />
+
+<h3 id="get-statssystem"><span class="http-get">GET</span> /stats/system</h3>
+<p>Statistiques système globales</p>
+<details class="note">
+<summary>Description</summary>
+<p>Récupère les statistiques système globales.</p>
+<p>Cette route analyse les métriques de confiance des recherches effectuées
+et l'état des corpus dans le système pour fournir une vue d'ensemble
+de la performance et de l'état de l'indexation.</p>
+<p>Args:
+    db: Session de base de données fournie par dépendance.</p>
+<p>Returns:
+    SystemStats: Objet contenant les métriques système.</p>
+<p>Raises:
+    HTTPException: Si une erreur survient lors du calcul des statistiques.</p>
+</details>
+<p class="response-title">
+    <strong>Response <span class="response-code code-200">200</span>&nbsp;<span class="status-phrase">OK</span></strong>
+</p>
+
+<div class="tabbed-set tabbed-alternate" data-tabs="45:1"><input checked="checked" id="__tabbed_45_1" name="__tabbed_45" type="radio" /><div class="tabbed-labels"><label for="__tabbed_45_1">application/json</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;satisfaction&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;avgConfidence&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;percentChange&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;indexedCorpora&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;totalCorpora&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="p">}</span>
+</code></pre></div>
+<span class="small-note">⚠️</span>&nbsp;<em class="small-note warning">This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.</em></p>
+<details class="hint">
+<summary>Schema of the response body</summary>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;satisfaction&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;number&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Satisfaction&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;avgConfidence&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;number&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Avgconfidence&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;percentChange&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;number&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Percentchange&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;indexedCorpora&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indexedcorpora&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;totalCorpora&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Totalcorpora&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;satisfaction&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;avgConfidence&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;percentChange&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;indexedCorpora&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;totalCorpora&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SystemStats&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Payload complet pour `POST /database/documents`.&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+</details>
+</div>
+</div>
+</div>
+<hr class="operation-separator" />
+
+<h3 id="get-statsdashboard"><span class="http-get">GET</span> /stats/dashboard</h3>
+<p>Toutes les statistiques pour le tableau de bord</p>
+<details class="note">
+<summary>Description</summary>
+<p>Récupère l'ensemble des statistiques pour le tableau de bord.</p>
+<p>Cette route agrège les résultats des différentes fonctions de calcul
+de statistiques pour fournir un objet unique contenant toutes les
+métriques nécessaires au tableau de bord d'administration.</p>
+<p>Args:
+    db: Session de base de données fournie par dépendance.</p>
+<p>Returns:
+    DashboardStats: Objet contenant l'ensemble des statistiques.</p>
+<p>Raises:
+    HTTPException: Si une erreur survient lors du calcul des statistiques.</p>
+</details>
+<p class="response-title">
+    <strong>Response <span class="response-code code-200">200</span>&nbsp;<span class="status-phrase">OK</span></strong>
+</p>
+
+<div class="tabbed-set tabbed-alternate" data-tabs="46:1"><input checked="checked" id="__tabbed_46_1" name="__tabbed_46" type="radio" /><div class="tabbed-labels"><label for="__tabbed_46_1">application/json</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;documentStats&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;totalCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;byTheme&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="w">        </span><span class="nt">&quot;byType&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="w">        </span><span class="nt">&quot;recentlyAdded&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;percentChange&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;searchStats&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;totalCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;lastMonthCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;percentChange&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;topQueries&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;systemStats&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;satisfaction&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;avgConfidence&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;percentChange&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;indexedCorpora&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;totalCorpora&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<span class="small-note">⚠️</span>&nbsp;<em class="small-note warning">This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.</em></p>
+<details class="hint">
+<summary>Schema of the response body</summary>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;documentStats&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/components/schemas/DocumentStats&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;searchStats&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/components/schemas/SearchStats&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;systemStats&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/components/schemas/SystemStats&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;documentStats&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;searchStats&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;systemStats&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DashboardStats&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Corps minimal pour créer un document (hors contenu).&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+</details>
+</div>
+</div>
+</div>
+<hr class="operation-separator" />
+
+<h3 id="post-statsrefresh"><span class="http-post">POST</span> /stats/refresh</h3>
+<p>Rafraîchir le cache des statistiques</p>
+<details class="note">
+<summary>Description</summary>
+<p>Force le rafraîchissement du cache des statistiques.</p>
+<p>Cette route permet d'invalider les caches potentiels et de forcer
+un recalcul complet de toutes les métriques du système. Utile après
+des opérations importantes comme des imports massifs ou des maintenances.</p>
+<p>Args:
+    db: Session de base de données fournie par dépendance.</p>
+<p>Returns:
+    dict: Résultat de l'opération avec statut et message.</p>
+<p>Raises:
+    HTTPException: Si une erreur survient lors du rafraîchissement.</p>
+</details>
+<p class="response-title">
+    <strong>Response <span class="response-code code-200">200</span>&nbsp;<span class="status-phrase">OK</span></strong>
+</p>
+
+<div class="tabbed-set tabbed-alternate" data-tabs="47:1"><input checked="checked" id="__tabbed_47_1" name="__tabbed_47" type="radio" /><div class="tabbed-labels"><label for="__tabbed_47_1">application/json</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<details class="hint">
+<summary>Schema of the response body</summary>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Response Refresh Stats Cache Stats Refresh Post&quot;</span>
+<span class="p">}</span>
 </code></pre></div>
 </details>
 </div>
@@ -2808,7 +3201,7 @@ une réponse contextuelle.</p>
     <strong>Response <span class="response-code code-200">200</span>&nbsp;<span class="status-phrase">OK</span></strong>
 </p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="43:1"><input checked="checked" id="__tabbed_43_1" name="__tabbed_43" type="radio" /><div class="tabbed-labels"><label for="__tabbed_43_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="48:1"><input checked="checked" id="__tabbed_48_1" name="__tabbed_48" type="radio" /><div class="tabbed-labels"><label for="__tabbed_48_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <details class="hint">
@@ -3021,6 +3414,30 @@ une réponse contextuelle.</p>
     </tbody>
 </table>
 
+<h3 id="dashboardstats">DashboardStats</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>documentStats</code></td>
+            <td><a href="#documentstats" class="ref-link">DocumentStats</a></td>
+        </tr>
+        <tr>
+            <td><code>searchStats</code></td>
+            <td><a href="#searchstats" class="ref-link">SearchStats</a></td>
+        </tr>
+        <tr>
+            <td><code>systemStats</code></td>
+            <td><a href="#systemstats" class="ref-link">SystemStats</a></td>
+        </tr>
+    </tbody>
+</table>
+
 <h3 id="documentcreate">DocumentCreate</h3>
 <table>
     <thead>
@@ -3093,6 +3510,38 @@ une réponse contextuelle.</p>
         <tr>
             <td><code>title</code></td>
             <td><span class="string-type">string</span></td>
+        </tr>
+    </tbody>
+</table>
+
+<h3 id="documentstats">DocumentStats</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>byTheme</code></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><code>byType</code></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><code>percentChange</code></td>
+            <td><span class="number-type">number</span></td>
+        </tr>
+        <tr>
+            <td><code>recentlyAdded</code></td>
+            <td><span class="integer-type">integer</span></td>
+        </tr>
+        <tr>
+            <td><code>totalCount</code></td>
+            <td><span class="integer-type">integer</span></td>
         </tr>
     </tbody>
 </table>
@@ -3237,42 +3686,6 @@ une réponse contextuelle.</p>
     </tbody>
 </table>
 
-<h3 id="ragqueryrequest">RagQueryRequest</h3>
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Type</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><code>filters</code></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><code>max_docs</code></td>
-            <td><span class="integer-type">integer</span></td>
-        </tr>
-        <tr>
-            <td><code>model_name</code></td>
-            <td><span class="string-type">string</span></td>
-        </tr>
-        <tr>
-            <td><code>prompt_type</code></td>
-            <td><span class="string-type">string</span></td>
-        </tr>
-        <tr>
-            <td><code>query</code></td>
-            <td><span class="string-type">string</span></td>
-        </tr>
-        <tr>
-            <td><code>stream</code></td>
-            <td><span class="boolean-type">boolean</span></td>
-        </tr>
-    </tbody>
-</table>
-
 <h3 id="searchrequest">SearchRequest</h3>
 <table>
     <thead>
@@ -3369,6 +3782,66 @@ une réponse contextuelle.</p>
     </tbody>
 </table>
 
+<h3 id="searchstats">SearchStats</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>lastMonthCount</code></td>
+            <td><span class="integer-type">integer</span></td>
+        </tr>
+        <tr>
+            <td><code>percentChange</code></td>
+            <td><span class="number-type">number</span></td>
+        </tr>
+        <tr>
+            <td><code>topQueries</code></td>
+            <td>Array&lt;&gt;</td>
+        </tr>
+        <tr>
+            <td><code>totalCount</code></td>
+            <td><span class="integer-type">integer</span></td>
+        </tr>
+    </tbody>
+</table>
+
+<h3 id="systemstats">SystemStats</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>avgConfidence</code></td>
+            <td><span class="number-type">number</span></td>
+        </tr>
+        <tr>
+            <td><code>indexedCorpora</code></td>
+            <td><span class="integer-type">integer</span></td>
+        </tr>
+        <tr>
+            <td><code>percentChange</code></td>
+            <td><span class="number-type">number</span></td>
+        </tr>
+        <tr>
+            <td><code>satisfaction</code></td>
+            <td><span class="number-type">number</span></td>
+        </tr>
+        <tr>
+            <td><code>totalCorpora</code></td>
+            <td><span class="integer-type">integer</span></td>
+        </tr>
+    </tbody>
+</table>
+
 <h3 id="updatewithchunks">UpdateWithChunks</h3>
 <table>
     <thead>
@@ -3416,7 +3889,7 @@ une réponse contextuelle.</p>
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../../../lib/vectordb/search_lib/" class="btn btn-neutral float-left" title="Recherche hybride"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../../lib/stats/stats_computer_lib/" class="btn btn-neutral float-left" title="Recherche hybride"><span class="icon icon-circle-arrow-left"></span> Previous</a>
         <a href="../../lib/askai/rag_references/" class="btn btn-neutral float-right" title="RAG">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
@@ -3444,7 +3917,7 @@ une réponse contextuelle.</p>
         </span>
     
     
-      <span><a href="../../../lib/vectordb/search_lib/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../../../lib/stats/stats_computer_lib/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
       <span><a href="../../lib/askai/rag_references/" style="color: #fcfcfc">Next &raquo;</a></span>

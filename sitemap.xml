@@ -29,6 +29,10 @@
          <lastmod>2025-05-05</lastmod>
     </url>
     <url>
+         <loc>https://WillIsback.github.io/clea-api/Integration/stats/stats_computer_js/</loc>
+         <lastmod>2025-05-05</lastmod>
+    </url>
+    <url>
          <loc>https://WillIsback.github.io/clea-api/Integration/vectordb/crud_js/</loc>
          <lastmod>2025-05-05</lastmod>
     </url>
@@ -54,6 +58,10 @@
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/api/lib/pipeline/pipeline_references/</loc>
+         <lastmod>2025-05-05</lastmod>
+    </url>
+    <url>
+         <loc>https://WillIsback.github.io/clea-api/api/lib/stats/stats_computer_references/</loc>
          <lastmod>2025-05-05</lastmod>
     </url>
     <url>
@@ -86,6 +94,10 @@
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/lib/pipeline/pipeline_lib/</loc>
+         <lastmod>2025-05-05</lastmod>
+    </url>
+    <url>
+         <loc>https://WillIsback.github.io/clea-api/lib/stats/stats_computer_lib/</loc>
          <lastmod>2025-05-05</lastmod>
     </url>
     <url>

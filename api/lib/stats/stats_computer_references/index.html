@@ -3,9 +3,9 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://WillIsback.github.io/clea-api/api/lib/vectordb/search_references/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://WillIsback.github.io/clea-api/api/lib/stats/stats_computer_references/" />
       <link rel="shortcut icon" href="../../../../img/favicon.ico" />
-    <title>Recherche - Cléa-API Documentation</title>
+    <title>Statistiques - Cléa-API Documentation</title>
     <link rel="stylesheet" href="../../../../css/theme.css" />
     <link rel="stylesheet" href="../../../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -14,9 +14,9 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Recherche";
-        var mkdocs_page_input_path = "api/lib/vectordb/search_references.md";
-        var mkdocs_page_url = "/clea-api/api/lib/vectordb/search_references/";
+        var mkdocs_page_name = "Statistiques";
+        var mkdocs_page_input_path = "api/lib/stats/stats_computer_references.md";
+        var mkdocs_page_url = "/clea-api/api/lib/stats/stats_computer_references/";
       </script>
     
     <!--[if lt IE 9]>
@@ -126,25 +126,33 @@
                 </li>
     </ul>
                 </li>
-                <li class="toctree-l2 current"><a class="reference internal current" >vectordb</a>
-    <ul class="current">
-                <li class="toctree-l3"><a class="reference internal" href="../crud_references/">CRUD</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../index_references/">Indexation</a>
-                </li>
-                <li class="toctree-l3 current"><a class="reference internal current" href="#">Recherche</a>
-    <ul class="current">
-    <li class="toctree-l4"><a class="reference internal" href="#vectordb.src.search">search</a>
-    </li>
-    <li class="toctree-l4"><a class="reference internal" href="#vectordb.src.search.SearchEngine">SearchEngine</a>
-    </li>
-    </ul>
-                </li>
-    </ul>
-                </li>
-                <li class="toctree-l2"><a class="reference internal" >stats</a>
+                <li class="toctree-l2"><a class="reference internal" >vectordb</a>
     <ul>
-                <li class="toctree-l3"><a class="reference internal" href="../../stats/stats_computer_references/">Statistiques</a>
+                <li class="toctree-l3"><a class="reference internal" href="../../vectordb/crud_references/">CRUD</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../vectordb/index_references/">Indexation</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../vectordb/search_references/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" >stats</a>
+    <ul class="current">
+                <li class="toctree-l3 current"><a class="reference internal current" href="#">Statistiques</a>
+    <ul class="current">
+    <li class="toctree-l4"><a class="reference internal" href="#stats">stats</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#stats.DashboardStats">DashboardStats</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#stats.DocumentStats">DocumentStats</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#stats.SearchStats">SearchStats</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#stats.StatsComputer">StatsComputer</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#stats.SystemStats">SystemStats</a>
+    </li>
+    </ul>
                 </li>
     </ul>
                 </li>
@@ -208,10 +216,10 @@
     <li><a href="../../../.." class="icon icon-home" aria-label="Docs"></a></li>
           <li class="breadcrumb-item">Références API</li>
           <li class="breadcrumb-item">Références Python</li>
-          <li class="breadcrumb-item">vectordb</li>
-      <li class="breadcrumb-item active">Recherche</li>
+          <li class="breadcrumb-item">stats</li>
+      <li class="breadcrumb-item active">Statistiques</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/WillIsback/clea-api/edit/master/docs/api/lib/vectordb/search_references.md">Edit on Cléa-API</a>
+          <a href="https://github.com/WillIsback/clea-api/edit/master/docs/api/lib/stats/stats_computer_references.md">Edit on Cléa-API</a>
     </li>
   </ul>
   <hr/>
@@ -219,18 +227,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="references-for-search">References for <code>SEARCH</code></h1>
+                <h1 id="references-for-stats">References for <code>STATS</code></h1>
 
 
 <div class="doc doc-object doc-module">
 
 
 
-<a id="vectordb.src.search"></a>
+<a id="stats"></a>
     <div class="doc doc-contents first">
-
-        <p>search.py – Recherche hybride sémantique et par métadonnées.</p>
-<p>Framework de recherche documentaire hybride pour PostgreSQL + pgvector</p>
 
 
 
@@ -253,8 +258,143 @@
 
 
 
-<h2 id="vectordb.src.search.SearchEngine" class="doc doc-heading">
-            <code>SearchEngine</code>
+<h2 id="stats.DashboardStats" class="doc doc-heading">
+            <code>DashboardStats</code>
+
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
+
+
+        <p>Corps minimal pour créer un document (hors contenu).</p>
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="stats.DocumentStats" class="doc doc-heading">
+            <code>DocumentStats</code>
+
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
+
+
+        <p>Corps pour créer un chunk (texte + méta hiérarchiques).</p>
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="stats.SearchStats" class="doc doc-heading">
+            <code>SearchStats</code>
+
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
+
+
+        <p>Payload complet pour <code>POST /database/documents</code>.</p>
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="stats.StatsComputer" class="doc doc-heading">
+            <code>StatsComputer</code>
 
 
 </h2>
@@ -263,9 +403,9 @@
     <div class="doc doc-contents ">
 
 
-        <p>Moteur de recherche hybride (métadonnées + vecteur) avec rerank optionnel via Cross-Encoder.</p>
-<p>Utilise à la fois une recherche par similarité vectorielle et un rerank avec un modèle Cross-Encoder.
-Inclut une évaluation de la pertinence des résultats et détection des requêtes hors domaine.</p>
+        <p>Calculateur de statistiques pour le tableau de bord.</p>
+<p>Cette classe centralise les fonctionnalités de calcul des différentes
+métriques utilisées dans le tableau de bord d'administration.</p>
 
 
 
@@ -289,15 +429,36 @@ Inclut une évaluation de la pertinence des résultats et détection des requêt
 <div class="doc doc-object doc-function">
 
 
-<h3 id="vectordb.src.search.SearchEngine.__init__" class="doc doc-heading">
-            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">min_relevance_threshold</span><span class="o">=-</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">high_confidence_threshold</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span></code>
+<h3 id="stats.StatsComputer.__init__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">()</span></code>
 
 </h3>
 
 
     <div class="doc doc-contents ">
 
-        <p>Initialise le moteur de recherche avec son générateur d'embeddings et son ranker.</p>
+        <p>Initialise le calculateur de statistiques.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="stats.StatsComputer.compute_all_stats" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">compute_all_stats</span><span class="p">()</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Calcule toutes les statistiques pour le tableau de bord.</p>
+<p>Cette fonction agrège les résultats des différentes fonctions de calcul
+de statistiques pour fournir un objet unique contenant toutes les
+métriques nécessaires au tableau de bord.</p>
 
 
 <table class="field-list">
@@ -307,27 +468,14 @@ Inclut une évaluation de la pertinence des résultats et détection des requêt
   </colgroup>
   <tbody valign="top">
     <tr class="field">
-      <th class="field-name">Parameters:</th>
+      <th class="field-name">Returns:</th>
       <td class="field-body">
         <ul class="first simple">
             <li>
-              <b><code>min_relevance_threshold</code></b>
-                  (<code><span title="float">float</span></code>, default:
-                      <code>-0.0</code>
-)
+                  <code><a class="autorefs autorefs-internal" title="DashboardStats (stats.src.stats_src_schemas.DashboardStats)" href="#stats.DashboardStats">DashboardStats</a></code>
               –
               <div class="doc-md-description">
-                <p>Score minimal pour qu'un résultat soit considéré pertinent.</p>
-              </div>
-            </li>
-            <li>
-              <b><code>high_confidence_threshold</code></b>
-                  (<code><span title="float">float</span></code>, default:
-                      <code>0.0</code>
-)
-              –
-              <div class="doc-md-description">
-                <p>Score minimal pour une confiance élevée.</p>
+                <p>Un objet DashboardStats contenant l'ensemble des statistiques.</p>
               </div>
             </li>
         </ul>
@@ -343,17 +491,18 @@ Inclut une évaluation de la pertinence des résultats et détection des requêt
 <div class="doc doc-object doc-function">
 
 
-<h3 id="vectordb.src.search.SearchEngine.evaluate_confidence" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">evaluate_confidence</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span></code>
+<h3 id="stats.StatsComputer.compute_document_stats" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">compute_document_stats</span><span class="p">(</span><span class="n">skip</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span></code>
 
 </h3>
 
 
     <div class="doc doc-contents ">
 
-        <p>Évalue la confiance globale dans les résultats de recherche.</p>
-<p>Analyse les scores du ranker pour déterminer la pertinence globale des résultats
-et détecter les requêtes potentiellement hors domaine.</p>
+        <p>Calcule les statistiques des documents présents dans la base de données.</p>
+<p>Cette fonction récupère les documents de la base de données et calcule diverses statistiques
+comme le nombre total, la répartition par thème et par type, ainsi que les documents 
+récemment ajoutés et l'évolution en pourcentage.</p>
 
 
 <table class="field-list">
@@ -367,11 +516,17 @@ et détecter les requêtes potentiellement hors domaine.</p>
       <td class="field-body">
         <ul class="first simple">
             <li>
-              <b><code>scores</code></b>
-                  (<code><span title="typing.List">List</span>[<span title="float">float</span>]</code>)
+              <b><code>skip</code></b>
               –
               <div class="doc-md-description">
-                <p>Liste des scores de pertinence.</p>
+                <p>Nombre de documents à ignorer (pour la pagination).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>limit</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Nombre maximal de documents à retourner.</p>
               </div>
             </li>
         </ul>
@@ -391,10 +546,10 @@ et détecter les requêtes potentiellement hors domaine.</p>
       <td class="field-body">
         <ul class="first simple">
             <li>
-                  <code><span title="vectordb.src.schemas.ConfidenceMetrics">ConfidenceMetrics</span></code>
+                  <code><a class="autorefs autorefs-internal" title="DocumentStats (stats.src.stats_src_schemas.DocumentStats)" href="#stats.DocumentStats">DocumentStats</a></code>
               –
               <div class="doc-md-description">
-                <p>Métriques de confiance avec niveau, message explicatif et statistiques.</p>
+                <p>Un objet DocumentStats contenant les statistiques calculées.</p>
               </div>
             </li>
         </ul>
@@ -410,17 +565,18 @@ et détecter les requêtes potentiellement hors domaine.</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="vectordb.src.search.SearchEngine.hybrid_search" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">hybrid_search</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">req</span><span class="p">)</span></code>
+<h3 id="stats.StatsComputer.compute_search_stats" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">compute_search_stats</span><span class="p">(</span><span class="n">skip</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span></code>
 
 </h3>
 
 
     <div class="doc doc-contents ">
 
-        <p>Exécute une recherche hybride avec évaluation de confiance.</p>
-<p>Combine recherche vectorielle et filtrage SQL, puis applique un reranking
-avec un modèle Cross-Encoder et évalue la pertinence des résultats.</p>
+        <p>Calcule les statistiques des recherches effectuées dans le système.</p>
+<p>Cette fonction analyse l'historique des recherches pour fournir des métriques
+comme le nombre total de recherches, l'activité récente et les requêtes
+les plus populaires.</p>
 
 
 <table class="field-list">
@@ -434,19 +590,17 @@ avec un modèle Cross-Encoder et évalue la pertinence des résultats.</p>
       <td class="field-body">
         <ul class="first simple">
             <li>
-              <b><code>db</code></b>
-                  (<code><span title="sqlalchemy.orm.Session">Session</span></code>)
+              <b><code>skip</code></b>
               –
               <div class="doc-md-description">
-                <p>Session SQLAlchemy.</p>
+                <p>Nombre d'entrées à ignorer pour la pagination.</p>
               </div>
             </li>
             <li>
-              <b><code>req</code></b>
-                  (<code><span title="vectordb.src.schemas.SearchRequest">SearchRequest</span></code>)
+              <b><code>limit</code></b>
               –
               <div class="doc-md-description">
-                <p>Paramètres de la recherche.</p>
+                <p>Nombre maximal d'entrées à traiter.</p>
               </div>
             </li>
         </ul>
@@ -466,10 +620,10 @@ avec un modèle Cross-Encoder et évalue la pertinence des résultats.</p>
       <td class="field-body">
         <ul class="first simple">
             <li>
-                  <code><span title="vectordb.src.schemas.SearchResponse">SearchResponse</span></code>
+                  <code><a class="autorefs autorefs-internal" title="SearchStats (stats.src.stats_src_schemas.SearchStats)" href="#stats.SearchStats">SearchStats</a></code>
               –
               <div class="doc-md-description">
-                <p>Réponse formatée avec résultats triés, métriques de confiance et statistiques.</p>
+                <p>Un objet SearchStats contenant les statistiques calculées.</p>
               </div>
             </li>
         </ul>
@@ -485,100 +639,19 @@ avec un modèle Cross-Encoder et évalue la pertinence des résultats.</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="vectordb.src.search.SearchEngine.log_search_query" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">log_search_query</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span></code>
+<h3 id="stats.StatsComputer.compute_system_stats" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">compute_system_stats</span><span class="p">()</span></code>
 
 </h3>
 
 
     <div class="doc doc-contents ">
 
-        <p>Enregistre la recherche effectuée dans l'historique.</p>
-<p>Cette méthode persiste les métadonnées de la requête et de ses résultats
-pour permettre l'analyse statistique ultérieure.</p>
+        <p>Calcule les statistiques système globales.</p>
+<p>Cette fonction analyse les métriques de confiance des recherches effectuées
+et l'état des corpus dans le système pour fournir une vue d'ensemble
+de la performance et de l'état de l'indexation.</p>
 
-
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Parameters:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-              <b><code>db</code></b>
-                  (<code><span title="sqlalchemy.orm.Session">Session</span></code>)
-              –
-              <div class="doc-md-description">
-                <p>Session SQLAlchemy active.</p>
-              </div>
-            </li>
-            <li>
-              <b><code>req</code></b>
-                  (<code><span title="vectordb.src.schemas.SearchRequest">SearchRequest</span></code>)
-              –
-              <div class="doc-md-description">
-                <p>Requête de recherche soumise.</p>
-              </div>
-            </li>
-            <li>
-              <b><code>response</code></b>
-                  (<code><span title="vectordb.src.schemas.SearchResponse">SearchResponse</span></code>)
-              –
-              <div class="doc-md-description">
-                <p>Réponse générée contenant les résultats et métriques.</p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="vectordb.src.search.SearchEngine.normalize_scores" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">normalize_scores</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span></code>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Normalise les scores en valeurs entre 0 et 1.</p>
-
-
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Parameters:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-              <b><code>scores</code></b>
-                  (<code><span title="typing.List">List</span>[<span title="float">float</span>]</code>)
-              –
-              <div class="doc-md-description">
-                <p>Liste des scores bruts du modèle.</p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
 <table class="field-list">
   <colgroup>
@@ -591,10 +664,10 @@ pour permettre l'analyse statistique ultérieure.</p>
       <td class="field-body">
         <ul class="first simple">
             <li>
-                  <code><span title="typing.List">List</span>[<span title="float">float</span>]</code>
+                  <code><a class="autorefs autorefs-internal" title="SystemStats (stats.src.stats_src_schemas.SystemStats)" href="#stats.SystemStats">SystemStats</a></code>
               –
               <div class="doc-md-description">
-                <p>Liste de scores normalisés entre 0 et 1.</p>
+                <p>Un objet SystemStats contenant les métriques système calculées.</p>
               </div>
             </li>
         </ul>
@@ -606,6 +679,51 @@ pour permettre l'analyse statistique ultérieure.</p>
     </div>
 
 </div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="stats.SystemStats" class="doc doc-heading">
+            <code>SystemStats</code>
+
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
+
+
+        <p>Payload complet pour <code>POST /database/documents</code>.</p>
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
 
 
 
@@ -627,8 +745,8 @@ pour permettre l'analyse statistique ultérieure.</p>
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../index_references/" class="btn btn-neutral float-left" title="Indexation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../../stats/stats_computer_references/" class="btn btn-neutral float-right" title="Statistiques">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../../vectordb/search_references/" class="btn btn-neutral float-left" title="Recherche"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../../../Integration/askai/rag_js/" class="btn btn-neutral float-right" title="RAG">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -655,10 +773,10 @@ pour permettre l'analyse statistique ultérieure.</p>
         </span>
     
     
-      <span><a href="../index_references/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../../vectordb/search_references/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../../stats/stats_computer_references/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../../../../Integration/askai/rag_js/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

@@ -85,7 +85,13 @@
                 </li>
                 <li class="toctree-l2"><a class="reference internal" href="../../../../lib/vectordb/index_lib/">Indexation vectorielle</a>
                 </li>
-                <li class="toctree-l2"><a class="reference internal" href="../../../../lib/vectordb/search_lib/">Recherche hybride</a>
+                <li class="toctree-l2"><a class="reference internal" href="../../../../lib/stats/stats_computer_lib/">Recherche hybride</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >stats</a>
+    <ul>
+                <li class="toctree-l2"><a class="" href="../../../../lib/stats/stats_lib.md">Statistiques</a>
                 </li>
     </ul>
                   </li>
@@ -132,6 +138,8 @@
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#vectordb.src.crud.delete_document_chunks">delete_document_chunks</a>
     </li>
+    <li class="toctree-l4"><a class="reference internal" href="#vectordb.src.crud.get_documents">get_documents</a>
+    </li>
     <li class="toctree-l4"><a class="reference internal" href="#vectordb.src.crud.update_document_with_chunks">update_document_with_chunks</a>
     </li>
     </ul>
@@ -139,6 +147,12 @@
                 <li class="toctree-l3"><a class="reference internal" href="../index_references/">Indexation</a>
                 </li>
                 <li class="toctree-l3"><a class="reference internal" href="../search_references/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >stats</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../stats/stats_computer_references/">Statistiques</a>
                 </li>
     </ul>
                 </li>
@@ -174,6 +188,12 @@
                 <li class="toctree-l3"><a class="reference internal" href="../../../../Integration/vectordb/index_js/">Indexation</a>
                 </li>
                 <li class="toctree-l3"><a class="reference internal" href="../../../../Integration/vectordb/search_js/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >stats</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../../Integration/stats/stats_computer_js/">Statistiques</a>
                 </li>
     </ul>
                 </li>
@@ -341,6 +361,8 @@ et préserve les relations hiérarchiques entre les chunks.</p>
     <div class="doc doc-contents ">
 
         <p>Supprime un document de la base de données avec tous ses chunks associés.</p>
+<p>Cette fonction supprime un document et tous ses chunks. Si le document est le dernier
+de son corpus, l'index vectoriel associé est également supprimé.</p>
 
 
 <table class="field-list">
@@ -358,7 +380,7 @@ et préserve les relations hiérarchiques entre les chunks.</p>
                   (<code><span title="int">int</span></code>)
               –
               <div class="doc-md-description">
-                <p>ID du document à supprimer.</p>
+                <p>Identifiant du document à supprimer.</p>
               </div>
             </li>
         </ul>
@@ -381,7 +403,7 @@ et préserve les relations hiérarchiques entre les chunks.</p>
                   <code><span title="typing.Dict">Dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
               –
               <div class="doc-md-description">
-                <p>Dict[str, Any]: Résultat de l'opération.</p>
+                <p>Dict contenant le statut de l'opération et les actions réalisées.</p>
               </div>
             </li>
         </ul>
@@ -406,6 +428,8 @@ et préserve les relations hiérarchiques entre les chunks.</p>
     <div class="doc doc-contents ">
 
         <p>Supprime des chunks spécifiques d'un document ou tous les chunks si aucun ID n'est spécifié.</p>
+<p>Cette fonction supprime des chunks et met à jour les statistiques d'index du corpus.
+L'index devient invalide après suppression de chunks et nécessite une reconstruction.</p>
 
 
 <table class="field-list">
@@ -456,7 +480,126 @@ et préserve les relations hiérarchiques entre les chunks.</p>
                   <code><span title="typing.Dict">Dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
               –
               <div class="doc-md-description">
-                <p>Dict[str, Any]: Résultat de l'opération.</p>
+                <p>Dict contenant le statut de l'opération et des informations sur l'index.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="vectordb.src.crud.get_documents" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_documents</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">document_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">corpus_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Liste l'ensemble des documents de la base de données avec leur nombre de chunks.</p>
+<p>Cette fonction permet de récupérer un ensemble paginé de documents avec possibilité
+de filtrage sur différents critères.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>theme</code></b>
+                  (<code><span title="typing.Optional">Optional</span>[<span title="str">str</span>]</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Filtre optionnel pour le thème du document.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>document_type</code></b>
+                  (<code><span title="typing.Optional">Optional</span>[<span title="str">str</span>]</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Filtre optionnel pour le type du document.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>corpus_id</code></b>
+                  (<code><span title="typing.Optional">Optional</span>[<span title="str">str</span>]</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Filtre optionnel sur l'identifiant du corpus.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>skip</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>0</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Nombre de documents à ignorer (pour la pagination).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>limit</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>100</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Nombre maximal de documents à retourner.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>db</code></b>
+                  (<code><span title="sqlalchemy.orm.Session">Session</span></code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Session de base de données fournie par dépendance.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="typing.List">List</span>[<span title="vectordb.src.schemas.DocumentResponse">DocumentResponse</span>]</code>
+              –
+              <div class="doc-md-description">
+                <p>Liste des documents formatés avec leur nombre de chunks associés.</p>
               </div>
             </li>
         </ul>

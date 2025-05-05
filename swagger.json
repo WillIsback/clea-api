@@ -663,6 +663,30 @@
     }
     }
     },
+    "/index/cleanup-indexes": {
+    "post": {
+    "tags": [
+    "Index"
+    ],
+    "summary": "Nettoyer les index vectoriels orphelins",
+    "description": "Nettoie les index vectoriels orphelins.\n\nCette route identifie et supprime les configurations d'index et vues matérialisées\nqui ne sont plus associées à des corpus existants dans la base de données.\n\nReturns:\n    dict: Résultat de l'opération avec statistiques.",
+    "operationId": "cleanup_orphaned_indexes_index_cleanup_indexes_post",
+    "responses": {
+    "200": {
+    "description": "Successful Response",
+    "content": {
+    "application/json": {
+    "schema": {
+    "additionalProperties": true,
+    "type": "object",
+    "title": "Response Cleanup Orphaned Indexes Index Cleanup Indexes Post"
+    }
+    }
+    }
+    }
+    }
+    }
+    },
     "/doc_loader/upload-file": {
     "post": {
     "tags": [
@@ -931,46 +955,6 @@
     }
     }
     },
-    "/pipeline/query-rag": {
-    "post": {
-    "tags": [
-    "Pipeline"
-    ],
-    "summary": "Interroger la base de connaissances avec RAG (Retrieval-Augmented Generation)",
-    "description": "Interroge la base de connaissances avec RAG pour générer une réponse contextualisée.\n\nCette fonction utilise le système RAG (Retrieval-Augmented Generation) pour:\n1. Rechercher les documents les plus pertinents pour la requête\n2. Générer une réponse synthétique basée sur ces documents avec un modèle LLM\n\nArgs:\n    request: Paramètres de la requête RAG (question, filtres, modèle, etc.)\n    \nReturns:\n    JSONResponse ou StreamingResponse: Réponse générée par le LLM, sous forme\n    de dictionnaire JSON ou de flux de données selon le paramètre stream.\n    \nRaises:\n    HTTPException: Si une erreur survient lors du traitement de la requête.",
-    "operationId": "query_rag_endpoint_pipeline_query_rag_post",
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "$ref": "#/components/schemas/RagQueryRequest"
-    }
-    }
-    },
-    "required": true
-    },
-    "responses": {
-    "200": {
-    "description": "Réponse générée basée sur les documents pertinents",
-    "content": {
-    "application/json": {
-    "schema": {}
-    }
-    }
-    },
-    "422": {
-    "description": "Validation Error",
-    "content": {
-    "application/json": {
-    "schema": {
-    "$ref": "#/components/schemas/HTTPValidationError"
-    }
-    }
-    }
-    }
-    }
-    }
-    },
     "/askai/ask": {
     "post": {
     "tags": [
@@ -1025,6 +1009,190 @@
     "content": {
     "application/json": {
     "schema": {}
+    }
+    }
+    }
+    }
+    }
+    },
+    "/stats/documents": {
+    "get": {
+    "tags": [
+    "Stats"
+    ],
+    "summary": "Statistiques sur les documents",
+    "description": "Récupère les statistiques sur les documents présents dans la base de données.\n\nCette route calcule différentes métriques sur les documents indexés, notamment\nla distribution par thème, par type de document, ainsi que les tendances\nrécentes d'ajout de documents.\n\nArgs:\n    skip: Nombre d'éléments à ignorer pour la pagination.\n    limit: Nombre maximal d'éléments à retourner.\n    db: Session de base de données fournie par dépendance.\n    \nReturns:\n    DocumentStats: Objet contenant les statistiques sur les documents.\n    \nRaises:\n    HTTPException: Si une erreur survient lors du calcul des statistiques.",
+    "operationId": "get_document_stats_stats_documents_get",
+    "parameters": [
+    {
+    "name": "skip",
+    "in": "query",
+    "required": false,
+    "schema": {
+    "type": "integer",
+    "description": "Nombre d'éléments à ignorer",
+    "default": 0,
+    "title": "Skip"
+    },
+    "description": "Nombre d'éléments à ignorer"
+    },
+    {
+    "name": "limit",
+    "in": "query",
+    "required": false,
+    "schema": {
+    "type": "integer",
+    "description": "Nombre maximal d'éléments à retourner",
+    "default": 100,
+    "title": "Limit"
+    },
+    "description": "Nombre maximal d'éléments à retourner"
+    }
+    ],
+    "responses": {
+    "200": {
+    "description": "Successful Response",
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/DocumentStats"
+    }
+    }
+    }
+    },
+    "422": {
+    "description": "Validation Error",
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/HTTPValidationError"
+    }
+    }
+    }
+    }
+    }
+    }
+    },
+    "/stats/searches": {
+    "get": {
+    "tags": [
+    "Stats"
+    ],
+    "summary": "Statistiques sur les recherches effectuées",
+    "description": "Récupère les statistiques sur les recherches effectuées dans le système.\n\nCette route analyse l'historique des recherches pour fournir des métriques\ncomme le nombre total de recherches, l'activité récente et les requêtes\nles plus populaires.\n\nArgs:\n    skip: Nombre d'éléments à ignorer pour la pagination.\n    limit: Nombre maximal d'éléments à retourner.\n    db: Session de base de données fournie par dépendance.\n    \nReturns:\n    SearchStats: Objet contenant les statistiques sur les recherches.\n    \nRaises:\n    HTTPException: Si une erreur survient lors du calcul des statistiques.",
+    "operationId": "get_search_stats_stats_searches_get",
+    "parameters": [
+    {
+    "name": "skip",
+    "in": "query",
+    "required": false,
+    "schema": {
+    "type": "integer",
+    "description": "Nombre d'éléments à ignorer",
+    "default": 0,
+    "title": "Skip"
+    },
+    "description": "Nombre d'éléments à ignorer"
+    },
+    {
+    "name": "limit",
+    "in": "query",
+    "required": false,
+    "schema": {
+    "type": "integer",
+    "description": "Nombre maximal d'éléments à retourner",
+    "default": 100,
+    "title": "Limit"
+    },
+    "description": "Nombre maximal d'éléments à retourner"
+    }
+    ],
+    "responses": {
+    "200": {
+    "description": "Successful Response",
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/SearchStats"
+    }
+    }
+    }
+    },
+    "422": {
+    "description": "Validation Error",
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/HTTPValidationError"
+    }
+    }
+    }
+    }
+    }
+    }
+    },
+    "/stats/system": {
+    "get": {
+    "tags": [
+    "Stats"
+    ],
+    "summary": "Statistiques système globales",
+    "description": "Récupère les statistiques système globales.\n\nCette route analyse les métriques de confiance des recherches effectuées\net l'état des corpus dans le système pour fournir une vue d'ensemble\nde la performance et de l'état de l'indexation.\n\nArgs:\n    db: Session de base de données fournie par dépendance.\n    \nReturns:\n    SystemStats: Objet contenant les métriques système.\n    \nRaises:\n    HTTPException: Si une erreur survient lors du calcul des statistiques.",
+    "operationId": "get_system_stats_stats_system_get",
+    "responses": {
+    "200": {
+    "description": "Successful Response",
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/SystemStats"
+    }
+    }
+    }
+    }
+    }
+    }
+    },
+    "/stats/dashboard": {
+    "get": {
+    "tags": [
+    "Stats"
+    ],
+    "summary": "Toutes les statistiques pour le tableau de bord",
+    "description": "Récupère l'ensemble des statistiques pour le tableau de bord.\n\nCette route agrège les résultats des différentes fonctions de calcul\nde statistiques pour fournir un objet unique contenant toutes les\nmétriques nécessaires au tableau de bord d'administration.\n\nArgs:\n    db: Session de base de données fournie par dépendance.\n    \nReturns:\n    DashboardStats: Objet contenant l'ensemble des statistiques.\n    \nRaises:\n    HTTPException: Si une erreur survient lors du calcul des statistiques.",
+    "operationId": "get_all_stats_stats_dashboard_get",
+    "responses": {
+    "200": {
+    "description": "Successful Response",
+    "content": {
+    "application/json": {
+    "schema": {
+    "$ref": "#/components/schemas/DashboardStats"
+    }
+    }
+    }
+    }
+    }
+    }
+    },
+    "/stats/refresh": {
+    "post": {
+    "tags": [
+    "Stats"
+    ],
+    "summary": "Rafraîchir le cache des statistiques",
+    "description": "Force le rafraîchissement du cache des statistiques.\n\nCette route permet d'invalider les caches potentiels et de forcer\nun recalcul complet de toutes les métriques du système. Utile après\ndes opérations importantes comme des imports massifs ou des maintenances.\n\nArgs:\n    db: Session de base de données fournie par dépendance.\n    \nReturns:\n    dict: Résultat de l'opération avec statut et message.\n    \nRaises:\n    HTTPException: Si une erreur survient lors du rafraîchissement.",
+    "operationId": "refresh_stats_cache_stats_refresh_post",
+    "responses": {
+    "200": {
+    "description": "Successful Response",
+    "content": {
+    "application/json": {
+    "schema": {
+    "additionalProperties": true,
+    "type": "object",
+    "title": "Response Refresh Stats Cache Stats Refresh Post"
+    }
     }
     }
     }
@@ -1316,6 +1484,27 @@
     "title": "ConfidenceMetrics",
     "description": "Métriques de confiance pour les résultats de recherche.\n\nFournit des informations sur la pertinence des résultats et des statistiques\npour aider l'utilisateur à évaluer la qualité des réponses."
     },
+    "DashboardStats": {
+    "properties": {
+    "documentStats": {
+    "$ref": "#/components/schemas/DocumentStats"
+    },
+    "searchStats": {
+    "$ref": "#/components/schemas/SearchStats"
+    },
+    "systemStats": {
+    "$ref": "#/components/schemas/SystemStats"
+    }
+    },
+    "type": "object",
+    "required": [
+    "documentStats",
+    "searchStats",
+    "systemStats"
+    ],
+    "title": "DashboardStats",
+    "description": "Corps minimal pour créer un document (hors contenu)."
+    },
     "DocumentCreate": {
     "properties": {
     "title": {
@@ -1413,6 +1602,46 @@
     ],
     "title": "DocumentResponse",
     "description": "Réponse standard lorsqu’un document est renvoyé côté API.\n\nAttributs:\n    id (int): Identifiant du document.\n    title (str): Titre du document.\n    theme (str): Thème du document.\n    document_type (str): Type de document.\n    publish_date (date): Date de publication.\n    corpus_id (Optional[str]): Identifiant du corpus.\n    chunk_count (int): Nombre de chunks associés (>= 0)."
+    },
+    "DocumentStats": {
+    "properties": {
+    "totalCount": {
+    "type": "integer",
+    "title": "Totalcount"
+    },
+    "byTheme": {
+    "additionalProperties": {
+    "type": "integer"
+    },
+    "type": "object",
+    "title": "Bytheme"
+    },
+    "byType": {
+    "additionalProperties": {
+    "type": "integer"
+    },
+    "type": "object",
+    "title": "Bytype"
+    },
+    "recentlyAdded": {
+    "type": "integer",
+    "title": "Recentlyadded"
+    },
+    "percentChange": {
+    "type": "number",
+    "title": "Percentchange"
+    }
+    },
+    "type": "object",
+    "required": [
+    "totalCount",
+    "byTheme",
+    "byType",
+    "recentlyAdded",
+    "percentChange"
+    ],
+    "title": "DocumentStats",
+    "description": "Corps pour créer un chunk (texte + méta hiérarchiques)."
     },
     "DocumentUpdate": {
     "properties": {
@@ -1632,58 +1861,6 @@
     "title": "IndexStatus",
     "description": "Statut de l'indexation d'un document."
     },
-    "RagQueryRequest": {
-    "properties": {
-    "query": {
-    "type": "string",
-    "title": "Query",
-    "description": "Question en langage naturel"
-    },
-    "filters": {
-    "anyOf": [
-    {
-    "additionalProperties": true,
-    "type": "object"
-    },
-    {
-    "type": "null"
-    }
-    ],
-    "title": "Filters",
-    "description": "Filtres pour la recherche"
-    },
-    "model_name": {
-    "type": "string",
-    "title": "Model Name",
-    "description": "Modèle LLM à utiliser",
-    "default": "Qwen3-0.6B"
-    },
-    "prompt_type": {
-    "type": "string",
-    "title": "Prompt Type",
-    "description": "Type de prompt (standard, summary, comparison)",
-    "default": "standard"
-    },
-    "stream": {
-    "type": "boolean",
-    "title": "Stream",
-    "description": "Réponse en streaming",
-    "default": false
-    },
-    "max_docs": {
-    "type": "integer",
-    "title": "Max Docs",
-    "description": "Nombre maximum de documents à utiliser",
-    "default": 5
-    }
-    },
-    "type": "object",
-    "required": [
-    "query"
-    ],
-    "title": "RagQueryRequest",
-    "description": "Requête pour interroger la base de connaissances avec RAG.\n\nArgs:\n    query: Question en langage naturel à poser au système.\n    filters: Filtres optionnels pour la recherche documentaire.\n    model_name: Nom du modèle LLM à utiliser.\n    prompt_type: Type de prompt à utiliser.\n    stream: Indique si la réponse doit être générée en streaming.\n    max_docs: Nombre maximum de documents à utiliser.\n    \nAttributes:\n    query: Question en langage naturel.\n    filters: Filtres pour la recherche (thème, type de document, dates...).\n    model_name: Nom du modèle LLM à utiliser.\n    prompt_type: Type de prompt ('standard', 'summary', 'comparison').\n    stream: Si True, la réponse est générée progressivement.\n    max_docs: Nombre maximum de documents à utiliser pour le contexte."
-    },
     "SearchRequest": {
     "properties": {
     "query": {
@@ -1861,6 +2038,73 @@
     ],
     "title": "SearchResponse",
     "description": "Réponse à une requête de recherche.\n\nContient les résultats triés par pertinence avec métadonnées et évaluation de confiance."
+    },
+    "SearchStats": {
+    "properties": {
+    "totalCount": {
+    "type": "integer",
+    "title": "Totalcount"
+    },
+    "lastMonthCount": {
+    "type": "integer",
+    "title": "Lastmonthcount"
+    },
+    "percentChange": {
+    "type": "number",
+    "title": "Percentchange"
+    },
+    "topQueries": {
+    "items": {
+    "additionalProperties": true,
+    "type": "object"
+    },
+    "type": "array",
+    "title": "Topqueries"
+    }
+    },
+    "type": "object",
+    "required": [
+    "totalCount",
+    "lastMonthCount",
+    "percentChange",
+    "topQueries"
+    ],
+    "title": "SearchStats",
+    "description": "Payload complet pour `POST /database/documents`."
+    },
+    "SystemStats": {
+    "properties": {
+    "satisfaction": {
+    "type": "number",
+    "title": "Satisfaction"
+    },
+    "avgConfidence": {
+    "type": "number",
+    "title": "Avgconfidence"
+    },
+    "percentChange": {
+    "type": "number",
+    "title": "Percentchange"
+    },
+    "indexedCorpora": {
+    "type": "integer",
+    "title": "Indexedcorpora"
+    },
+    "totalCorpora": {
+    "type": "integer",
+    "title": "Totalcorpora"
+    }
+    },
+    "type": "object",
+    "required": [
+    "satisfaction",
+    "avgConfidence",
+    "percentChange",
+    "indexedCorpora",
+    "totalCorpora"
+    ],
+    "title": "SystemStats",
+    "description": "Payload complet pour `POST /database/documents`."
     },
     "UpdateWithChunks": {
     "properties": {

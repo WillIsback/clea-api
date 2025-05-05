@@ -56,11 +56,7 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#1-configuration-et-connexion">1. Configuration et connexion</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#composants-principaux">Composants principaux</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#utilitaire-de-session">Utilitaire de session</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#initialisation">Initialisation</a>
+    <li class="toctree-l3"><a class="reference internal" href="#initialisation-et-mise-a-jour">Initialisation et mise à jour</a>
     </li>
         </ul>
     </li>
@@ -69,12 +65,10 @@
     <li class="toctree-l3"><a class="reference internal" href="#21-document">2.1. Document</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#22-chunk">2.2. Chunk</a>
-        <ul>
-    <li class="toctree-l4"><a class="reference internal" href="#hierarchie-des-chunks">Hiérarchie des chunks</a>
-    </li>
-        </ul>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#23-indexconfig">2.3. IndexConfig</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#24-searchquery-nouvel-historique-des-recherches">2.4. SearchQuery (nouvel historique des recherches)</a>
     </li>
         </ul>
     </li>
@@ -149,7 +143,13 @@
                 </li>
                 <li class="toctree-l2"><a class="reference internal" href="../lib/vectordb/index_lib/">Indexation vectorielle</a>
                 </li>
-                <li class="toctree-l2"><a class="reference internal" href="../lib/vectordb/search_lib/">Recherche hybride</a>
+                <li class="toctree-l2"><a class="reference internal" href="../lib/stats/stats_computer_lib/">Recherche hybride</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >stats</a>
+    <ul>
+                <li class="toctree-l2"><a class="" href="../lib/stats/stats_lib.md">Statistiques</a>
                 </li>
     </ul>
                   </li>
@@ -194,6 +194,12 @@
                 </li>
     </ul>
                 </li>
+                <li class="toctree-l2"><a class="reference internal" >stats</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../api/lib/stats/stats_computer_references/">Statistiques</a>
+                </li>
+    </ul>
+                </li>
     </ul>
                   </li>
               </ul>
@@ -226,6 +232,12 @@
                 <li class="toctree-l3"><a class="reference internal" href="../Integration/vectordb/index_js/">Indexation</a>
                 </li>
                 <li class="toctree-l3"><a class="reference internal" href="../Integration/vectordb/search_js/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >stats</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../Integration/stats/stats_computer_js/">Statistiques</a>
                 </li>
     </ul>
                 </li>
@@ -262,19 +274,20 @@ La solution repose sur <strong>PostgreSQL</strong> enrichi de l'extension <stron
 <hr />
 <h2 id="table-des-matieres">Table des matières</h2>
 <ol>
-<li>Configuration et connexion</li>
-<li>Modèles de données</li>
-<li>Document</li>
-<li>Chunk</li>
-<li>IndexConfig</li>
-<li>Indexation vectorielle</li>
-<li>Schéma global</li>
-<li>Bonnes pratiques</li>
-<li>Installation et configuration</li>
+<li>Configuration et connexion  </li>
+<li>Modèles de données  </li>
+<li>Document  </li>
+<li>Chunk  </li>
+<li>IndexConfig  </li>
+<li><strong>SearchQuery</strong>  </li>
+<li>Indexation vectorielle  </li>
+<li>Schéma global  </li>
+<li>Bonnes pratiques  </li>
+<li>Installation et configuration  </li>
 </ol>
 <hr />
 <h2 id="1-configuration-et-connexion">1. Configuration et connexion</h2>
-<p>Les paramètres de connexion sont lus depuis le fichier .env :</p>
+<p>Les paramètres de connexion sont lus depuis le fichier <code>.env</code> :</p>
 <div class="highlight"><pre><span></span><code><span class="n">DB_USER</span>     <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DB_USER&quot;</span><span class="p">,</span> <span class="s2">&quot;postgres&quot;</span><span class="p">)</span>
 <span class="n">DB_PASSWORD</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DB_PASSWORD&quot;</span><span class="p">,</span> <span class="s2">&quot;password&quot;</span><span class="p">)</span>
 <span class="n">DB_HOST</span>     <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DB_HOST&quot;</span><span class="p">,</span> <span class="s2">&quot;localhost&quot;</span><span class="p">)</span>
@@ -282,22 +295,30 @@ La solution repose sur <strong>PostgreSQL</strong> enrichi de l'extension <stron
 <span class="n">DB_NAME</span>     <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DB_NAME&quot;</span><span class="p">,</span> <span class="s2">&quot;vectordb&quot;</span><span class="p">)</span>
 
 <span class="n">DATABASE_URL</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;postgresql://</span><span class="si">{</span><span class="n">DB_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">DB_PASSWORD</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="n">DB_HOST</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">DB_PORT</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">DB_NAME</span><span class="si">}</span><span class="s2">&quot;</span>
-</code></pre></div>
-<h3 id="composants-principaux">Composants principaux</h3>
-<ul>
-<li><strong>Engine SQLAlchemy</strong> : <code>create_engine(DATABASE_URL)</code></li>
-<li><strong>Session factory</strong> : <code>SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)</code></li>
-<li><strong>Base déclarative</strong> : <code>Base = declarative_base()</code></li>
-</ul>
-<h3 id="utilitaire-de-session">Utilitaire de session</h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_db</span><span class="p">():</span>
+<span class="err">````</span>
+
+<span class="c1">### Composants principaux</span>
+
+<span class="o">*</span> <span class="o">**</span><span class="n">Engine</span> <span class="n">SQLAlchemy</span><span class="o">**</span> <span class="p">:</span> <span class="err">`</span><span class="n">create_engine</span><span class="p">(</span><span class="n">DATABASE_URL</span><span class="p">)</span><span class="err">`</span>
+<span class="o">*</span> <span class="o">**</span><span class="n">Session</span> <span class="n">factory</span><span class="o">**</span> <span class="p">:</span>
+
+  <span class="err">```</span><span class="n">python</span>
+  <span class="n">SessionLocal</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span>
+      <span class="n">bind</span><span class="o">=</span><span class="n">engine</span><span class="p">,</span>
+      <span class="n">autocommit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+      <span class="n">autoflush</span><span class="o">=</span><span class="kc">False</span>
+  <span class="p">)</span>
+  <span class="err">```</span>
+<span class="o">*</span> <span class="o">**</span><span class="n">Base</span> <span class="n">déclarative</span><span class="o">**</span> <span class="p">:</span> <span class="err">`</span><span class="n">Base</span> <span class="o">=</span> <span class="n">declarative_base</span><span class="p">()</span><span class="err">`</span>
+
+<span class="c1">### Utilitaire de session</span>
+
+<span class="err">```</span><span class="n">python</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_db</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Crée et retourne une session de base de données.</span>
 
-<span class="sd">    Génère une session SQLAlchemy compatible avec FastAPI à utiliser </span>
-<span class="sd">    comme dépendance dans les endpoints.</span>
-
 <span class="sd">    Yields:</span>
-<span class="sd">        Session: Session SQLAlchemy pour les opérations de base de données</span>
+<span class="sd">        Session: Session SQLAlchemy pour les opérations de base.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">db</span> <span class="o">=</span> <span class="n">SessionLocal</span><span class="p">()</span>
     <span class="k">try</span><span class="p">:</span>
@@ -305,35 +326,37 @@ La solution repose sur <strong>PostgreSQL</strong> enrichi de l'extension <stron
     <span class="k">finally</span><span class="p">:</span>
         <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </code></pre></div>
-<h3 id="initialisation">Initialisation</h3>
+<h3 id="initialisation-et-mise-a-jour">Initialisation et mise à jour</h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">init_db</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialise la base de données avec les tables et extensions nécessaires.</span>
-
-<span class="sd">    Crée l&#39;extension pgvector si elle n&#39;existe pas déjà et génère toutes </span>
-<span class="sd">    les tables définies dans les modèles SQLAlchemy.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialise la base avec pgvector + toutes les tables.&quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
         <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;CREATE EXTENSION IF NOT EXISTS vector&quot;</span><span class="p">))</span>
         <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
     <span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span>
 </code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">update_db</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Crée les tables manquantes après évolution des modèles.&quot;&quot;&quot;</span>
+    <span class="n">inspector</span> <span class="o">=</span> <span class="n">inspect</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+    <span class="n">existing</span> <span class="o">=</span> <span class="n">inspector</span><span class="o">.</span><span class="n">get_table_names</span><span class="p">()</span>
+    <span class="n">to_create</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">tables</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">existing</span>
+    <span class="p">]</span>
+    <span class="k">if</span> <span class="n">to_create</span><span class="p">:</span>
+        <span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span>
+            <span class="n">bind</span><span class="o">=</span><span class="n">engine</span><span class="p">,</span>
+            <span class="n">tables</span><span class="o">=</span><span class="p">[</span><span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">to_create</span><span class="p">]</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;created&quot;</span><span class="p">:</span> <span class="n">to_create</span><span class="p">,</span>
+        <span class="s2">&quot;existing&quot;</span><span class="p">:</span> <span class="n">existing</span>
+    <span class="p">}</span>
+</code></pre></div>
 <hr />
 <h2 id="2-modeles-de-donnees">2. Modèles de données</h2>
+<p>Toutes les définitions suivantes proviennent de <code>database.py</code> .</p>
 <h3 id="21-document">2.1. Document</h3>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Document</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stocke les métadonnées globales des documents.</span>
-
-<span class="sd">    Attrs:</span>
-<span class="sd">        id (int): Identifiant unique du document</span>
-<span class="sd">        title (str): Titre du document</span>
-<span class="sd">        theme (str): Thème ou catégorie du document</span>
-<span class="sd">        document_type (str): Type de document (PDF, DOCX, etc.)</span>
-<span class="sd">        publish_date (Date): Date de publication du document</span>
-<span class="sd">        corpus_id (str): UUID du corpus auquel appartient ce document</span>
-<span class="sd">        created_at (Date): Date d&#39;ajout à la base de données</span>
-<span class="sd">        index_needed (bool): Indique si une mise à jour d&#39;index est nécessaire</span>
-<span class="sd">        chunks (relationship): Relation avec les fragments textuels</span>
-<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;documents&quot;</span>
 
     <span class="nb">id</span>            <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -346,7 +369,9 @@ La solution repose sur <strong>PostgreSQL</strong> enrichi de l'extension <stron
     <span class="n">index_needed</span>  <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Boolean</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="n">chunks</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span>
-        <span class="s2">&quot;Chunk&quot;</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;document&quot;</span><span class="p">,</span> <span class="n">cascade</span><span class="o">=</span><span class="s2">&quot;all, delete-orphan&quot;</span>
+        <span class="s2">&quot;Chunk&quot;</span><span class="p">,</span>
+        <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;document&quot;</span><span class="p">,</span>
+        <span class="n">cascade</span><span class="o">=</span><span class="s2">&quot;all, delete-orphan&quot;</span>
     <span class="p">)</span>
 
     <span class="n">__table_args__</span> <span class="o">=</span> <span class="p">(</span>
@@ -357,38 +382,23 @@ La solution repose sur <strong>PostgreSQL</strong> enrichi de l'extension <stron
     <span class="p">)</span>
 </code></pre></div>
 <ul>
-<li><strong>Métadonnées</strong> : titre, thème, type, date de publication, identifiant de corpus (UUID)</li>
-<li><strong>Relation 1–N</strong> vers les <code>Chunk</code> (cascade delete)</li>
-<li><strong>Index SQL</strong> sur les colonnes fréquemment utilisées pour le filtrage</li>
+<li>Stocke les métadonnées d’un document (titre, thème, type, dates, corpus_id).</li>
+<li><code>index_needed</code>: flag pour déclencher la (re)création de l’index vectoriel.</li>
+<li>Relation <strong>1–N</strong> vers la table <code>chunks</code>.</li>
 </ul>
 <hr />
 <h3 id="22-chunk">2.2. Chunk</h3>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Chunk</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stocke les fragments de texte avec leurs embeddings vectoriels.</span>
-
-<span class="sd">    Attrs:</span>
-<span class="sd">        id (int): Identifiant unique du fragment</span>
-<span class="sd">        document_id (int): Référence au document parent</span>
-<span class="sd">        content (str): Texte du fragment</span>
-<span class="sd">        embedding (Vector): Représentation vectorielle (768 dim)</span>
-<span class="sd">        start_char (int): Position de début dans le document source</span>
-<span class="sd">        end_char (int): Position de fin dans le document source</span>
-<span class="sd">        hierarchy_level (int): Niveau hiérarchique (0-3)</span>
-<span class="sd">        parent_chunk_id (int): Référence au fragment parent</span>
-<span class="sd">        document (relationship): Relation avec le document parent</span>
-<span class="sd">        parent (relationship): Relation avec le fragment parent</span>
-<span class="sd">        children (relationship): Relation avec les fragments enfants</span>
-<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;chunks&quot;</span>
 
-    <span class="nb">id</span>             <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">document_id</span>    <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s2">&quot;documents.id&quot;</span><span class="p">,</span> <span class="n">ondelete</span><span class="o">=</span><span class="s2">&quot;CASCADE&quot;</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">content</span>        <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Text</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">embedding</span>      <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Vector</span><span class="p">(</span><span class="mi">768</span><span class="p">))</span>
-    <span class="n">start_char</span>     <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
-    <span class="n">end_char</span>       <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
-    <span class="n">hierarchy_level</span><span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-    <span class="n">parent_chunk_id</span><span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s2">&quot;chunks.id&quot;</span><span class="p">,</span> <span class="n">ondelete</span><span class="o">=</span><span class="s2">&quot;CASCADE&quot;</span><span class="p">))</span>
+    <span class="nb">id</span>              <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">document_id</span>     <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s2">&quot;documents.id&quot;</span><span class="p">,</span> <span class="n">ondelete</span><span class="o">=</span><span class="s2">&quot;CASCADE&quot;</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">content</span>         <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Text</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">embedding</span>       <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Vector</span><span class="p">(</span><span class="mi">768</span><span class="p">))</span>
+    <span class="n">start_char</span>      <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="n">end_char</span>        <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="n">hierarchy_level</span> <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">parent_chunk_id</span> <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s2">&quot;chunks.id&quot;</span><span class="p">,</span> <span class="n">ondelete</span><span class="o">=</span><span class="s2">&quot;CASCADE&quot;</span><span class="p">))</span>
 
     <span class="n">document</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Document&quot;</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;chunks&quot;</span><span class="p">)</span>
     <span class="n">parent</span>   <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Chunk&quot;</span><span class="p">,</span> <span class="n">remote_side</span><span class="o">=</span><span class="p">[</span><span class="nb">id</span><span class="p">],</span> <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;children&quot;</span><span class="p">)</span>
@@ -400,77 +410,52 @@ La solution repose sur <strong>PostgreSQL</strong> enrichi de l'extension <stron
     <span class="p">)</span>
 </code></pre></div>
 <ul>
-<li><strong>Contenu texte</strong> segmenté en <strong>chunks</strong> hiérarchiques (niveau 0 à 3)</li>
-<li><strong>Embedding</strong> : vecteur de dimension 768 stocké via <strong>pgvector</strong></li>
-<li><strong>Auto-relation</strong> parent–enfant pour reconstruire l'arborescence textuelle</li>
-<li><strong>Index</strong> pour accélérer les recherches par document et niveau hiérarchique</li>
+<li>Stocke le texte segmenté en « chunks » hiérarchisés (niveaux 0 à 3).</li>
+<li><code>embedding</code>: vecteur 768-dimensions via <strong>pgvector</strong>.</li>
+<li>Auto-relation parent–enfant pour reconstruire la hiérarchie.</li>
 </ul>
-<h4 id="hierarchie-des-chunks">Hiérarchie des chunks</h4>
-<table>
-<thead>
-<tr>
-<th>Niveau</th>
-<th>Description</th>
-<th>Usage</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>0</td>
-<td>Document entier</td>
-<td>Aperçu global</td>
-</tr>
-<tr>
-<td>1</td>
-<td>Sections</td>
-<td>Structure principale</td>
-</tr>
-<tr>
-<td>2</td>
-<td>Paragraphes</td>
-<td>Contexte intermédiaire</td>
-</tr>
-<tr>
-<td>3</td>
-<td>Fragments</td>
-<td>Recherche précise</td>
-</tr>
-</tbody>
-</table>
 <hr />
 <h3 id="23-indexconfig">2.3. IndexConfig</h3>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">IndexConfig</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configure les index vectoriels par corpus.</span>
-
-<span class="sd">    Attrs:</span>
-<span class="sd">        id (int): Identifiant unique de la configuration</span>
-<span class="sd">        corpus_id (str): Identifiant du corpus concerné</span>
-<span class="sd">        index_type (str): Type d&#39;index vectoriel (&#39;ivfflat&#39; ou &#39;hnsw&#39;)</span>
-<span class="sd">        is_indexed (bool): Indique si l&#39;index a été créé</span>
-<span class="sd">        chunk_count (int): Nombre de fragments dans le corpus</span>
-<span class="sd">        last_indexed (Date): Dernière date d&#39;indexation</span>
-<span class="sd">        ivf_lists (int): Nombre de listes pour index IVFFLAT</span>
-<span class="sd">        hnsw_m (int): Nombre de connexions par nœud pour HNSW</span>
-<span class="sd">        hnsw_ef_construction (int): Facteur d&#39;exploration pour HNSW</span>
-<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;index_configs&quot;</span>
 
-    <span class="nb">id</span>                <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">corpus_id</span>         <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">36</span><span class="p">),</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">index_type</span>        <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;ivfflat&quot;</span><span class="p">)</span>
-    <span class="n">is_indexed</span>        <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Boolean</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">chunk_count</span>       <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">last_indexed</span>      <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Date</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">ivf_lists</span>         <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-    <span class="n">hnsw_m</span>            <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
-    <span class="n">hnsw_ef_construction</span> <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    <span class="nb">id</span>                 <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">corpus_id</span>          <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">36</span><span class="p">),</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">index_type</span>         <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;ivfflat&quot;</span><span class="p">)</span>
+    <span class="n">is_indexed</span>         <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Boolean</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">chunk_count</span>        <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">last_indexed</span>       <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Date</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ivf_lists</span>          <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">hnsw_m</span>             <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+    <span class="n">hnsw_ef_construction</span><span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
 </code></pre></div>
 <ul>
-<li><strong>Configuration vectorielle</strong> par <code>corpus_id</code></li>
-<li><strong>Types d'index</strong> disponibles :</li>
-<li><code>ivfflat</code> (inverted file) - rapide pour corpus moyens, moins précis</li>
-<li><code>hnsw</code> (graph-based) - plus précis, meilleur pour grands corpus</li>
-<li>Paramètres ajustables pour optimiser vitesse et précision de recherche</li>
+<li>Configure le type d’index (<code>ivfflat</code> ou <code>hnsw</code>) et ses paramètres par <code>corpus_id</code>.</li>
+<li><code>is_indexed</code> &amp; <code>last_indexed</code> pour suivre l’état de l’index.</li>
+</ul>
+<hr />
+<h3 id="24-searchquery-nouvel-historique-des-recherches">2.4. SearchQuery (nouvel historique des recherches)</h3>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SearchQuery</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;search_queries&quot;</span>
+
+    <span class="nb">id</span>                <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">query_text</span>        <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">theme</span>             <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">document_type</span>     <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">corpus_id</span>         <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">results_count</span>     <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">confidence_level</span>  <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">created_at</span>        <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">)</span>
+    <span class="n">user_id</span>           <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+<ul>
+<li><strong>Objectif</strong> : historiser chaque action de recherche pour analyser tendances et usage.</li>
+<li><code>query_text</code> : texte saisi par l’utilisateur.</li>
+<li>Filtres optionnels : <code>theme</code>, <code>document_type</code>, <code>corpus_id</code>.</li>
+<li><code>results_count</code> : nombre de chunks retournés.</li>
+<li><code>confidence_level</code> : score agrégé ou métrique de confiance.</li>
+<li><code>created_at</code> : horodatage de la requête.</li>
+<li><code>user_id</code> : identifiant optionnel de l’utilisateur (SSO, session, etc.).</li>
 </ul>
 <hr />
 <h2 id="3-indexation-vectorielle">3. Indexation vectorielle</h2>

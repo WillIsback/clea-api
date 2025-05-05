@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://WillIsback.github.io/clea-api/lib/stats/stats_computer_lib/" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>Recherche hybride - Cléa-API Documentation</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../../css/mkdocsoad.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Recherche hybride";
+        var mkdocs_page_input_path = "lib/stats/stats_computer_lib.md";
+        var mkdocs_page_url = "/clea-api/lib/stats/stats_computer_lib/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Cléa-API Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../..">Accueil</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../main/">Introduction</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../database/">Base de données</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../schemas/">Schémas</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Documentation des librairies</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../askai/rag_lib/">RAG</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../doc_loader/extractor_lib/">Extracteurs</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../doc_loader/splitter_lib/">Segmentation</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../pipeline/pipeline_lib/">Pipeline end-to-end</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" >vectordb</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" href="../../vectordb/crud_lib/">Opérations CRUD</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../vectordb/index_lib/">Indexation vectorielle</a>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" href="#">Recherche hybride</a>
+    <ul class="current">
+    <li class="toctree-l3"><a class="reference internal" href="#1-installation">1. Installation</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2-schemas-de-sortie">2. Schémas de sortie</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#21-documentstats">2.1. DocumentStats</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#22-searchstats">2.2. SearchStats</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#23-systemstats">2.3. SystemStats</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#24-dashboardstats">2.4. DashboardStats</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#3-classe-statscomputer">3. Classe StatsComputer</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#31-compute_document_statsskip0-limit100-documentstats">3.1. compute_document_stats(skip=0, limit=100) → DocumentStats</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#32-compute_search_statsskip0-limit100-searchstats">3.2. compute_search_stats(skip=0, limit=100) → SearchStats</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#33-compute_system_stats-systemstats">3.3. compute_system_stats() → SystemStats</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#34-compute_all_stats-dashboardstats">3.4. compute_all_stats() → DashboardStats</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#4-bonnes-pratiques">4. Bonnes pratiques</a>
+    </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >stats</a>
+    <ul>
+                <li class="toctree-l2"><a class="" href="../stats_lib.md">Statistiques</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Références API</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >REST API</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../../api/rest/rest_api/">Documentation Swagger</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Références Python</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/askai/rag_references/">RAG</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/doc_loader/extractor_references/">Extracteurs</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/doc_loader/splitter_references/">Segmentation</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/pipeline/pipeline_references/">Pipeline</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/vectordb/crud_references/">CRUD</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/vectordb/index_references/">Indexation</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/vectordb/search_references/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >stats</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/stats/stats_computer_references/">Statistiques</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Intégrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >JavaScript / TypeScript</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/askai/rag_js/">RAG</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/doc_loader/doc_loader_js/">Extraction de documents</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/pipeline/pipeline_js/">Pipeline end-to-end</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/vectordb/crud_js/">Opérations CRUD</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/vectordb/index_js/">Indexation</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/vectordb/search_js/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >stats</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/stats/stats_computer_js/">Statistiques</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Cléa-API Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Documentation des librairies</li>
+          <li class="breadcrumb-item">vectordb</li>
+      <li class="breadcrumb-item active">Recherche hybride</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/WillIsback/clea-api/edit/master/docs/lib/stats/stats_computer_lib.md">Edit on Cléa-API</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="librairie-statscomputer">Librairie <strong>StatsComputer</strong></h1>
+<p>Cette librairie centralise le calcul de diverses <strong>statistiques</strong> pour le tableau de bord d’administration de Clea-API, en s’appuyant sur :</p>
+<ul>
+<li>Les <strong>schémas Pydantic</strong> définis dans <code>stats_src_schemas.py</code>  </li>
+<li>La classe <strong><code>StatsComputer</code></strong> implémentée dans <code>stats_src_compute.py</code></li>
+</ul>
+<hr />
+<h2 id="1-installation">1. Installation</h2>
+<p>Assurez-vous que le paquet <code>stats</code> est installé dans votre environnement Clea-API, et que <code>vectordb</code> est configuré (PG + SQLAlchemy).</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>stats/
+</code></pre></div>
+<hr />
+<h2 id="2-schemas-de-sortie">2. Schémas de sortie</h2>
+<p>Tous les modèles Pydantic utilisent la configuration <code>alias_generator</code> pour produire des clés <strong>camelCase</strong> à la sortie JSON.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># config globale</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_to_camel</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">head</span><span class="p">,</span> <span class="o">*</span><span class="n">tail</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">head</span> <span class="o">+</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">word</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">tail</span><span class="p">)</span>
+<span class="n">CamelConfig</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;alias_generator&quot;</span><span class="p">:</span> <span class="n">_to_camel</span><span class="p">,</span>
+    <span class="s2">&quot;populate_by_name&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="21-documentstats">2.1. <code>DocumentStats</code></h3>
+<p>Statistiques sur les documents stockés.</p>
+<table>
+<thead>
+<tr>
+<th>Attribut</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>totalCount</code></td>
+<td><code>int</code></td>
+<td>Nombre total de documents analysés</td>
+</tr>
+<tr>
+<td><code>byTheme</code></td>
+<td><code>Record&lt;string,int&gt;</code></td>
+<td>Répartition par thème</td>
+</tr>
+<tr>
+<td><code>byType</code></td>
+<td><code>Record&lt;string,int&gt;</code></td>
+<td>Répartition par type de document</td>
+</tr>
+<tr>
+<td><code>recentlyAdded</code></td>
+<td><code>int</code></td>
+<td>Documents publiés au cours des 30 derniers jours</td>
+</tr>
+<tr>
+<td><code>percentChange</code></td>
+<td><code>float</code></td>
+<td>% de documents récents par rapport au total</td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-searchstats">2.2. <code>SearchStats</code></h3>
+<p>Statistiques sur l’historique des recherches des utilisateurs.</p>
+<table>
+<thead>
+<tr>
+<th>Attribut</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>totalCount</code></td>
+<td><code>int</code></td>
+<td>Nombre total de requêtes enregistrées</td>
+</tr>
+<tr>
+<td><code>lastMonthCount</code></td>
+<td><code>int</code></td>
+<td>Requêtes effectuées au cours des 30 derniers jours</td>
+</tr>
+<tr>
+<td><code>percentChange</code></td>
+<td><code>float</code></td>
+<td>% d’évolution par rapport au mois précédent</td>
+</tr>
+<tr>
+<td><code>topQueries</code></td>
+<td><code>Array&lt;{query:string, count:number}&gt;</code></td>
+<td>Top 10 des requêtes les plus populaires</td>
+</tr>
+</tbody>
+</table>
+<h3 id="23-systemstats">2.3. <code>SystemStats</code></h3>
+<p>Indicateurs globaux de performance et d’état.</p>
+<table>
+<thead>
+<tr>
+<th>Attribut</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>satisfaction</code></td>
+<td><code>float</code></td>
+<td>% de recherches jugées satisfaisantes (confiance ≥ 0.7)</td>
+</tr>
+<tr>
+<td><code>avgConfidence</code></td>
+<td><code>float</code></td>
+<td>Confiance moyenne des recherches du dernier mois</td>
+</tr>
+<tr>
+<td><code>percentChange</code></td>
+<td><code>float</code></td>
+<td>% d’évolution de la confiance par rapport au mois précédent</td>
+</tr>
+<tr>
+<td><code>indexedCorpora</code></td>
+<td><code>int</code></td>
+<td>Nombre de corpus/documents déjà indexés</td>
+</tr>
+<tr>
+<td><code>totalCorpora</code></td>
+<td><code>int</code></td>
+<td>Nombre total de corpus/documents dans la base</td>
+</tr>
+</tbody>
+</table>
+<h3 id="24-dashboardstats">2.4. <code>DashboardStats</code></h3>
+<p>Regroupe l’ensemble des stats en un seul objet :</p>
+<div class="highlight"><pre><span></span><code><span class="kd">interface</span><span class="w"> </span><span class="nx">DashboardStats</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">documentStats</span><span class="o">:</span><span class="w"> </span><span class="kt">DocumentStats</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">searchStats</span><span class="o">:</span><span class="w">   </span><span class="kt">SearchStats</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">systemStats</span><span class="o">:</span><span class="w">   </span><span class="kt">SystemStats</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="3-classe-statscomputer">3. Classe <strong><code>StatsComputer</code></strong></h2>
+<p>La classe principale pour générer ces statistiques :</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">stats.src.stats_src_compute</span><span class="w"> </span><span class="kn">import</span> <span class="n">StatsComputer</span>
+
+<span class="n">stats</span> <span class="o">=</span> <span class="n">StatsComputer</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="31-compute_document_statsskip0-limit100-documentstats">3.1. <code>compute_document_stats(skip=0, limit=100) → DocumentStats</code></h3>
+<ul>
+<li>
+<p><strong>Description</strong> :
+  Récupère jusqu’à <code>limit</code> documents (après avoir ignoré <code>skip</code>), puis calcule :</p>
+</li>
+<li>
+<p><code>totalCount</code>, <code>byTheme</code>, <code>byType</code></p>
+</li>
+<li><code>recentlyAdded</code> (← 30 derniers jours)</li>
+<li>
+<p><code>percentChange</code></p>
+</li>
+<li>
+<p><strong>Usage</strong> :</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="n">doc_stats</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">compute_document_stats</span><span class="p">(</span><span class="n">skip</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">doc_stats</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+</code></pre></div>
+<h3 id="32-compute_search_statsskip0-limit100-searchstats">3.2. <code>compute_search_stats(skip=0, limit=100) → SearchStats</code></h3>
+<ul>
+<li>
+<p><strong>Description</strong> :
+  Analyse la table <code>SearchQuery</code> pour :</p>
+</li>
+<li>
+<p><code>totalCount</code>, <code>lastMonthCount</code></p>
+</li>
+<li><code>percentChange</code> (mois vs mois)</li>
+<li>
+<p><code>topQueries</code> (top 10 requêtes)</p>
+</li>
+<li>
+<p><strong>Usage</strong> :</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="n">search_stats</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">compute_search_stats</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">search_stats</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+</code></pre></div>
+<h3 id="33-compute_system_stats-systemstats">3.3. <code>compute_system_stats() → SystemStats</code></h3>
+<ul>
+<li>
+<p><strong>Description</strong> :
+  Calcul des indicateurs système :</p>
+</li>
+<li>
+<p>Confiance moyenne (<code>avgConfidence</code>) et évolution (<code>percentChange</code>)</p>
+</li>
+<li>Taux de satisfaction (<code>satisfaction</code>)</li>
+<li>
+<p><code>indexedCorpora</code> vs <code>totalCorpora</code></p>
+</li>
+<li>
+<p><strong>Usage</strong> :</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="n">sys_stats</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">compute_system_stats</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sys_stats</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+</code></pre></div>
+<h3 id="34-compute_all_stats-dashboardstats">3.4. <code>compute_all_stats() → DashboardStats</code></h3>
+<ul>
+<li>
+<p><strong>Description</strong> :
+  Agrège les trois méthodes précédentes et retourne un <strong><code>DashboardStats</code></strong>.</p>
+</li>
+<li>
+<p><strong>Usage</strong> :</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="n">dashboard</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">compute_all_stats</span><span class="p">()</span>
+<span class="c1"># affiche un rapport JSON complet</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dashboard</span><span class="o">.</span><span class="n">json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+</code></pre></div>
+<hr />
+<h2 id="4-bonnes-pratiques">4. Bonnes pratiques</h2>
+<ul>
+<li><strong>Pagination</strong> : ajustez <code>skip</code>/<code>limit</code> pour ne pas surcharger la mémoire.</li>
+<li><strong>Logging</strong> : la classe utilise le logger <code>"clea-api.stats"</code> pour tracer les erreurs.</li>
+<li><strong>Sécurité</strong> : si les calculs sont lourds, envisagez de les déporter en tâche asynchrone.</li>
+</ul>
+<hr />
+<blockquote>
+<p><strong>Fichiers source</strong> :
+– <code>stats/src/stats_src_schemas.py</code>&#x20;
+– <code>stats/src/stats_src_compute.py</code>&#x20;
+<strong>Dernière mise à jour</strong> : 05 mai 2025</p>
+</blockquote>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../vectordb/index_lib/" class="btn btn-neutral float-left" title="Indexation vectorielle"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../../api/rest/rest_api/" class="btn btn-neutral float-right" title="Documentation Swagger">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/WillIsback/clea-api" class="fa fa-code-fork" style="color: #fcfcfc"> Cléa-API</a>
+        </span>
+    
+    
+      <span><a href="../../vectordb/index_lib/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../../api/rest/rest_api/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+      <script src="../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

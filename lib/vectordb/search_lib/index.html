@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://WillIsback.github.io/clea-api/lib/vectordb/search_lib/" />
       <link rel="shortcut icon" href="../../../img/favicon.ico" />
-    <title>Recherche hybride - Cléa-API Documentation</title>
+    <title>Module search (Hybrid Semantic / Metadata Search) - Cléa-API Documentation</title>
     <link rel="stylesheet" href="../../../css/theme.css" />
     <link rel="stylesheet" href="../../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -14,7 +14,7 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Recherche hybride";
+        var mkdocs_page_name = "Module search (Hybrid Semantic / Metadata Search)";
         var mkdocs_page_input_path = "lib/vectordb/search_lib.md";
         var mkdocs_page_url = "/clea-api/lib/vectordb/search_lib/";
       </script>
@@ -58,7 +58,7 @@
                 </li>
               </ul>
               <p class="caption"><span class="caption-text">Documentation des librairies</span></p>
-              <ul class="current">
+              <ul>
                   <li class="toctree-l1"><a class="reference internal" >askai</a>
     <ul>
                 <li class="toctree-l2"><a class="reference internal" href="../../askai/rag_lib/">RAG</a>
@@ -79,41 +79,19 @@
                 </li>
     </ul>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" >vectordb</a>
-    <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" >vectordb</a>
+    <ul>
                 <li class="toctree-l2"><a class="reference internal" href="../crud_lib/">Opérations CRUD</a>
                 </li>
                 <li class="toctree-l2"><a class="reference internal" href="../index_lib/">Indexation vectorielle</a>
                 </li>
-                <li class="toctree-l2 current"><a class="reference internal current" href="#">Recherche hybride</a>
-    <ul class="current">
-    <li class="toctree-l3"><a class="reference internal" href="#table-des-matieres">Table des matières</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#installation">Installation</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#modeles-schemas">Modèles (schemas)</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#classe-searchengine">Classe SearchEngine&#x20;</a>
-        <ul>
-    <li class="toctree-l4"><a class="reference internal" href="#constructeur">Constructeur</a>
-    </li>
-    <li class="toctree-l4"><a class="reference internal" href="#methode-hybrid_search">Méthode hybrid_search</a>
-    </li>
-    <li class="toctree-l4"><a class="reference internal" href="#methode-privee-_build_sql">Méthode privée _build_sql</a>
-    </li>
-    <li class="toctree-l4"><a class="reference internal" href="#methode-privee-_get_context">Méthode privée _get_context</a>
-    </li>
-    <li class="toctree-l4"><a class="reference internal" href="#methode-evaluate_confidence">Méthode evaluate_confidence</a>
-    </li>
-    <li class="toctree-l4"><a class="reference internal" href="#methode-normalize_scores">Méthode normalize_scores</a>
-    </li>
-        </ul>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#exemple-dutilisation-avancee">Exemple d'utilisation avancée</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#exemple-dutilisation">Exemple d’utilisation</a>
-    </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../stats/stats_computer_lib/">Recherche hybride</a>
+                </li>
     </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >stats</a>
+    <ul>
+                <li class="toctree-l2"><a class="" href="../../stats/stats_lib.md">Statistiques</a>
                 </li>
     </ul>
                   </li>
@@ -158,6 +136,12 @@
                 </li>
     </ul>
                 </li>
+                <li class="toctree-l2"><a class="reference internal" >stats</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/stats/stats_computer_references/">Statistiques</a>
+                </li>
+    </ul>
+                </li>
     </ul>
                   </li>
               </ul>
@@ -193,6 +177,12 @@
                 </li>
     </ul>
                 </li>
+                <li class="toctree-l2"><a class="reference internal" >stats</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/stats/stats_computer_js/">Statistiques</a>
+                </li>
+    </ul>
+                </li>
     </ul>
                   </li>
               </ul>
@@ -210,9 +200,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
-          <li class="breadcrumb-item">Documentation des librairies</li>
-          <li class="breadcrumb-item">vectordb</li>
-      <li class="breadcrumb-item active">Recherche hybride</li>
+      <li class="breadcrumb-item active">Module search (Hybrid Semantic / Metadata Search)</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/WillIsback/clea-api/edit/master/docs/lib/vectordb/search_lib.md">Edit on Cléa-API</a>
     </li>
@@ -232,13 +220,17 @@
 <li><a href="#classe-searchengine">Classe <code>SearchEngine</code></a></li>
 <li><a href="#constructeur">Constructeur</a></li>
 <li><a href="#methode-hybrid_search">Méthode <code>hybrid_search</code></a> </li>
+<li><a href="#methode-log_search_query">Méthode <code>log_search_query</code></a></li>
+<li><a href="#methode-evaluate_confidence">Méthode <code>evaluate_confidence</code></a></li>
+<li><a href="#methode-normalize_scores">Méthode <code>normalize_scores</code></a></li>
 <li><a href="#methode-privee-_build_sql">Méthode privée <code>_build_sql</code></a></li>
 <li><a href="#methode-privee-_get_context">Méthode privée <code>_get_context</code></a> </li>
+<li><a href="#historisation-des-recherches">Historisation des recherches</a></li>
 <li><a href="#exemple-dutilisation">Exemple d'utilisation</a></li>
 </ol>
 <hr />
 <h2 id="installation">Installation</h2>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>clea_vectordb<span class="w">  </span><span class="c1"># ou via votre setup.py/pyproject.toml</span>
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>clea_vectordb<span class="w">  </span><span class="c1"># ou via votre setup.py/pyproject.toml</span>
 </code></pre></div>
 <hr />
 <h2 id="modeles-schemas">Modèles (schemas)</h2>
@@ -262,9 +254,10 @@
 <p><strong>Initialise</strong> :</p>
 </li>
 <li>
-<p>un générateur d’embeddings (<code>EmbeddingGenerator</code>)</p>
+<p>un générateur d'embeddings (<code>EmbeddingGenerator</code>)</p>
 </li>
 <li>un ranker Cross-Encoder (<code>ResultRanker</code>)</li>
+<li>les seuils de pertinence configurables (<code>min_relevance_threshold</code>, <code>high_confidence_threshold</code>)</li>
 </ul>
 <p><a id="methode-hybrid_search"></a></p>
 <h3 id="methode-hybrid_search">Méthode <code>hybrid_search</code></h3>
@@ -285,13 +278,14 @@
 <p><strong>Fonctionnement</strong></p>
 </li>
 <li>
-<p>Génère l’embedding de la requête.</p>
+<p>Génère l'embedding de la requête.</p>
 </li>
 <li>Monte la requête SQL pour ANN + métadonnées (via <code>_build_sql</code>).</li>
 <li>Exécute <code>db.execute(text(sql), params)</code>.</li>
 <li>Si pas de résultat, renvoie un <code>SearchResponse</code> vide.</li>
 <li>Rerank les top <em>k × 3</em> résultats avec un Cross-Encoder.</li>
 <li>Construit la liste finale de <code>ChunkResult</code>, en récupérant le contexte hiérarchique si <code>req.hierarchical=True</code>.</li>
+<li>Historise la recherche dans la base de données via <code>log_search_query</code>.</li>
 <li>
 <p>Renvoie un <code>SearchResponse(query, topK, totalResults, results)</code> .</p>
 </li>
@@ -305,8 +299,62 @@
 <li><code>topK</code> (int)</li>
 <li><code>totalResults</code> (int)</li>
 <li><code>results</code> (<code>List[ChunkResult]</code>)</li>
+<li><code>confidence</code> (<code>ConfidenceMetrics</code>)</li>
+<li><code>normalized</code> (bool)</li>
+<li><code>message</code> (str)</li>
 </ul>
 </li>
+</ul>
+<p><a id="methode-log_search_query"></a></p>
+<h3 id="methode-log_search_query">Méthode <code>log_search_query</code></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">log_search_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="n">req</span><span class="p">:</span> <span class="n">SearchRequest</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">SearchResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="o">...</span>
+</code></pre></div>
+<ul>
+<li><strong>Arguments</strong></li>
+<li><code>db: Session</code> – session SQLAlchemy active</li>
+<li><code>req: SearchRequest</code> – requête de recherche soumise</li>
+<li>
+<p><code>response: SearchResponse</code> – réponse générée avec les résultats</p>
+</li>
+<li>
+<p><strong>Fonctionnement</strong></p>
+</li>
+<li>Crée une entrée dans la table <code>SearchQuery</code> avec les informations sur la recherche</li>
+<li>Persiste les métadonnées de la requête (texte, thème, type de document, corpus)</li>
+<li>Enregistre les métriques de résultats (nombre, niveau de confiance)</li>
+<li>Gère silencieusement les erreurs pour ne pas perturber le flux principal</li>
+</ul>
+<p><a id="methode-evaluate_confidence"></a></p>
+<h3 id="methode-evaluate_confidence">Méthode <code>evaluate_confidence</code></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">evaluate_confidence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scores</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ConfidenceMetrics</span><span class="p">:</span>
+    <span class="o">...</span>
+</code></pre></div>
+<ul>
+<li><strong>But</strong> : analyser les scores des résultats pour déterminer la pertinence globale et détecter les requêtes hors domaine.</li>
+<li><strong>Arguments</strong> : </li>
+<li><code>scores: List[float]</code> – liste des scores de pertinence issus du ranker</li>
+<li><strong>Fonctionnement</strong> :</li>
+<li>Calcule les statistiques de base (min, max, moyenne, médiane)</li>
+<li>Détermine le niveau de confiance (0.1 à 0.9) et le message associé</li>
+<li>Les seuils utilisés sont <code>min_relevance_threshold</code> et <code>high_confidence_threshold</code></li>
+<li><strong>Niveaux de confiance</strong> :</li>
+<li><code>0.1</code> – "Requête probablement hors du domaine de connaissances"</li>
+<li><code>0.4</code> – "Pertinence moyenne: résultats disponibles mais peu spécifiques"</li>
+<li><code>0.7</code> – "Bonne pertinence: résultats généralement pertinents"</li>
+<li><code>0.9</code> – "Haute pertinence: résultats fiables trouvés"</li>
+<li><strong>Retour</strong> : <code>ConfidenceMetrics</code> contenant le niveau, le message et les statistiques</li>
+</ul>
+<p><a id="methode-normalize_scores"></a></p>
+<h3 id="methode-normalize_scores">Méthode <code>normalize_scores</code></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">normalize_scores</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scores</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+    <span class="o">...</span>
+</code></pre></div>
+<ul>
+<li><strong>But</strong> : transformer les scores bruts (potentiellement négatifs) en valeurs entre 0 et 1</li>
+<li><strong>Arguments</strong> : </li>
+<li><code>scores: List[float]</code> – liste des scores bruts du modèle</li>
+<li><strong>Retour</strong> : liste de scores normalisés entre 0 et 1, facilitant l'interprétation</li>
 </ul>
 <p><a id="methode-privee-_build_sql"></a></p>
 <h3 id="methode-privee-_build_sql">Méthode privée <code>_build_sql</code></h3>
@@ -350,35 +398,40 @@
 <li><strong>Retour</strong> : instanciation de <code>HierarchicalContext</code> ou <code>None</code> si pas de parent .</li>
 </ul>
 <hr />
-<h3 id="methode-evaluate_confidence">Méthode <code>evaluate_confidence</code></h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">evaluate_confidence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scores</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ConfidenceMetrics</span><span class="p">:</span>
-    <span class="o">...</span>
+<h2 id="historisation-des-recherches">Historisation des recherches</h2>
+<p>Le module intègre un système d'historisation qui enregistre automatiquement toutes les recherches effectuées dans la base de données. Cette fonctionnalité permet:</p>
+<ol>
+<li><strong>Mémorisation</strong> des requêtes pour analyse</li>
+<li><strong>Calcul de statistiques</strong> sur les comportements de recherche</li>
+<li><strong>Génération de rapports</strong> sur les thèmes et termes recherchés</li>
+</ol>
+<h3 id="schema-de-la-table-searchquery">Schéma de la table <code>SearchQuery</code></h3>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SearchQuery</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Historique des recherches utilisateurs.&quot;&quot;&quot;</span>
+
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;search_queries&quot;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">query_text</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">theme</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">document_type</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">corpus_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">results_count</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">confidence_level</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">created_at</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">)</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Pour intégration future d&#39;authentification</span>
 </code></pre></div>
-<ul>
-<li><strong>But</strong> : analyser les scores des résultats pour déterminer la pertinence globale et détecter les requêtes hors domaine.</li>
-<li><strong>Arguments</strong> : </li>
-<li><code>scores: List[float]</code> – liste des scores de pertinence issus du ranker</li>
-<li><strong>Fonctionnement</strong> :</li>
-<li>Calcule les statistiques de base (min, max, moyenne, médiane)</li>
-<li>Détermine le niveau de confiance (0.1 à 0.9) et le message associé</li>
-<li>Les seuils utilisés sont <code>min_relevance_threshold</code> et <code>high_confidence_threshold</code></li>
-<li><strong>Niveaux de confiance</strong> :</li>
-<li><code>0.1</code> – "Requête probablement hors du domaine de connaissances"</li>
-<li><code>0.4</code> – "Pertinence moyenne: résultats disponibles mais peu spécifiques"</li>
-<li><code>0.7</code> – "Bonne pertinence: résultats généralement pertinents"</li>
-<li><code>0.9</code> – "Haute pertinence: résultats fiables trouvés"</li>
-<li><strong>Retour</strong> : <code>ConfidenceMetrics</code> contenant le niveau, le message et les statistiques</li>
-</ul>
-<h3 id="methode-normalize_scores">Méthode <code>normalize_scores</code></h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">normalize_scores</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scores</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-    <span class="o">...</span>
+<h3 id="activation-de-lhistorisation">Activation de l'historisation</h3>
+<p>L'historisation est activée <strong>automatiquement</strong> pour toute requête effectuée via la méthode <code>hybrid_search</code>. Pour les applications intensives où la performance est critique, elle peut être désactivée via un paramètre de configuration dans le fichier d'environnement:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">LOG_SEARCH_QUERIES</span><span class="o">=</span><span class="nb">false</span>
 </code></pre></div>
-<ul>
-<li><strong>But</strong> : transformer les scores bruts (potentiellement négatifs) en valeurs entre 0 et 1</li>
-<li><strong>Arguments</strong> : </li>
-<li><code>scores: List[float]</code> – liste des scores bruts du modèle</li>
-<li><strong>Retour</strong> : liste de scores normalisés entre 0 et 1, facilitant l'interprétation</li>
-</ul>
+<h3 id="exploitation-des-donnees-dhistorique">Exploitation des données d'historique</h3>
+<p>Les données historisées peuvent être consultées:</p>
+<ol>
+<li>Via SQL standard sur la table <code>search_queries</code></li>
+<li>Via le module de statistiques de Cléa-API (<code>stats/src/stats_src_compute.py</code>)</li>
+<li>Via les endpoints API du tableau de bord admin (<code>/stats/searches</code>)</li>
+</ol>
 <h2 id="exemple-dutilisation-avancee">Exemple d'utilisation avancée</h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># Requête avec options avancées</span>
 <span class="n">req</span> <span class="o">=</span> <span class="n">SearchRequest</span><span class="p">(</span>
@@ -407,9 +460,11 @@
 <span class="k">else</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">results</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">chunk</span><span class="o">.</span><span class="n">score</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">chunk</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">chunk</span><span class="o">.</span><span class="n">content</span><span class="p">[:</span><span class="mi">60</span><span class="p">]</span><span class="si">}</span><span class="s2">…&quot;</span><span class="p">)</span>
+
+<span class="c1"># Les données de cette recherche sont automatiquement historisées en base</span>
 </code></pre></div>
 <hr />
-<h2 id="exemple-dutilisation">Exemple d’utilisation</h2>
+<h2 id="exemple-dutilisation-simple">Exemple d'utilisation simple</h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_engine</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy.orm</span><span class="w"> </span><span class="kn">import</span> <span class="n">sessionmaker</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">vectordb.src.search</span><span class="w"> </span><span class="kn">import</span> <span class="n">SearchEngine</span><span class="p">,</span> <span class="n">SearchRequest</span>
@@ -446,10 +501,6 @@
               
             </div>
           </div><footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../index_lib/" class="btn btn-neutral float-left" title="Indexation vectorielle"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../../../api/rest/rest_api/" class="btn btn-neutral float-right" title="Documentation Swagger">Next <span class="icon icon-circle-arrow-right"></span></a>
-    </div>
 
   <hr/>
 
@@ -475,10 +526,6 @@
         </span>
     
     
-      <span><a href="../index_lib/" style="color: #fcfcfc">&laquo; Previous</a></span>
-    
-    
-      <span><a href="../../../api/rest/rest_api/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

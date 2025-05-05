@@ -87,17 +87,31 @@
     <ul class="current">
     <li class="toctree-l3"><a class="reference internal" href="#installation">Installation</a>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#table-des-matieres">Table des matières</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#1-create_simple_indexcorpus_id-str-dict">1. create_simple_index(corpus_id: str) → dict</a>
+    </li>
     <li class="toctree-l3"><a class="reference internal" href="#2-drop_indexcorpus_id-str-dict">2. drop_index(corpus_id: str) → dict</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#3-check_index_statuscorpus_id-str-dict">3. check_index_status(corpus_id: str) → dict</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#4-check_all_indexes-dict">4. check_all_indexes() → dict</a>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#5-clean_orphaned_indexes-dict">5. clean_orphaned_indexes() → dict</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#6-schedule_cleanup_jobinterval_hours-int-24-none">6. schedule_cleanup_job(interval_hours: int = 24) → None</a>
+    </li>
     <li class="toctree-l3"><a class="reference internal" href="#logging-erreurs">Logging &amp; erreurs</a>
     </li>
     </ul>
                 </li>
-                <li class="toctree-l2"><a class="reference internal" href="../search_lib/">Recherche hybride</a>
+                <li class="toctree-l2"><a class="reference internal" href="../../stats/stats_computer_lib/">Recherche hybride</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >stats</a>
+    <ul>
+                <li class="toctree-l2"><a class="" href="../../stats/stats_lib.md">Statistiques</a>
                 </li>
     </ul>
                   </li>
@@ -142,6 +156,12 @@
                 </li>
     </ul>
                 </li>
+                <li class="toctree-l2"><a class="reference internal" >stats</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../api/lib/stats/stats_computer_references/">Statistiques</a>
+                </li>
+    </ul>
+                </li>
     </ul>
                   </li>
               </ul>
@@ -177,6 +197,12 @@
                 </li>
     </ul>
                 </li>
+                <li class="toctree-l2"><a class="reference internal" >stats</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../Integration/stats/stats_computer_js/">Statistiques</a>
+                </li>
+    </ul>
+                </li>
     </ul>
                   </li>
               </ul>
@@ -208,36 +234,31 @@
               
                 <h1 id="module-index_manager">Module <code>index_manager</code></h1>
 <p>Gestion des index vectoriels pour pgvector au sein de <strong>Cléa-API</strong>.<br />
-Ce module offre une API simple pour créer, supprimer et contrôler l’état des index IVFFLAT associés aux chunks de documents.</p>
+Ce module offre une API simple pour créer, supprimer et contrôler l'état des index IVFFLAT associés aux chunks de documents.</p>
 <hr />
 <h2 id="installation">Installation</h2>
 <p>Le module <code>index_manager</code> fait partie du package <code>vectordb</code>.<br />
-Aucun paquet externe n’est nécessaire, si ce n’est votre installation PostgreSQL/pgvector et SQLAlchemy.</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>vectordb
-<span class="sb">````</span>
+Aucun paquet externe n'est nécessaire, si ce n'est votre installation PostgreSQL/pgvector et SQLAlchemy.</p>
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>vectordb
+</code></pre></div>
+<hr />
+<h2 id="table-des-matieres">Table des matières</h2>
+<ol>
+<li><a href="#create_simple_index">Créer un index simple</a></li>
+<li><a href="#drop_index">Supprimer un index</a></li>
+<li><a href="#check_index_status">Vérifier l'état d'un index</a></li>
+<li><a href="#check_all_indexes">Vérifier tous les index</a></li>
+<li><a href="#clean_orphaned_indexes">Nettoyer les index orphelins</a></li>
+<li><a href="#schedule_cleanup_job">Programmation du nettoyage automatique</a></li>
+</ol>
+<hr />
+<p><a name="create_simple_index"></a></p>
+<h2 id="1-create_simple_indexcorpus_id-str-dict">1. <code>create_simple_index(corpus_id: str) → dict</code></h2>
+<p>Crée un index <strong>IVFFLAT</strong> standard sur une vue matérialisée des chunks appartenant au corpus.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">vectordb.src.index_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_simple_index</span>
 
----
-
-<span class="c1">## Table des matières</span>
-
-<span class="m">1</span>.<span class="w"> </span><span class="o">[</span>Créer<span class="w"> </span>un<span class="w"> </span>index<span class="w"> </span>simple<span class="o">](</span><span class="c1">#create_simple_index)</span>
-<span class="m">2</span>.<span class="w"> </span><span class="o">[</span>Supprimer<span class="w"> </span>un<span class="w"> </span>index<span class="o">](</span><span class="c1">#drop_index)</span>
-<span class="m">3</span>.<span class="w"> </span><span class="o">[</span>Vérifier<span class="w"> </span>l’état<span class="w"> </span>d’un<span class="w"> </span>index<span class="o">](</span><span class="c1">#check_index_status)</span>
-<span class="m">4</span>.<span class="w"> </span><span class="o">[</span>Vérifier<span class="w"> </span>tous<span class="w"> </span>les<span class="w"> </span>index<span class="o">](</span><span class="c1">#check_all_indexes)</span>
-
----
-
-&lt;a<span class="w"> </span><span class="nv">name</span><span class="o">=</span><span class="s2">&quot;create_simple_index&quot;</span>&gt;&lt;/a&gt;
-
-<span class="c1">## 1. `create_simple_index(corpus_id: str) → dict`</span>
-
-Crée<span class="w"> </span>un<span class="w"> </span>index<span class="w"> </span>**IVFFLAT**<span class="w"> </span>standard<span class="w"> </span>sur<span class="w"> </span>une<span class="w"> </span>vue<span class="w"> </span>matérialisée<span class="w"> </span>des<span class="w"> </span>chunks<span class="w"> </span>appartenant<span class="w"> </span>au<span class="w"> </span>corpus.
-
-<span class="sb">```</span>python
-from<span class="w"> </span>vectordb.src.index_manager<span class="w"> </span>import<span class="w"> </span>create_simple_index
-
-<span class="nv">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>create_simple_index<span class="o">(</span><span class="s2">&quot;3159e84e-9dc6-41a7-a464-bb6c3894a5ad&quot;</span><span class="o">)</span>
-print<span class="o">(</span>result<span class="o">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">create_simple_index</span><span class="p">(</span><span class="s2">&quot;3159e84e-9dc6-41a7-a464-bb6c3894a5ad&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 </code></pre></div>
 <table>
 <thead>
@@ -287,7 +308,7 @@ print<span class="o">(</span>result<span class="o">)</span>
 <hr />
 <p><a name="drop_index"></a></p>
 <h2 id="2-drop_indexcorpus_id-str-dict">2. <code>drop_index(corpus_id: str) → dict</code></h2>
-<p>Supprime l’index et la vue matérialisée correspondant au corpus.</p>
+<p>Supprime l'index et la vue matérialisée correspondant au corpus.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">vectordb.src.index_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">drop_index</span>
 
 <span class="n">result</span> <span class="o">=</span> <span class="n">drop_index</span><span class="p">(</span><span class="s2">&quot;3159e84e-9dc6-41a7-a464-bb6c3894a5ad&quot;</span><span class="p">)</span>
@@ -305,14 +326,14 @@ print<span class="o">(</span>result<span class="o">)</span>
 <tr>
 <td><code>corpus_id</code></td>
 <td><code>str</code></td>
-<td>UUID du corpus dont on veut supprimer l’index.</td>
+<td>UUID du corpus dont on veut supprimer l'index.</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Retourne</strong> :</p>
 <ul>
-<li><code>status</code>: <code>"success"</code>, <code>"warning"</code> (si l’index n’existait pas) ou <code>"error"</code>.</li>
-<li><code>message</code>: explication de l’opération.</li>
+<li><code>status</code>: <code>"success"</code>, <code>"warning"</code> (si l'index n'existait pas) ou <code>"error"</code>.</li>
+<li><code>message</code>: explication de l'opération.</li>
 </ul>
 <details>
 <summary>Exemple de sortie</summary>
@@ -328,7 +349,7 @@ print<span class="o">(</span>result<span class="o">)</span>
 <hr />
 <p><a name="check_index_status"></a></p>
 <h2 id="3-check_index_statuscorpus_id-str-dict">3. <code>check_index_status(corpus_id: str) → dict</code></h2>
-<p>Récupère l’état courant de l’index vectoriel pour un corpus donné.</p>
+<p>Récupère l'état courant de l'index vectoriel pour un corpus donné.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">vectordb.src.index_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_index_status</span>
 
 <span class="n">status</span> <span class="o">=</span> <span class="n">check_index_status</span><span class="p">(</span><span class="s2">&quot;3159e84e-9dc6-41a7-a464-bb6c3894a5ad&quot;</span><span class="p">)</span>
@@ -353,9 +374,9 @@ print<span class="o">(</span>result<span class="o">)</span>
 <p><strong>Retourne</strong> un objet contenant :</p>
 <ul>
 <li><code>corpus_id</code> : UUID interrogé.</li>
-<li><code>index_exists</code> : booléen, l’index existe-t-il en base ?</li>
+<li><code>index_exists</code> : booléen, l'index existe-t-il en base ?</li>
 <li><code>config_exists</code> : booléen, la config Pydantic/SQLAlchemy existe-t-elle ?</li>
-<li><code>is_indexed</code> : booléen, l’index est-il actif selon la config ?</li>
+<li><code>is_indexed</code> : booléen, l'index est-il actif selon la config ?</li>
 <li><code>index_type</code> : <code>"ivfflat"</code> ou <code>"hnsw"</code> ou <code>null</code>.</li>
 <li><code>chunk_count</code> : nombre total de chunks dans le corpus.</li>
 <li><code>indexed_chunks</code> : nombre de chunks réellement indexés (config).</li>
@@ -381,7 +402,7 @@ print<span class="o">(</span>result<span class="o">)</span>
 <hr />
 <p><a name="check_all_indexes"></a></p>
 <h2 id="4-check_all_indexes-dict">4. <code>check_all_indexes() → dict</code></h2>
-<p>Balaye tous les corpus en base et renvoie l’état de leurs index.</p>
+<p>Balaye tous les corpus en base et renvoie l'état de leurs index.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">vectordb.src.index_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_all_indexes</span>
 
 <span class="n">all_status</span> <span class="o">=</span> <span class="n">check_all_indexes</span><span class="p">()</span>
@@ -391,7 +412,7 @@ print<span class="o">(</span>result<span class="o">)</span>
 <ul>
 <li><code>status</code>: <code>"success"</code> ou <code>"error"</code>.</li>
 <li><code>corpus_count</code>: nombre de corpus trouvés.</li>
-<li><code>indexes</code>: tableau d’objets identiques à la sortie de <code>check_index_status()</code>.</li>
+<li><code>indexes</code>: tableau d'objets identiques à la sortie de <code>check_index_status()</code>.</li>
 </ul>
 <details>
 <summary>Exemple de sortie</summary>
@@ -427,22 +448,104 @@ print<span class="o">(</span>result<span class="o">)</span>
 </details>
 
 <hr />
+<p><a name="clean_orphaned_indexes"></a></p>
+<h2 id="5-clean_orphaned_indexes-dict">5. <code>clean_orphaned_indexes() → dict</code></h2>
+<p>Nettoie les index et configurations orphelins qui ne sont plus associés à des corpus existants.</p>
+<p>Cette fonction est utile pour maintenir la propreté de la base de données après la suppression de documents :
+- Elle identifie les configurations d'index dont le corpus n'existe plus
+- Elle supprime les vues matérialisées et index PostgreSQL associés
+- Elle nettoie les entrées dans la table <code>index_configs</code></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">vectordb.src.index_cleaner</span><span class="w"> </span><span class="kn">import</span> <span class="n">clean_orphaned_indexes</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">clean_orphaned_indexes</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Retourne</strong> un dictionnaire comportant :</p>
+<ul>
+<li><code>status</code>: <code>"success"</code>, <code>"partial_success"</code> (certaines suppressions ont échoué) ou <code>"error"</code>.</li>
+<li><code>deleted_count</code>: nombre de configurations d'index supprimées.</li>
+<li><code>cleaned_corpus_ids</code>: liste des identifiants de corpus nettoyés.</li>
+<li><code>errors</code>: liste d'erreurs éventuelles lors du nettoyage (si <code>partial_success</code>).</li>
+<li><code>timestamp</code>: horodatage de l'opération.</li>
+</ul>
+<details>
+<summary>Exemple de sortie</summary>
+
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;deleted_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;cleaned_corpus_ids&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;cccc111-dddd-eeee-ffff-gggghhhhiiii&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;jjjj222-kkkk-llll-mmmm-nnnnoooooppp&quot;</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;errors&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-05-05T10:30:45.123456&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+</details>
+
+<hr />
+<p><a name="schedule_cleanup_job"></a></p>
+<h2 id="6-schedule_cleanup_jobinterval_hours-int-24-none">6. <code>schedule_cleanup_job(interval_hours: int = 24) → None</code></h2>
+<p>Configure un travail périodique qui nettoie automatiquement les index orphelins.</p>
+<p>Cette fonction utilise APScheduler pour exécuter <code>clean_orphaned_indexes</code> à intervalles réguliers.
+Elle est généralement appelée au démarrage de l'application via la lifespan FastAPI.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">vectordb.src.index_cleaner</span><span class="w"> </span><span class="kn">import</span> <span class="n">schedule_cleanup_job</span>
+
+<span class="c1"># Configurer un nettoyage toutes les 12 heures</span>
+<span class="n">schedule_cleanup_job</span><span class="p">(</span><span class="n">interval_hours</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Paramètre</th>
+<th>Type</th>
+<th>Description</th>
+<th>Défaut</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>interval_hours</code></td>
+<td><code>int</code></td>
+<td>Intervalle en heures entre nettoyages</td>
+<td><code>24</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Exemple d'intégration dans la lifespan FastAPI</strong> :</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">asynccontextmanager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">vectordb.src.index_cleaner</span><span class="w"> </span><span class="kn">import</span> <span class="n">schedule_cleanup_job</span>
+
+<span class="nd">@asynccontextmanager</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">lifespan</span><span class="p">(</span><span class="n">app</span><span class="p">:</span> <span class="n">FastAPI</span><span class="p">):</span>
+    <span class="c1"># Démarrage de l&#39;application</span>
+    <span class="n">schedule_cleanup_job</span><span class="p">(</span><span class="n">interval_hours</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
+    <span class="k">yield</span>
+    <span class="c1"># Arrêt de l&#39;application - rien à faire car APScheduler s&#39;arrête automatiquement</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span><span class="n">lifespan</span><span class="o">=</span><span class="n">lifespan</span><span class="p">)</span>
+</code></pre></div>
+<hr />
 <h2 id="logging-erreurs">Logging &amp; erreurs</h2>
 <ul>
 <li>Toutes les opérations journalisent en niveau <strong>INFO</strong> et <strong>WARNING</strong> via le logger standard.</li>
-<li>En cas d’erreur, la transaction est roll-backée et <code>{"status":"error","message":...}</code> est retourné.</li>
+<li>En cas d'erreur, la transaction est roll-backée et <code>{"status":"error","message":...}</code> est retourné.</li>
+<li>Le nettoyage des index orphelins génère des logs détaillés pour faciliter le suivi des opérations.</li>
 </ul>
 <hr />
 <blockquote>
-<p><em>Module</em> : <code>vectordb/src/index_manager.py</code>
-<em>Dernière mise à jour</em> : 02 mai 2025</p>
+<p><em>Modules</em> : <code>vectordb/src/index_manager.py</code>, <code>vectordb/src/index_cleaner.py</code><br />
+<em>Dernière mise à jour</em> : 05 mai 2025</p>
 </blockquote>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
         <a href="../crud_lib/" class="btn btn-neutral float-left" title="Opérations CRUD"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../search_lib/" class="btn btn-neutral float-right" title="Recherche hybride">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../../stats/stats_computer_lib/" class="btn btn-neutral float-right" title="Recherche hybride">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -472,7 +575,7 @@ print<span class="o">(</span>result<span class="o">)</span>
       <span><a href="../crud_lib/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../search_lib/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../../stats/stats_computer_lib/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
