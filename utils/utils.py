@@ -6,6 +6,7 @@ import psycopg2
 from sqlalchemy import inspect
 import tomllib
 from pathlib import Path
+from typing import Optional
 
 # Configuration du logger
 logging.basicConfig(
@@ -106,50 +107,49 @@ def verify_database_tables() -> bool:
 
 
 def get_version_from_pyproject() -> str:
-    """Récupère la version du projet depuis le fichier pyproject.toml.
-
-    Cette fonction lit le fichier pyproject.toml à la racine du projet
-    et extrait la version définie dans la section [project].
-
+    """Récupère la version du projet depuis pyproject.toml.
+    
+    Cette fonction lit la version définie dans le fichier pyproject.toml
+    à la racine du projet.
+    
     Returns:
-        str: La version du projet ou "0.1.0" si non trouvée.
-
-    Raises:
-        FileNotFoundError: Si le fichier pyproject.toml n'existe pas.
-        KeyError: Si la structure du fichier ne contient pas la version.
+        str: La version du projet ou "0.0.0" si non trouvée.
     """
     try:
-        # Chemin vers le fichier pyproject.toml (relatif à ce fichier)
-        pyproject_path = Path(__file__).parent / "pyproject.toml"
-
-        # Lecture du fichier avec tomllib (intégré à Python 3.11+)
+        
+        # Chemin absolu vers le répertoire racine du projet (parent de utils/)
+        root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        pyproject_path = os.path.join(root_dir, "pyproject.toml")
+        
         with open(pyproject_path, "rb") as f:
             pyproject_data = tomllib.load(f)
-
-        # Extraction de la version
-        version = pyproject_data.get("project", {}).get("version", "0.1.0")
-        return version
-    except (FileNotFoundError, KeyError) as e:
-        logging.warning(f"Erreur lors de la lecture de la version: {e}")
-        return "0.1.0"  # Version par défaut
+            return pyproject_data.get("project", {}).get("version", "0.0.0")
+    except Exception as e:
+        import logging
+        logging.getLogger("root").warning(f"Erreur lors de la lecture de la version: {e}")
+        return "0.0.0"
 
 
 def get_logger(name: str) -> logging.Logger:
-    """
-    Crée un logger avec le nom spécifié.
+    """Récupère un logger avec le nom spécifié.
+
+    Cette fonction allège la création des loggers en créant automatiquement
+    des loggers hiérarchiques préfixés par l'application.
 
     Args:
-        name (str): Nom du logger.
+        name: Nom du logger à créer (sans le préfixe 'clea-api').
+            Par exemple: 'doc_loader.extractor' sera nommé 'clea-api.doc_loader.extractor'
 
     Returns:
-        logging.Logger: Instance de logger configurée.
+        Instance de logger configurée selon les paramètres globaux.
     """
-    logger = logging.getLogger(name)
-    logger.setLevel(logging.INFO)
-    handler = logging.StreamHandler()
-    formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    )
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    return logger
+    # Préfixer tous les loggers avec 'clea-api' sauf si déjà présent
+    if not name.startswith("clea-api"):
+        if name:
+            full_name = f"clea-api.{name}"
+        else:
+            full_name = "clea-api"
+    else:
+        full_name = name
+
+    return logging.getLogger(full_name)

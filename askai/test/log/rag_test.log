@@ -1,0 +1,109 @@
+=== Tests du processeur RAG démarrés le 2025-05-04 21:30:50.502332 ===
+
+INFO: 2025-05-04 21:30:52.737147 -- === TEST: Formatage du contexte ===
+
+INFO: 2025-05-04 21:30:52.738288 -- Contexte formaté:
+DOCUMENT 1:
+TITRE: Documentation Cléa
+SOURCE: Markdown
+THÈME: API
+DATE: 04/05/2025
+SECTION: Section 1 du document...
+SOUS-SECTION: Sous-section 1.1 avec détails spécifiques...
+PERTINENCE: 0.80
+CONTENU:
+Cléa-API charge des documents multi-formats, les segmente, les vectorise et fournit une recherche ...
+
+INFO: 2025-05-04 21:30:52.738371 -- ✅ Test de formatage du contexte réussi
+
+INFO: 2025-05-04 21:30:54.815021 -- === TEST: Récupération des templates de prompts ===
+
+INFO: 2025-05-04 21:30:54.815163 -- Type de template standard: StandardRAGPrompt
+
+INFO: 2025-05-04 21:30:54.815199 -- Type de template summary: SummaryRAGPrompt
+
+INFO: 2025-05-04 21:30:54.815227 -- Type de template comparison: ComparisonRAGPrompt
+
+INFO: 2025-05-04 21:30:54.815264 -- Exemple de prompt formaté:
+Tu es un assistant spécialisé dans la recherche documentaire qui répond aux questions à partir du co...
+
+INFO: 2025-05-04 21:30:54.815376 -- Erreur pour type inconnu: Type de prompt non reconnu: inconnu
+
+INFO: 2025-05-04 21:30:54.815442 -- ✅ Test de récupération des templates réussi
+
+INFO: 2025-05-04 21:30:54.816547 -- === TEST: Chargeur de modèle ===
+
+INFO: 2025-05-04 21:30:54.816649 -- Réponse avec thinking: Voici une réponse simulée avec thinking mode activé.
+
+INFO: 2025-05-04 21:30:54.816687 -- Réponse sans thinking: Réponse standard.
+
+INFO: 2025-05-04 21:30:54.816717 -- Réponse pour résultats vides: Aucune information pertinente n'a été trouvée pour votre requête.
+
+INFO: 2025-05-04 21:30:54.816745 -- ✅ Test du chargeur de modèle réussi
+
+INFO: 2025-05-04 21:30:56.508071 -- === TEST: Récupération de documents ===
+
+INFO: 2025-05-04 21:30:56.508168 -- Création de 5 documents de test pour la recherche
+
+INFO: 2025-05-04 21:31:01.315124 -- Génération des embeddings pour les chunks de test...
+
+INFO: 2025-05-04 21:31:01.356671 -- Documents créés avec succès dans le corpus 1f00557f-2763-4dc3-b014-46b7d1089fb2, 5 chunks embeddings générés
+
+INFO: 2025-05-04 21:31:01.413786 -- Nombre de résultats récupérés: 5
+
+INFO: 2025-05-04 21:31:01.450410 -- Résultats sans filtres: 5
+
+INFO: 2025-05-04 21:31:01.450525 -- ✅ Test de récupération de documents réussi
+
+INFO: 2025-05-04 21:31:03.475203 -- === TEST: Génération de réponses ===
+
+INFO: 2025-05-04 21:31:03.514771 -- Réponse générée: Voici une réponse simulée avec thinking mode activé.
+
+INFO: 2025-05-04 21:31:03.584129 -- Réponse avec thinking: Voici une réponse simulée avec thinking mode activé.
+
+INFO: 2025-05-04 21:31:03.584234 -- Réponse sans thinking: Réponse standard.
+
+INFO: 2025-05-04 21:31:03.618106 -- Réponse avec template summary: Voici une réponse simulée avec thinking mode activé.
+
+INFO: 2025-05-04 21:31:03.618207 -- ✅ Test de génération de réponses réussi
+
+INFO: 2025-05-04 21:31:05.633506 -- === TEST: Streaming de réponses ===
+
+INFO: 2025-05-04 21:31:05.633622 -- Fragment reçu: Partie 1 de la réponse en streaming.
+
+INFO: 2025-05-04 21:31:05.643893 -- Fragment reçu: Partie 2 de la réponse en streaming.
+
+INFO: 2025-05-04 21:31:05.654224 -- Fragment reçu: Partie 3 de la réponse en streaming.
+
+INFO: 2025-05-04 21:31:07.941957 -- === TEST: Récupération de documents ===
+
+INFO: 2025-05-04 21:31:07.942070 -- Création de 5 documents de test pour la recherche
+
+INFO: 2025-05-04 21:31:12.498952 -- Génération des embeddings pour les chunks de test...
+
+INFO: 2025-05-04 21:31:12.532711 -- Documents créés avec succès dans le corpus b9c09049-5513-4003-871b-06efed37bf6e, 5 chunks embeddings générés
+
+INFO: 2025-05-04 21:31:12.577356 -- Nombre de résultats récupérés: 5
+
+INFO: 2025-05-04 21:31:12.615897 -- Résultats sans filtres: 5
+
+INFO: 2025-05-04 21:31:12.616002 -- ✅ Test de récupération de documents réussi
+
+INFO: 2025-05-04 21:31:14.581513 -- === TEST: Génération de réponses ===
+
+INFO: 2025-05-04 21:31:14.619611 -- Réponse générée: Voici une réponse simulée avec thinking mode activé.
+
+INFO: 2025-05-04 21:31:14.693440 -- Réponse avec thinking: Voici une réponse simulée avec thinking mode activé.
+
+INFO: 2025-05-04 21:31:14.693548 -- Réponse sans thinking: Réponse standard.
+
+INFO: 2025-05-04 21:31:14.726874 -- Réponse avec template summary: Voici une réponse simulée avec thinking mode activé.
+
+INFO: 2025-05-04 21:31:14.726979 -- ✅ Test de génération de réponses réussi
+
+INFO: 2025-05-04 21:31:16.730251 -- === TEST: Streaming de réponses ===
+
+INFO: 2025-05-04 21:31:16.730362 -- Fragment reçu: Partie 1 de la réponse en streaming.
+
+INFO: 2025-05-04 21:31:16.730628 -- Fragment reçu: Erreur pendant la génération: no running event loop
+

@@ -8,14 +8,16 @@ Fournit des fonctions pour:
 """
 
 import re
-import logging
 from typing import Dict, List
+from utils import get_logger
 
 # Constantes locales
 from .constants import MAX_CHUNK_SIZE
 
+
 # Configuration du logger
-logger = logging.getLogger(__name__)
+logger = get_logger("doc_loader.splitter.text_analysis")
+# --------------------------------------------------------------------------- #
 
 # Patterns pour la détection des sections
 _SECTION_PATTERNS = [
@@ -357,23 +359,38 @@ def _create_semantic_chunks(
     base_offset: int = 0,
     max_chunks: int = 20,
 ) -> List[Dict]:
-    """
-    Crée des chunks qui respectent le contenu sémantique du texte.
+    """Crée des chunks sémantiquement cohérents à partir d'un texte.
 
-    Optimisé pour les grands textes avec une meilleure stratégie de découpage
-    et un nombre accru de chunks autorisés.
+    Cette fonction découpe le texte en respectant au mieux les frontières naturelles
+    (fins de paragraphes, phrases) pour préserver le contexte sémantique. Elle est
+    optimisée pour gérer les grands textes et inclut un chevauchement contrôlé pour
+    maintenir la continuité entre les chunks.
 
     Args:
-        text: Texte à diviser.
-        max_length: Longueur maximale d'un chunk.
-        min_overlap: Chevauchement minimal entre chunks.
-        base_offset: Décalage de base pour l'indexation.
-        max_chunks: Nombre maximum de chunks à créer (augmenté à 20).
+        text: Texte à diviser en chunks.
+        max_length: Longueur maximale souhaitée pour chaque chunk.
+        min_overlap: Chevauchement minimal entre chunks consécutifs.
+        base_offset: Décalage à appliquer aux positions dans le document original.
+        max_chunks: Nombre maximal de chunks à créer.
 
     Returns:
-        List[Dict]: Liste des chunks sémantiquement cohérents.
+        Liste de dictionnaires contenant le contenu et les positions des chunks.
+        Format: [{"content": str, "start_char": int, "end_char": int}, ...]
     """
+    # Convertir tous les paramètres en entiers pour éviter les erreurs de type
+    max_length = int(max_length)
+    min_overlap = int(min_overlap)
+    base_offset = int(base_offset)
+    max_chunks = int(max_chunks)
+
+    logger.debug(
+        f"Entrée _create_semantic_chunks: max_length={max_length}, min_overlap={min_overlap}, max_chunks={max_chunks}"
+    )
+
     if len(text) <= max_length:
+        logger.debug(
+            f"Texte court ({len(text)} <= {max_length}): retourne chunk unique"
+        )
         return [
             {
                 "content": text,
@@ -388,7 +405,12 @@ def _create_semantic_chunks(
     chunk_count = 0
 
     # Pour la recherche sémantique, garder des chunks de bonne taille
-    effective_max = min(max_length * 1.2, MAX_CHUNK_SIZE)
+    # Calcul intermédiaire pour éviter les erreurs de type
+    temp_max = (max_length * 12) // 10  # équivalent à max_length * 1.2
+    effective_max = min(temp_max, MAX_CHUNK_SIZE)
+    logger.debug(
+        f"effective_max calculé: {effective_max} (type: {type(effective_max).__name__})"
+    )
 
     # Adapter l'overlap en fonction de la taille du texte
     if len(text) > effective_max * 10:
@@ -398,68 +420,163 @@ def _create_semantic_chunks(
         # Sinon garder un overlap significatif pour la continuité sémantique
         effective_overlap = min(min_overlap, effective_max // 10)
 
+    logger.debug(
+        f"effective_overlap calculé: {effective_overlap} (type: {type(effective_overlap).__name__})"
+    )
+
     while start < len(text) and chunk_count < max_chunks:
+        logger.debug(
+            f"Itération {chunk_count + 1}: start={start}, type(start)={type(start).__name__}"
+        )
+
         # Déterminer où terminer ce chunk
         end = min(start + effective_max, len(text))
+        logger.debug(f"end initial: {end} (type: {type(end).__name__})")
 
         # Chercher un point de coupure naturel (phrase complète ou paragraphe)
         if end < len(text):
             # Priorité aux fins de paragraphes
-            # Conversion explicite en entiers pour éviter les erreurs de typage
-            para_break = text.rfind(
-                "\n\n", int(start + (effective_max * 0.5)), int(end)
+            para_break_start = start + (effective_max // 2)
+            logger.debug(
+                f"para_break_start: {para_break_start} (type: {type(para_break_start).__name__})"
             )
-            if para_break > start + int(effective_max * 0.3):
+
+            para_break = text.rfind("\n\n", para_break_start, end)
+            logger.debug(
+                f"para_break trouvé: {para_break} (type: {type(para_break).__name__})"
+            )
+
+            min_break_pos = start + (effective_max // 3)
+            logger.debug(
+                f"min_break_pos: {min_break_pos} (type: {type(min_break_pos).__name__})"
+            )
+
+            if para_break > min_break_pos and para_break != -1:
+                # ⚠️ Conversion explicite en entier avant addition
+                para_break = int(para_break)
                 end = para_break + 2
+                logger.debug(f"Fin de paragraphe trouvée, end devient: {end}")
             else:
                 # Chercher en arrière un point de fin de phrase
+                sentence_found = False
                 for punct in [". ", "! ", "? ", ".\n", "!\n", "?\n"]:
-                    sentence_break = text.rfind(
-                        punct, int(start + (effective_max * 0.5)), int(end)
+                    sentence_break_start = start + (effective_max // 2)
+                    sentence_break = text.rfind(punct, sentence_break_start, end)
+                    logger.debug(
+                        f"Recherche de '{punct}': sentence_break={sentence_break}"
                     )
-                    if sentence_break > start + int(effective_max * 0.3):
-                        end = sentence_break + len(punct)
+
+                    if sentence_break > min_break_pos and sentence_break != -1:
+                        # ⚠️ Conversion explicite en entier avant addition
+                        sentence_break = int(sentence_break)
+                        punct_len = len(punct)
+                        end = sentence_break + punct_len
+                        sentence_found = True
+                        logger.debug(f"Fin de phrase trouvée, end devient: {end}")
                         break
 
+        # Garantir que start et end sont des entiers valides
+        start_idx = int(start)
+        end_idx = int(end)
+        logger.debug(f"Indices finaux: start_idx={start_idx}, end_idx={end_idx}")
+
         # Extraire le chunk et vérifier sa cohérence
-        chunk_text = text[start:end].strip()
-        if not chunk_text:
-            # Avancer au prochain caractère non-vide
-            # Utiliser une expression régulière littérale et convertir en int
-            next_non_empty = text.find("\\S", int(start))
-            start = next_non_empty if next_non_empty > 0 else end
+        try:
+            chunk_text = text[start_idx:end_idx].strip()
+            logger.debug(f"Chunk extrait de longueur: {len(chunk_text)}")
+        except Exception as e:
+            logger.error(
+                f"ERREUR extraction chunk: {e}, indices: [{start_idx}:{end_idx}]",
+                exc_info=True,
+            )
+            # Fallback en cas d'erreur d'indices
+            start = start_idx + 1
             continue
 
-        chunks.append(
-            {
-                "content": chunk_text,
-                "start_char": base_offset + start,
-                "end_char": base_offset + end,
-            }
-        )
-        chunk_count += 1
+        if not chunk_text:
+            # Avancer au prochain caractère non-vide
+            try:
+                next_non_empty = text.find(r"\S", start_idx)
+                logger.debug(f"Chunk vide, recherche de non-vide: {next_non_empty}")
+                start = next_non_empty if next_non_empty > 0 else end_idx
+                continue
+            except Exception as e:
+                logger.error(f"ERREUR recherche non-vide: {e}", exc_info=True)
+                start = start_idx + 1
+                continue
 
-        # Adapter l'overlap intelligemment pour éviter les répétitions exactes
-        # mais maintenir la continuité sémantique
-        if end < len(text):
-            # Chercher la fin de phrase précédente pour un overlap propre
-            # Conversion explicite en entiers pour éviter les erreurs de typage
-            overlap_pos = max(
-                text.rfind(". ", int(end - (effective_overlap * 2)), int(end)),
-                text.rfind("! ", int(end - (effective_overlap * 2)), int(end)),
-                text.rfind("? ", int(end - (effective_overlap * 2)), int(end)),
-                text.rfind(".\n", int(end - (effective_overlap * 2)), int(end)),
-                text.rfind("!\n", int(end - (effective_overlap * 2)), int(end)),
-                text.rfind("?\n", int(end - (effective_overlap * 2)), int(end)),
+        # Ajouter le chunk à la liste
+        try:
+            chunks.append(
+                {
+                    "content": chunk_text,
+                    "start_char": base_offset + start_idx,
+                    "end_char": base_offset + end_idx,
+                }
             )
+            chunk_count += 1
+            logger.debug(f"Chunk #{chunk_count} ajouté")
+        except Exception as e:
+            logger.error(f"ERREUR ajout chunk: {e}", exc_info=True)
+            break
 
-            if overlap_pos > start and overlap_pos > end - int(effective_overlap * 2):
-                next_start = overlap_pos + 2
-            else:
-                next_start = max(start + 1, end - int(effective_overlap))
+        # Adapter l'overlap intelligemment
+        if end < len(text):
+            try:
+                # Utiliser uniquement des opérations entières
+                overlap_start = end - (effective_overlap * 2)
+                overlap_start = int(overlap_start)  # Conversion explicite
+                overlap_end = int(end)
+
+                logger.debug(
+                    f"Calcul overlap: start={overlap_start}, end={overlap_end}"
+                )
+
+                # Vérifier les limites
+                if overlap_start < 0:
+                    overlap_start = 0
+
+                # Recherche des positions de séparation naturelles
+                overlap_positions = []
+                for punct in [". ", "! ", "? ", ".\n", "!\n", "?\n"]:
+                    pos = text.rfind(punct, overlap_start, overlap_end)
+                    logger.debug(f"Position '{punct}': {pos}")
+                    if pos != -1:
+                        overlap_positions.append(pos)
+
+                # Trouver la meilleure position d'overlap
+                if overlap_positions:
+                    overlap_pos = max(overlap_positions)
+                    logger.debug(f"Meilleure position overlap: {overlap_pos}")
+                else:
+                    overlap_pos = -1
+                    logger.debug("Aucune position d'overlap trouvée")
+
+                # Calculer la position minimum acceptable
+                min_overlap_pos = end - (effective_overlap * 2)
+                min_overlap_pos = int(min_overlap_pos)  # Conversion explicite
+
+                # Déterminer la position de départ du prochain chunk
+                if (
+                    overlap_pos > start
+                    and overlap_pos > min_overlap_pos
+                    and overlap_pos != -1
+                ):
+                    next_start = overlap_pos + 2
+                else:
+                    next_start = max(start + 1, end - effective_overlap)
+
+                next_start = int(next_start)  # Conversion explicite finale
+                logger.debug(f"Position de départ du prochain chunk: {next_start}")
+            except Exception as e:
+                logger.error(f"ERREUR calcul overlap: {e}", exc_info=True)
+                # Fallback en cas d'erreur: avancer simplement
+                next_start = int(end)
         else:
-            next_start = end
+            next_start = int(end)
 
         start = next_start
+        logger.debug(f"Fin d'itération, start mis à jour: {start}")
 
+    logger.debug(f"Fin de _create_semantic_chunks: {len(chunks)} chunks générés")
     return chunks

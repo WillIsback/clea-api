@@ -8,7 +8,7 @@ schemas.py – Pydantic Data-Transfer Objects (DTO) used by the REST API.
 
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, datetime
 from typing import Any, List, Optional, Dict
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -168,31 +168,55 @@ class ChunkResult(BaseModel):
 
 
 class SearchRequest(BaseModel):
-    """Paramètres acceptés par `POST /search/hybrid_search`."""
+    """Paramètres pour la recherche hybride.
 
-    query: str
-    top_k: int = Field(10, ge=1, alias="topK")
-    theme: Optional[str] = None
-    document_type: Optional[str] = Field(None, alias="documentType")
-    start_date: Optional[date] = Field(None, alias="startDate")
-    end_date: Optional[date] = Field(None, alias="endDate")
-    corpus_id: Optional[str] = Field(None, alias="corpusId")
-    hierarchical: bool = False
-    hierarchy_level: Optional[int] = Field(None, alias="hierarchyLevel")
+    Combine la requête textuelle avec des filtres de métadonnées optionnels.
+    """
 
+    query: str = Field(..., description="Requête en langage naturel")
+    top_k: int = Field(10, description="Nombre de résultats à retourner")
+    theme: Optional[str] = Field(None, description="Filtre par thème")
+    document_type: Optional[str] = Field(
+        None, description="Filtre par type de document"
+    )
+    start_date: Optional[datetime] = Field(None, description="Date de début")
+    end_date: Optional[datetime] = Field(None, description="Date de fin")
+    corpus_id: Optional[int] = Field(None, description="ID du corpus")
+    hierarchy_level: Optional[int] = Field(
+        None, description="Niveau hiérarchique (0-2)"
+    )
+    hierarchical: bool = Field(False, description="Récupérer le contexte hiérarchique")
+    filter_by_relevance: bool = Field(
+        False, description="Filtrer les résultats sous le seuil de pertinence"
+    )
+    normalize_scores: bool = Field(
+        False, description="Normaliser les scores entre 0 et 1"
+    )
+    
     model_config = CamelConfig
 
 
 class SearchResponse(BaseModel):
-    """Réponse complète du moteur de recherche."""
+    """Réponse à une requête de recherche.
 
-    query: str
-    top_k: int = Field(..., alias="topK")
-    total_results: int = Field(..., alias="totalResults")
-    results: List[ChunkResult]
+    Contient les résultats triés par pertinence avec métadonnées et évaluation de confiance.
+    """
 
+    query: str = Field(..., description="Requête originale")
+    topK: int = Field(..., description="Nombre de résultats demandés")
+    totalResults: int = Field(..., description="Nombre total de résultats trouvés")
+    results: List[ChunkResult] = Field(..., description="Résultats de la recherche")
+    confidence: Optional[ConfidenceMetrics] = Field(
+        None, description="Métriques de confiance sur les résultats"
+    )
+    normalized: bool = Field(
+        False, description="Indique si les scores sont normalisés (0-1)"
+    )
+    message: Optional[str] = Field(
+        None, description="Message informatif sur les résultats"
+    )
+    
     model_config = CamelConfig
-
 
 class IndexStatus(BaseModel):
     """Statut de l'indexation d'un document."""
@@ -206,4 +230,20 @@ class IndexStatus(BaseModel):
     indexed_chunks: int
     last_indexed: Optional[date]
 
+    model_config = CamelConfig
+
+
+class ConfidenceMetrics(BaseModel):
+    """Métriques de confiance pour les résultats de recherche.
+
+    Fournit des informations sur la pertinence des résultats et des statistiques
+    pour aider l'utilisateur à évaluer la qualité des réponses.
+    """
+
+    level: float = Field(..., description="Niveau de confiance entre 0 et 1")
+    message: str = Field(..., description="Message explicatif sur la pertinence")
+    stats: Dict[str, float] = Field(
+        ..., description="Statistiques des scores (min, max, avg, median)"
+    )
+    
     model_config = CamelConfig

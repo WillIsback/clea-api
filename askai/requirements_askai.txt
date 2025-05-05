@@ -1,0 +1,5 @@
+transformers>=4.38.0
+torch>=2.0.0
+accelerate>=0.28.0
+bitsandbytes>=0.41.0  # Pour quantization 8-bit
+sentencepiece>=0.1.99  # Pour tokenizer

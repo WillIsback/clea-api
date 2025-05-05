@@ -1,0 +1,94 @@
+=== Tests de recherche démarrés le 2025-05-04 21:19:35.198560 ===
+
+INFO: 2025-05-04 21:19:35.198984 -- === TEST: Évaluation de la confidence ===
+
+INFO: 2025-05-04 21:19:37.014539 -- Scores élevés: [0.8, 0.7, 0.65, 0.6] → Confidence: 0.9
+
+INFO: 2025-05-04 21:19:37.014660 -- Scores faibles: [-7.0, -8.5, -9.0, -10.0] → Confidence: 0.1
+
+INFO: 2025-05-04 21:19:37.014712 -- Scores moyens: [-2.0, -1.5, -1.0, -0.5] → Confidence: 0.4
+
+INFO: 2025-05-04 21:19:37.014749 -- Sans scores → Confidence: 0.0
+
+INFO: 2025-05-04 21:19:37.014779 -- ✅ Test d'évaluation de confidence réussi
+
+INFO: 2025-05-04 21:19:37.018787 -- === TEST: Normalisation des scores ===
+
+INFO: 2025-05-04 21:19:38.861369 -- Scores originaux: [0.8, 0.2, 0.5, 0.9, 0.1]
+
+INFO: 2025-05-04 21:19:38.861480 -- Scores normalisés: [0.875, 0.125, 0.5, 1.0, 0.0]
+
+INFO: 2025-05-04 21:19:38.861515 -- Liste vide → Normalisée: []
+
+INFO: 2025-05-04 21:19:38.861551 -- Scores identiques: [0.5, 0.5, 0.5, 0.5] → Normalisés: [0.5, 0.5, 0.5, 0.5]
+
+INFO: 2025-05-04 21:19:38.861586 -- Scores mixtes: [-10.0, -5.0, 0.0, 5.0, 10.0] → Normalisés: [0.0, 0.25, 0.5, 0.75, 1.0]
+
+INFO: 2025-05-04 21:19:38.861622 -- ✅ Test de normalisation des scores réussi
+
+INFO: 2025-05-04 21:19:38.866553 -- === TEST: Détection des requêtes hors domaine ===
+
+INFO: 2025-05-04 21:19:40.550157 -- Requête hors domaine - Scores: [-8.5, -7.2, -6.9, -9.0]
+
+INFO: 2025-05-04 21:19:40.550260 -- Niveau de confidence: 0.1, Message: Requête probablement hors du domaine de connaissances.
+
+INFO: 2025-05-04 21:19:42.409855 -- Avec seuil bas - Niveau de confidence: 0.4
+
+INFO: 2025-05-04 21:19:42.409960 -- ✅ Test de détection hors domaine réussi
+
+INFO: 2025-05-04 21:19:42.419241 -- === TEST: Recherche hybride complète ===
+
+INFO: 2025-05-04 21:19:42.419349 -- Création de 3 documents de test pour la recherche
+
+INFO: 2025-05-04 21:19:46.900925 -- Génération des embeddings pour les chunks de test...
+
+INFO: 2025-05-04 21:19:46.955868 -- Documents créés avec succès dans le corpus e6a2eff2-b482-4fb8-afb5-bdfb4d933834, 11 chunks embeddings générés
+
+INFO: 2025-05-04 21:19:48.818511 -- Test 1: Recherche simple
+
+INFO: 2025-05-04 21:19:48.878303 -- Résultats trouvés: 5
+
+INFO: 2025-05-04 21:19:48.878415 -- Niveau de confidence: 0.9
+
+INFO: 2025-05-04 21:19:48.878448 -- Test 2: Recherche avec filtres
+
+INFO: 2025-05-04 21:19:48.912182 -- Avec filtres - Résultats: 0
+
+INFO: 2025-05-04 21:19:48.912309 -- Test 3: Requête potentiellement hors contexte
+
+INFO: 2025-05-04 21:19:48.942054 -- Requête hors contexte - Niveau de confidence: 0.1
+
+INFO: 2025-05-04 21:19:48.942166 -- Message: Requête probablement hors du domaine de connaissances.
+
+INFO: 2025-05-04 21:19:48.942210 -- ✅ Test de recherche hybride réussi
+
+INFO: 2025-05-04 21:19:48.948149 -- === TEST: Filtrage par pertinence ===
+
+INFO: 2025-05-04 21:19:52.297174 -- Score et résultat Avec filtre level=0.1 message='Requête probablement hors du domaine de connaissances.' stats={'min': -10.86037826538086, 'max': -10.86037826538086, 'avg': -10.86037826538086, 'median': -10.86037826538086}
+
+INFO: 2025-05-04 21:19:52.297295 -- Chunk 41449 a un score -10.86037826538086 et un thème Informatique
+
+INFO: 2025-05-04 21:19:52.297332 -- Chunk 41416 a un score -10.86037826538086 et un thème Informatique
+
+INFO: 2025-05-04 21:19:52.297361 -- Chunk 41438 a un score -10.86037826538086 et un thème Informatique
+
+INFO: 2025-05-04 21:19:52.297390 -- Chunk 41394 a un score -10.86037826538086 et un thème Informatique
+
+INFO: 2025-05-04 21:19:52.297417 -- Chunk 41405 a un score -10.86037826538086 et un thème Informatique
+
+INFO: 2025-05-04 21:19:52.297445 -- Chunk 41427 a un score -10.86037826538086 et un thème Informatique
+
+INFO: 2025-05-04 21:19:52.297471 -- Chunk 41383 a un score -10.86037826538086 et un thème Informatique
+
+INFO: 2025-05-04 21:19:52.297498 -- Chunk 41504 a un score -10.86037826538086 et un thème Informatique
+
+INFO: 2025-05-04 21:19:52.297525 -- Chunk 41567 a un score -10.86037826538086 et un thème Informatique
+
+INFO: 2025-05-04 21:19:52.297551 -- Chunk 41588 a un score -10.86037826538086 et un thème Informatique
+
+INFO: 2025-05-04 21:19:52.332091 -- Score et résultat Avec filtre level=0.1 message='Requête probablement hors du domaine de connaissances.' stats={'min': -10.86037826538086, 'max': -10.86037826538086, 'avg': -10.86037826538086, 'median': -10.86037826538086}
+
+INFO: 2025-05-04 21:19:52.332204 -- Sans filtre: 10 résultats, Avec filtre: 0 résultats
+
+INFO: 2025-05-04 21:19:52.332240 -- ✅ Test filter_by_relevance réussi
+

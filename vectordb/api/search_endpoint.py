@@ -25,13 +25,18 @@ _engine = SearchEngine()  # 1 instance partagée
 def hybrid_search(
     request: SearchRequest, db: Session = Depends(get_db)
 ) -> SearchResponse:
-    """Retourne les *top k* chunks les plus pertinents.
+    """Retourne les *top k* chunks les plus pertinents avec évaluation de confiance.
 
     Le moteur combine :
 
     * **Filtres SQL** (theme, `document_type`, dates, `corpus_id`)
     * **Index vectoriel pgvector** *(IVFFLAT ou HNSW)*
     * **Rerank Cross-Encoder** sur un sous-ensemble élargi (*top k × 3*)
+    * **Évaluation de confiance** analyse la pertinence globale des résultats
+    * **Filtrage de pertinence** élimine les résultats sous le seuil minimal
+    * **Normalisation des scores** facilite l'interprétation (0-1)
 
+    Les résultats incluent des métriques de confiance qui permettent
+    d'identifier les requêtes hors du domaine de connaissances.
     """
     return _engine.hybrid_search(db, request)

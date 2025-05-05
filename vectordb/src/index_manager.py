@@ -5,14 +5,17 @@ Ce module fournit des fonctions simples pour créer et gérer
 des index vectoriels sur les chunks de documents.
 """
 
-import logging
 from datetime import datetime
-from sqlalchemy import text, select
+from sqlalchemy import text
 
 from .database import get_db, Document, Chunk, IndexConfig
 
-# Configuration du logger
-logger = logging.getLogger(__name__)
+from utils import get_logger
+
+# --------------------------------------------------------------------------- #
+#  Configuration du logger
+# --------------------------------------------------------------------------- #
+logger = get_logger("vectordb.index_manager")
 
 
 def create_simple_index(corpus_id: str) -> dict:

@@ -6,7 +6,7 @@ en représentations vectorielles de haute dimension utilisables pour
 la recherche sémantique.
 """
 
-from transformers import CamembertModel, CamembertTokenizer
+from transformers import CamembertModel, CamembertTokenizer  # type: ignore
 import torch
 import os
 from typing import List
@@ -23,7 +23,7 @@ class EmbeddingGenerator:
         self.model_name = os.getenv("MODEL_NAME", "camembert-base")
         self.tokenizer = CamembertTokenizer.from_pretrained(self.model_name)
         self.model = CamembertModel.from_pretrained(self.model_name)
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device: torch.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model.to(self.device)
         self.model.eval()  # Passer explicitement en mode évaluation
         print(f"Modèle d'embedding chargé: {self.model_name} sur {self.device}")

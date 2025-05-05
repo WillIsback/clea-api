@@ -1,14 +1,42 @@
 from fastapi import APIRouter, HTTPException, UploadFile, File, Query, BackgroundTasks
 from pipeline.src.pipeline import process_and_store
-from typing import Dict, Optional
+from typing import Dict, Optional, Any
 import tempfile
 import shutil
 import os
 import logging
 import uuid
+from pydantic import BaseModel, Field
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
+
+
+class RagQueryRequest(BaseModel):
+    """Requête pour interroger la base de connaissances avec RAG.
+    
+    Args:
+        query: Question en langage naturel à poser au système.
+        filters: Filtres optionnels pour la recherche documentaire.
+        model_name: Nom du modèle LLM à utiliser.
+        prompt_type: Type de prompt à utiliser.
+        stream: Indique si la réponse doit être générée en streaming.
+        max_docs: Nombre maximum de documents à utiliser.
+        
+    Attributes:
+        query: Question en langage naturel.
+        filters: Filtres pour la recherche (thème, type de document, dates...).
+        model_name: Nom du modèle LLM à utiliser.
+        prompt_type: Type de prompt ('standard', 'summary', 'comparison').
+        stream: Si True, la réponse est générée progressivement.
+        max_docs: Nombre maximum de documents à utiliser pour le contexte.
+    """
+    query: str = Field(..., description="Question en langage naturel")
+    filters: Optional[Dict[str, Any]] = Field(None, description="Filtres pour la recherche")
+    model_name: str = Field("Qwen3-0.6B", description="Modèle LLM à utiliser")
+    prompt_type: str = Field("standard", description="Type de prompt (standard, summary, comparison)")
+    stream: bool = Field(False, description="Réponse en streaming")
+    max_docs: int = Field(5, description="Nombre maximum de documents à utiliser")
 
 
 @router.post(
@@ -36,11 +64,10 @@ async def process_and_store_endpoint(
         max_length: Taille maximale d'un chunk final.
         overlap: Chevauchement entre les chunks.
         theme: Thème à appliquer au document.
-        document_type: Type de document (déterminé automatiquement si non spécifié).
         corpus_id: Identifiant du corpus (généré si non spécifié).
 
     Returns:
-        Résultats de l'opération avec l'ID du document et les statistiques de segmentation.
+        Dict: Résultats de l'opération avec l'ID du document et les statistiques de segmentation.
 
     Raises:
         HTTPException: Si une erreur survient pendant le traitement du document.
@@ -121,11 +148,10 @@ async def process_and_store_async_endpoint(
         max_length: Taille maximale d'un chunk final.
         overlap: Chevauchement entre les chunks.
         theme: Thème à appliquer au document.
-        document_type: Type de document (déterminé automatiquement si non spécifié).
         corpus_id: Identifiant du corpus (généré si non spécifié).
 
     Returns:
-        Informations sur la tâche en arrière-plan créée.
+        Dict: Informations sur la tâche en arrière-plan créée.
     """
     # Sauvegarde temporaire du fichier
     temp_dir = tempfile.mkdtemp()
@@ -186,3 +212,4 @@ async def process_and_store_async_endpoint(
         )
     finally:
         file.file.close()
+

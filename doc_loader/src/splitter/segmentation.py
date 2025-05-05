@@ -7,7 +7,7 @@ Contient les algorithmes de segmentation sémantique et de secours:
 """
 
 import uuid
-import logging
+from utils import get_logger
 from typing import List, Set, Iterator
 
 from vectordb.src.schemas import ChunkCreate
@@ -22,7 +22,7 @@ from .text_utils import _get_meaningful_preview
 from .constants import MAX_CHUNKS, MAX_CHUNK_SIZE, MIN_LEVEL3_LENGTH, MAX_LEVEL3_CHUNKS
 
 # Configuration du logger
-logger = logging.getLogger(__name__)
+logger = get_logger("doc_loader.splitter.segmentation")
 
 
 def semantic_segmentation_stream(text: str, max_length: int) -> Iterator[ChunkCreate]:

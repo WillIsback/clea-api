@@ -13,7 +13,6 @@ from __future__ import annotations
 
 import re
 import tempfile
-import logging
 from abc import ABC, abstractmethod
 from datetime import date
 from pathlib import Path
@@ -21,6 +20,7 @@ from pathlib import Path
 
 # ------ dépendances internes (évite l'import circulaire au runtime) ----------
 from vectordb.src.schemas import DocumentCreate, ChunkCreate, DocumentWithChunks
+from utils import get_logger
 
 # ------ modules internes de data_extractor ------------------------------
 from doc_loader.src.splitter import (
@@ -35,7 +35,7 @@ from doc_loader.src.splitter import (
 # --------------------------------------------------------------------------- #
 #  Configuration du logger
 # --------------------------------------------------------------------------- #
-logger = logging.getLogger(__name__)
+logger = get_logger("doc_loader.base")
 
 # --------------------------------------------------------------------------- #
 #  Constantes

@@ -1,12 +1,21 @@
 site_name: Cléa-API Documentation
 
+site_url: https://WillIsback.github.io/clea-api/
+repo_url: https://github.com/WillIsback/clea-api
+repo_name: Cléa-API
+
+docs_dir: docs
+site_dir: site
+
 nav:
-  - Accueil: home.md
+  - Accueil: index.md
   - Introduction: main.md
   - Base de données: database.md
   - Schémas: schemas.md
-  
+
   - Documentation des librairies:
+      - askai:
+          - RAG: lib/askai/rag_lib.md
       - doc_loader:
           - Extracteurs: lib/doc_loader/extractor_lib.md
           - Segmentation: lib/doc_loader/splitter_lib.md
@@ -16,11 +25,13 @@ nav:
           - Opérations CRUD: lib/vectordb/crud_lib.md
           - Indexation vectorielle: lib/vectordb/index_lib.md
           - Recherche hybride: lib/vectordb/search_lib.md
-  
+
   - Références API:
       - REST API:
           - Documentation Swagger: api/rest/rest_api.md
       - Références Python:
+          - askai:
+              - RAG: api/lib/askai/rag_references.md
           - doc_loader:
               - Extracteurs: api/lib/doc_loader/extractor_references.md
               - Segmentation: api/lib/doc_loader/splitter_references.md
@@ -30,9 +41,11 @@ nav:
               - CRUD: api/lib/vectordb/crud_references.md
               - Indexation: api/lib/vectordb/index_references.md
               - Recherche: api/lib/vectordb/search_references.md
-  
+
   - Intégrations:
-      - JavaScript / TypeScript: 
+      - JavaScript / TypeScript:
+          - askai:
+              - RAG: Integration/askai/rag_js.md
           - doc_loader:
               - Extraction de documents: Integration/doc_loader/doc_loader_js.md
           - pipeline:
@@ -57,13 +70,21 @@ plugins:
       use_pymdownx: true
 
 markdown_extensions:
+  - admonition
+  - footnotes
   - pymdownx.details
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
-  - admonition
   - tables
-  - footnotes
 
 extra_css:
   - css/mkdocsoad.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/WillIsback/clea-api
+
+# Commande de déploiement GitHub Pages
+# uv run mkdocs gh-deploy --force

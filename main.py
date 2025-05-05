@@ -8,7 +8,9 @@ les erreurs globales de l'application.
 
 import os
 from contextlib import asynccontextmanager
-
+import argparse
+import logging
+from typing import AsyncGenerator
 import uvicorn
 from dotenv import load_dotenv
 from fastapi import FastAPI
@@ -24,6 +26,8 @@ from vectordb.api.index_endpoint import router as index_router
 from vectordb.api.search_endpoint import router as search_router
 from doc_loader.api.loader_endpoint import router as doc_loader_router
 from pipeline.api.pipeline_endpoint import router as pipeline_router
+from askai.api.askai_endpoint import router as askai_router
+
 from utils import (
     get_current_user,
     check_postgres_status,
@@ -33,8 +37,7 @@ from utils import (
 )
 
 
-# Configuration du logger
-logger = get_logger("clea-api")
+logger = get_logger("")
 
 # Charger les variables d'environnement depuis le fichier .env
 load_dotenv()
@@ -55,6 +58,44 @@ API_LOG_LEVEL = os.getenv("API_LOG_LEVEL", "info")
 VERSION = get_version_from_pyproject()
 # Stockage des ressources globales
 resources = {}
+
+
+# Configuration du logger
+def configure_logging(debug_mode: bool = False) -> None:
+    """Configure le système de journalisation global.
+
+    Définit le niveau de journalisation pour toute l'application et ajuste
+    les loggers externes pour une verbosité appropriée.
+
+    Args:
+        debug_mode: Si True, active les logs de niveau DEBUG dans toute l'application.
+    """
+    log_level = logging.DEBUG if debug_mode else logging.INFO
+
+    # Configuration du logger racine - POINT CLÉ
+    logging.basicConfig(
+        level=log_level,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        handlers=[logging.StreamHandler()],
+    )
+
+    # Logger principal de l'application
+    app_logger = logging.getLogger("clea-api")
+
+    # Réduire la verbosité des loggers tiers uniquement
+    logging.getLogger("uvicorn").setLevel(
+        logging.WARNING if not debug_mode else logging.INFO
+    )
+    logging.getLogger("uvicorn.access").setLevel(
+        logging.WARNING if not debug_mode else logging.INFO
+    )
+    logging.getLogger("sqlalchemy.engine").setLevel(
+        logging.WARNING if not debug_mode else logging.INFO
+    )
+
+    app_logger.info(
+        f"Niveau de journalisation configuré: {logging.getLevelName(log_level)}"
+    )
 
 
 def start_postgres() -> bool:
@@ -159,7 +200,7 @@ def setup_database() -> bool:
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """Gestionnaire de cycle de vie de l'application.
 
     Initialise les ressources nécessaires au démarrage et les libère à l'arrêt.
@@ -231,6 +272,7 @@ app.include_router(search_router, prefix="/search", tags=["Search"])
 app.include_router(index_router, prefix="/index", tags=["Index"])
 app.include_router(doc_loader_router, prefix="/doc_loader", tags=["DocLoader"])
 app.include_router(pipeline_router, prefix="/pipeline", tags=["Pipeline"])
+app.include_router(askai_router, prefix="/askai", tags=["AskAI"])
 
 
 # Gestionnaires d'erreurs globaux
@@ -294,19 +336,55 @@ async def root():
 
 # Point d'entrée principal
 if __name__ == "__main__":
+    # Analyser les arguments en ligne de commande
+    parser = argparse.ArgumentParser(description="Serveur Cléa-API")
+    parser.add_argument(
+        "--debug", action="store_true", help="Active le mode debug avec logs détaillés"
+    )
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=API_PORT,
+        help=f"Port du serveur (défaut: {API_PORT})",
+    )
+    parser.add_argument(
+        "--host",
+        type=str,
+        default=API_HOST,
+        help=f"Hôte du serveur (défaut: {API_HOST})",
+    )
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=API_WORKERS,
+        help=f"Nombre de workers (défaut: {API_WORKERS})",
+    )
+
+    args = parser.parse_args()
+
+    # Configurer la journalisation en fonction du mode debug
+    configure_logging(debug_mode=args.debug)
+
+    # Ajuster le niveau de log pour uvicorn
+    uvicorn_log_level = "debug" if args.debug else API_LOG_LEVEL
+
     # Configuration optimisée d'Uvicorn
     config = uvicorn.Config(
         app="main:app",
-        host=API_HOST,
-        port=API_PORT,
-        log_level=API_LOG_LEVEL,
+        host=args.host,
+        port=args.port,
+        log_level=uvicorn_log_level,
         reload=True,
-        workers=API_WORKERS,
+        workers=args.workers,
         loop="auto",  # Utiliser uvloop si disponible
         http="auto",  # Utiliser httptools si disponible
         ws="auto",
         proxy_headers=True,  # Important pour les déploiements derrière un proxy
-        access_log=True,
+        access_log=args.debug,  # Logs d'accès uniquement en mode debug
+    )
+
+    logger.info(
+        f"Démarrage du serveur Cléa-API sur {args.host}:{args.port} avec {args.workers} worker(s)"
     )
 
     # Démarrage du serveur

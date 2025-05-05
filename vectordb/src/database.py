@@ -25,6 +25,8 @@ from sqlalchemy.orm import (
     relationship,
     sessionmaker,
 )
+
+from utils import get_logger
 # ---------------------------------------------------------------------------
 
 load_dotenv()
@@ -38,7 +40,12 @@ DB_NAME = os.getenv("DB_NAME", "vectordb")
 
 DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
-logger = logging.getLogger(__name__)
+
+# --------------------------------------------------------------------------- #
+#  Configuration du logger
+# --------------------------------------------------------------------------- #
+logger = get_logger("vectordb.database")
+
 
 # Création du moteur SQLAlchemy
 engine = create_engine(DATABASE_URL)

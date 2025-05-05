@@ -10,9 +10,12 @@ from sqlalchemy.orm import (
     Session,
 )
 from .embeddings import EmbeddingGenerator
-import logging
+from utils import get_logger
 
-logger = logging.getLogger(__name__)
+# --------------------------------------------------------------------------- #
+#  Configuration du logger
+# --------------------------------------------------------------------------- #
+logger = get_logger("vectordb.crud")
 
 
 ##############################################################
