@@ -85,6 +85,16 @@
                 </li>
                 <li class="toctree-l2 current"><a class="reference internal current" href="#">Indexation vectorielle</a>
     <ul class="current">
+    <li class="toctree-l3"><a class="reference internal" href="#installation">Installation</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2-drop_indexcorpus_id-str-dict">2. drop_index(corpus_id: str) → dict</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#3-check_index_statuscorpus_id-str-dict">3. check_index_status(corpus_id: str) → dict</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#4-check_all_indexes-dict">4. check_all_indexes() → dict</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#logging-erreurs">Logging &amp; erreurs</a>
+    </li>
     </ul>
                 </li>
                 <li class="toctree-l2"><a class="reference internal" href="../search_lib/">Recherche hybride</a>
@@ -196,38 +206,38 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <p>Réflexion durant 7 secondes</p>
-<div class="highlight"><pre><span></span><code><span class="gh"># Module `index_manager`</span>
-
-Gestion des index vectoriels pour pgvector au sein de <span class="gs">**Cléa-API**</span>.  
-Ce module offre une API simple pour créer, supprimer et contrôler l’état des index IVFFLAT associés aux chunks de documents.
+                <h1 id="module-index_manager">Module <code>index_manager</code></h1>
+<p>Gestion des index vectoriels pour pgvector au sein de <strong>Cléa-API</strong>.<br />
+Ce module offre une API simple pour créer, supprimer et contrôler l’état des index IVFFLAT associés aux chunks de documents.</p>
+<hr />
+<h2 id="installation">Installation</h2>
+<p>Le module <code>index_manager</code> fait partie du package <code>vectordb</code>.<br />
+Aucun paquet externe n’est nécessaire, si ce n’est votre installation PostgreSQL/pgvector et SQLAlchemy.</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>vectordb
+<span class="sb">````</span>
 
 ---
 
-<span class="gu">## Installation</span>
+<span class="c1">## Table des matières</span>
 
-Le module <span class="sb">`index_manager`</span> fait partie du package <span class="sb">`vectordb`</span>.  
-Aucun paquet externe n’est nécessaire, si ce n’est votre installation PostgreSQL/pgvector et SQLAlchemy.
+<span class="m">1</span>.<span class="w"> </span><span class="o">[</span>Créer<span class="w"> </span>un<span class="w"> </span>index<span class="w"> </span>simple<span class="o">](</span><span class="c1">#create_simple_index)</span>
+<span class="m">2</span>.<span class="w"> </span><span class="o">[</span>Supprimer<span class="w"> </span>un<span class="w"> </span>index<span class="o">](</span><span class="c1">#drop_index)</span>
+<span class="m">3</span>.<span class="w"> </span><span class="o">[</span>Vérifier<span class="w"> </span>l’état<span class="w"> </span>d’un<span class="w"> </span>index<span class="o">](</span><span class="c1">#check_index_status)</span>
+<span class="m">4</span>.<span class="w"> </span><span class="o">[</span>Vérifier<span class="w"> </span>tous<span class="w"> </span>les<span class="w"> </span>index<span class="o">](</span><span class="c1">#check_all_indexes)</span>
 
-```bash
-pip install vectordb
-</code></pre></div>
-<hr />
-<h2 id="table-des-matieres">Table des matières</h2>
-<ol>
-<li><a href="#create_simple_index">Créer un index simple</a></li>
-<li><a href="#drop_index">Supprimer un index</a></li>
-<li><a href="#check_index_status">Vérifier l’état d’un index</a></li>
-<li><a href="#check_all_indexes">Vérifier tous les index</a></li>
-</ol>
-<hr />
-<p><a name="create_simple_index"></a></p>
-<h2 id="1-create_simple_indexcorpus_id-str-dict">1. <code>create_simple_index(corpus_id: str) → dict</code></h2>
-<p>Crée un index <strong>IVFFLAT</strong> standard sur une vue matérialisée des chunks appartenant au corpus.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">vectordb.src.index_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_simple_index</span>
+---
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">create_simple_index</span><span class="p">(</span><span class="s2">&quot;3159e84e-9dc6-41a7-a464-bb6c3894a5ad&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+&lt;a<span class="w"> </span><span class="nv">name</span><span class="o">=</span><span class="s2">&quot;create_simple_index&quot;</span>&gt;&lt;/a&gt;
+
+<span class="c1">## 1. `create_simple_index(corpus_id: str) → dict`</span>
+
+Crée<span class="w"> </span>un<span class="w"> </span>index<span class="w"> </span>**IVFFLAT**<span class="w"> </span>standard<span class="w"> </span>sur<span class="w"> </span>une<span class="w"> </span>vue<span class="w"> </span>matérialisée<span class="w"> </span>des<span class="w"> </span>chunks<span class="w"> </span>appartenant<span class="w"> </span>au<span class="w"> </span>corpus.
+
+<span class="sb">```</span>python
+from<span class="w"> </span>vectordb.src.index_manager<span class="w"> </span>import<span class="w"> </span>create_simple_index
+
+<span class="nv">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>create_simple_index<span class="o">(</span><span class="s2">&quot;3159e84e-9dc6-41a7-a464-bb6c3894a5ad&quot;</span><span class="o">)</span>
+print<span class="o">(</span>result<span class="o">)</span>
 </code></pre></div>
 <table>
 <thead>

@@ -83,6 +83,46 @@
     <ul class="current">
                 <li class="toctree-l2 current"><a class="reference internal current" href="#">Opérations CRUD</a>
     <ul class="current">
+    <li class="toctree-l3"><a class="reference internal" href="#installation">Installation</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#description">Description</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#parametres">Paramètres</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#retour">Retour</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2-update_document_with_chunksdocument_update-new_chunksnone-dictstr-any">2. update_document_with_chunks(document_update, new_chunks=None) → Dict[str, Any]</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#description_1">Description</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#parametres_1">Paramètres</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#retour_1">Retour</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#3-delete_document_chunksdocument_id-chunk_idsnone-dictstr-any">3. delete_document_chunks(document_id, chunk_ids=None) → Dict[str, Any]</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#description_2">Description</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#parametres_2">Paramètres</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#retour_2">Retour</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#4-delete_documentdocument_id-dictstr-any">4. delete_document(document_id) → Dict[str, Any]</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#description_3">Description</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#parametres_3">Paramètres</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#retour_3">Retour</a>
+    </li>
+        </ul>
+    </li>
     </ul>
                 </li>
                 <li class="toctree-l2"><a class="reference internal" href="../index_lib/">Indexation vectorielle</a>
@@ -196,39 +236,38 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <p>Réflexion durant 4 secondes</p>
-<div class="highlight"><pre><span></span><code><span class="gh"># Module `crud`</span>
-
-Ce module fournit des opérations CRUD de haut niveau sur les entités <span class="gs">**Document**</span>, <span class="gs">**Chunk**</span> et <span class="gs">**IndexConfig**</span>, avec gestion des embeddings et des index pgvector.  
-
-Fichier source : <span class="sb">`vectordb/src/crud.py`</span> :contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}
+                <h1 id="module-crud">Module <code>crud</code></h1>
+<p>Ce module fournit des opérations CRUD de haut niveau sur les entités <strong>Document</strong>, <strong>Chunk</strong> et <strong>IndexConfig</strong>, avec gestion des embeddings et des index pgvector.  </p>
+<p>Fichier source : <code>vectordb/src/crud.py</code> :contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}</p>
+<hr />
+<h2 id="installation">Installation</h2>
+<p>Ce module est inclus dans le package <code>vectordb</code>. Pour l’installer :</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>vectordb
+<span class="sb">````</span>
 
 ---
 
-<span class="gu">## Installation</span>
+<span class="c1">## Table des matières</span>
 
-Ce module est inclus dans le package <span class="sb">`vectordb`</span>. Pour l’installer :
+<span class="m">1</span>.<span class="w"> </span><span class="o">[</span>add<span class="se">\_</span>document<span class="se">\_</span>with<span class="se">\_</span>chunks<span class="o">](</span><span class="c1">#add_document_with_chunks)</span>
+<span class="m">2</span>.<span class="w"> </span><span class="o">[</span>update<span class="se">\_</span>document<span class="se">\_</span>with<span class="se">\_</span>chunks<span class="o">](</span><span class="c1">#update_document_with_chunks)</span>
+<span class="m">3</span>.<span class="w"> </span><span class="o">[</span>delete<span class="se">\_</span>document<span class="se">\_</span>chunks<span class="o">](</span><span class="c1">#delete_document_chunks)</span>
+<span class="m">4</span>.<span class="w"> </span><span class="o">[</span>delete<span class="se">\_</span>document<span class="o">](</span><span class="c1">#delete_document)</span>
 
-```bash
-pip install vectordb
-</code></pre></div>
-<hr />
-<h2 id="table-des-matieres">Table des matières</h2>
-<ol>
-<li><a href="#add_document_with_chunks">add_document_with_chunks</a></li>
-<li><a href="#update_document_with_chunks">update_document_with_chunks</a></li>
-<li><a href="#delete_document_chunks">delete_document_chunks</a></li>
-<li><a href="#delete_document">delete_document</a></li>
-</ol>
-<hr />
-<p><a name="add_document_with_chunks"></a></p>
-<h2 id="1-add_document_with_chunksdb-doc-chunks-batch_size10-dictstr-any">1. <code>add_document_with_chunks(db, doc, chunks, batch_size=10) → Dict[str, Any]</code></h2>
-<p>Ajoute un <strong>document</strong> et ses <strong>chunks</strong> en base, génère les embeddings en lot, et gère la configuration de l’index.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy.orm</span><span class="w"> </span><span class="kn">import</span> <span class="n">Session</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">vectordb.src.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">DocumentCreate</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">vectordb.src.crud</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_document_with_chunks</span>
+---
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">add_document_with_chunks</span><span class="p">(</span><span class="n">db</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="n">doc</span><span class="p">:</span> <span class="n">DocumentCreate</span><span class="p">,</span> <span class="n">chunks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+&lt;a<span class="w"> </span><span class="nv">name</span><span class="o">=</span><span class="s2">&quot;add_document_with_chunks&quot;</span>&gt;&lt;/a&gt;
+
+<span class="c1">## 1. `add_document_with_chunks(db, doc, chunks, batch_size=10) → Dict[str, Any]`</span>
+
+Ajoute<span class="w"> </span>un<span class="w"> </span>**document**<span class="w"> </span>et<span class="w"> </span>ses<span class="w"> </span>**chunks**<span class="w"> </span>en<span class="w"> </span>base,<span class="w"> </span>génère<span class="w"> </span>les<span class="w"> </span>embeddings<span class="w"> </span>en<span class="w"> </span>lot,<span class="w"> </span>et<span class="w"> </span>gère<span class="w"> </span>la<span class="w"> </span>configuration<span class="w"> </span>de<span class="w"> </span>l’index.
+
+<span class="sb">```</span>python
+from<span class="w"> </span>sqlalchemy.orm<span class="w"> </span>import<span class="w"> </span>Session
+from<span class="w"> </span>vectordb.src.schemas<span class="w"> </span>import<span class="w"> </span>DocumentCreate
+from<span class="w"> </span>vectordb.src.crud<span class="w"> </span>import<span class="w"> </span>add_document_with_chunks
+
+<span class="nv">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>add_document_with_chunks<span class="o">(</span>db:<span class="w"> </span>Session,<span class="w"> </span>doc:<span class="w"> </span>DocumentCreate,<span class="w"> </span>chunks:<span class="w"> </span>List<span class="o">[</span>dict<span class="o">]</span>,<span class="w"> </span><span class="nv">batch_size</span><span class="o">=</span><span class="m">20</span><span class="o">)</span>
 </code></pre></div>
 <h3 id="description">Description</h3>
 <ul>

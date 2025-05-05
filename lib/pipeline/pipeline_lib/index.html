@@ -77,7 +77,7 @@
     <ul class="current">
                 <li class="toctree-l2 current"><a class="reference internal current" href="#">Pipeline end-to-end</a>
     <ul class="current">
-    <li class="toctree-l3"><a class="reference internal" href="#process_and_store">process_and_store&#x20;</a>
+    <li class="toctree-l3"><a class="reference internal" href="#installation">Installation</a>
         <ul>
     <li class="toctree-l4"><a class="reference internal" href="#description">Description</a>
     </li>
@@ -89,19 +89,11 @@
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#exemple">Exemple</a>
     </li>
-        </ul>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#determine_document_type">determine_document_type&#x20;</a>
-        <ul>
-    <li class="toctree-l4"><a class="reference internal" href="#description_1">Description</a>
-    </li>
-    <li class="toctree-l4"><a class="reference internal" href="#parametre">Paramètre</a>
-    </li>
-    <li class="toctree-l4"><a class="reference internal" href="#retour_1">Retour</a>
-    </li>
-    <li class="toctree-l4"><a class="reference internal" href="#exemple_1">Exemple</a>
+    <li class="toctree-l4"><a class="reference internal" href="#determine_document_type">determine_document_type&#x20;</a>
     </li>
         </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utilisation-typique">Utilisation typique</a>
     </li>
     </ul>
                 </li>
@@ -222,34 +214,28 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <p><strong>Génération de documentation</strong></p>
-<p>L'utilisateur demande à générer une documentation pour la bibliothèque "pipeline". Il semble que le fichier "pipeline.py" actuel soit plus simple et contienne l'implémentation de "process_and_store" et "determine_document_type", alors qu'une version antérieure incluait d'autres éléments comme la classe "InterfaceDocument". Il semble qu'ils veuillent une documentation markdown basée sur ce script actuel. Il faudra alors bien documenter ces deux fonctions principales ainsi que leur rôle dans le cadre de cette bibliothèque.</p>
-<p><strong>Documentant la bibliothèque pipeline</strong></p>
-<p>L'utilisateur souhaite une documentation markdown pour la bibliothèque pipeline, basée sur "pipeline.py". Il semble que ce fichier définisse uniquement deux fonctions : <code>process_and_store</code> et <code>determine_document_type</code>. Nous devrons fournir des informations sur leur signature, leur fonctionnement, leurs arguments, valeurs de retour, exceptions et exemples d'utilisation, sans mentionner de classe "InterfaceDocument" qui n'est pas présente ici. Le tout sera structuré avec une introduction, installation et exemples, en précisant que cette bibliothèque fait partie de <code>clea-pipeline</code>.</p>
-<p>Réflexion durant 13 secondes</p>
-<div class="highlight"><pre><span></span><code><span class="gh"># Module **pipeline**</span>
-
-Orchestration du traitement de documents : extraction, segmentation et insertion en base.
+                <h1 id="module-pipeline">Module <strong>pipeline</strong></h1>
+<p>Orchestration du traitement de documents : extraction, segmentation et insertion en base.</p>
+<hr />
+<h2 id="installation">Installation</h2>
+<p>Le module <code>pipeline.py</code> fait partie du package <strong>clea-pipeline</strong>. Pour l’installer :</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>clea-pipeline
+<span class="sb">````</span>
 
 ---
 
-<span class="gu">## Installation</span>
+<span class="c1">## Fonctions principales</span>
 
-Le module <span class="sb">`pipeline.py`</span> fait partie du package <span class="gs">**clea-pipeline**</span>. Pour l’installer :
+<span class="c1">### `process_and_store`&amp;#x20;</span>
 
-```bash
-pip install clea-pipeline
-</code></pre></div>
-<hr />
-<h2 id="fonctions-principales">Fonctions principales</h2>
-<h3 id="process_and_store"><code>process_and_store</code>&#x20;</h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">process_and_store</span><span class="p">(</span>
-    <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">max_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span>
-    <span class="n">overlap</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
-    <span class="n">theme</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Thème générique&quot;</span><span class="p">,</span>
-    <span class="n">corpus_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="sb">```</span>python
+def<span class="w"> </span>process_and_store<span class="o">(</span>
+<span class="w">    </span>file_path:<span class="w"> </span>str,
+<span class="w">    </span>max_length:<span class="w"> </span><span class="nv">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">500</span>,
+<span class="w">    </span>overlap:<span class="w"> </span><span class="nv">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span>,
+<span class="w">    </span>theme:<span class="w"> </span>Optional<span class="o">[</span>str<span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Thème générique&quot;</span>,
+<span class="w">    </span>corpus_id:<span class="w"> </span>Optional<span class="o">[</span>str<span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>None,
+<span class="o">)</span><span class="w"> </span>-&gt;<span class="w"> </span>Dict<span class="o">[</span>str,<span class="w"> </span>Any<span class="o">]</span>:
 </code></pre></div>
 <h4 id="description">Description</h4>
 <ol>
