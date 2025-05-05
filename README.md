@@ -3,7 +3,7 @@
 *Hybrid document-search framework for PostgreSQL + pgvector*
 
 [![Licence MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Docs](https://img.shields.io/badge/docs-ReadTheDocs-green.svg)](https://<your-gh-user>.github.io/clea-api)
+[![Docs](https://img.shields.io/badge/docs-ReadTheDocs-green.svg)](https://WillIsback.github.io/clea-api)
 
 Cléa-API charge des documents multi-formats, les segmente, les vectorise et
 fournit une **recherche hybride (vectorielle + filtres SQL)** prête à l'emploi.
