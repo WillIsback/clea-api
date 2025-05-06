@@ -104,6 +104,7 @@ Les logs suivent le format standard:
 ├── askai/        # Génération RAG avec modèles légers
 ├── docs/         # Documentation MkDocs
 ├── demo/         # Fichiers d'exemple
+├── models/       # Models de traitement
 ├── start.sh      # Script de démarrage API
 ├── Dockerfile    # Build image
 └── ...

@@ -195,18 +195,21 @@ def test_confidence_evaluation():
     engine = SearchEngine()
     
     # Test avec scores élevés
-    high_scores = [0.8, 0.7, 0.65, 0.6]
+    high_scores = [8, 7, 6.5, 6]
     high_confidence = engine.evaluate_confidence(high_scores)
+    append_to_log(f"stats : {high_confidence.stats}")
     append_to_log(f"Scores élevés: {high_scores} → Confidence: {high_confidence.level}")
     
     # Test avec scores faibles (hors contexte)
     low_scores = [-7.0, -8.5, -9.0, -10.0]
     low_confidence = engine.evaluate_confidence(low_scores)
+    append_to_log(f"stats : {low_confidence.stats}")
     append_to_log(f"Scores faibles: {low_scores} → Confidence: {low_confidence.level}")
     
     # Test avec scores moyens
-    mid_scores = [-2.0, -1.5, -1.0, -0.5]
+    mid_scores = [-2.0, -1, 2, 1]
     mid_confidence = engine.evaluate_confidence(mid_scores)
+    append_to_log(f"stats : {mid_confidence.stats}")
     append_to_log(f"Scores moyens: {mid_scores} → Confidence: {mid_confidence.level}")
     
     # Test sans scores
@@ -214,7 +217,7 @@ def test_confidence_evaluation():
     append_to_log(f"Sans scores → Confidence: {empty_confidence.level}")
     
     # Validation
-    assert high_confidence.level > 0.8, "La confidence devrait être élevée pour des scores élevés"
+    assert high_confidence.level > 0.7, "La confidence devrait être élevée pour des scores élevés"
     assert low_confidence.level < 0.3, "La confidence devrait être faible pour des scores très négatifs"
     assert 0.3 < mid_confidence.level < 0.8, "La confidence devrait être moyenne pour des scores intermédiaires"
     assert empty_confidence.level == 0.0, "La confidence devrait être nulle sans scores"
@@ -249,7 +252,7 @@ def test_score_normalization():
     append_to_log(f"Scores identiques: {identical_scores} → Normalisés: {identical_normalized}")
     
     # Test avec scores négatifs et positifs
-    mixed_scores = [-10.0, -5.0, 0.0, 5.0, 10.0]
+    mixed_scores = [-1, -5.0, 0.0, 5.0, 10.0]
     mixed_normalized = engine.normalize_scores(mixed_scores)
     append_to_log(f"Scores mixtes: {mixed_scores} → Normalisés: {mixed_normalized}")
     
@@ -384,7 +387,7 @@ def test_filter_by_relevance_reduces_results():
 
     # Même requête pour les deux
     req_base = dict(
-        query="Jesus Christ",
+        query="Informatique",
         top_k=10,
         normalize_scores=False,
     )

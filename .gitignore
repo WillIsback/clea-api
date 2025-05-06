@@ -80,3 +80,7 @@ dmypy.json
 mkdocs.yml
 site/
 site/*
+
+models/embeddings/*
+models/llm/*
+models/reranking/*

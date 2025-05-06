@@ -67,4 +67,4 @@ cliff.toml
 CHANGELOG.md
 
 # Ne pas exclure les modèles
-!askai/models/
+!models/

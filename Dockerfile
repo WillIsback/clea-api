@@ -39,24 +39,6 @@
     ENV PATH="/app/.venv/bin:$PATH"
     RUN uv pip install --no-cache-dir -r requirements.txt -r askai/requirements_askai.txt
     
-    # Précharger les modèles Hugging Face 
-    RUN mkdir -p /app/models/hf_cache
-    ENV HF_HOME=/app/models/hf_cache \
-        TRANSFORMERS_CACHE=/app/models/hf_cache \
-        SENTENCE_TRANSFORMERS_HOME=/app/models/hf_cache
-    
-    # Copier les fichiers nécessaires pour le préchargement des modèles
-    COPY vectordb/src/ranking.py /app/temp_files/
-    COPY vectordb/src/embeddings.py /app/temp_files/
-    COPY askai/src/model_loader.py /app/temp_files/
-    
-    # Copier une version modifiée de setup.sh pour le préchargement des modèles
-    COPY docker_setup.sh /app/docker_setup.sh
-    RUN chmod +x /app/docker_setup.sh
-    
-    # Exécuter le préchargement des modèles via setup.sh
-    # Note: On exécute uniquement la partie préchargement des modèles
-    RUN /app/docker_setup.sh --docker-mode
     
     # --- STAGE 2: Runtime image ---
     FROM opensuse/tumbleweed:latest AS runtime
@@ -71,20 +53,8 @@
     # Copier l'environnement virtuel du builder
     COPY --from=builder /app/.venv /app/.venv
     
-    # Copier le cache des modèles Hugging Face
-    COPY --from=builder /app/models /app/models
-    
     # Ajouter l'utilisateur non-root
     RUN groupadd -r cleauser && useradd -r -g cleauser cleauser
-    
-    # Définir les variables d'environnement
-    ENV PATH="/app/.venv/bin:$PATH" \
-        PYTHONUNBUFFERED=1 \
-        PYTHONDONTWRITEBYTECODE=1 \
-        TZ=Europe/Paris \
-        HF_HOME="/app/models/hf_cache" \
-        TRANSFORMERS_OFFLINE=1 \
-        SENTENCE_TRANSFORMERS_HOME="/app/models/hf_cache"
     
     # Créer le répertoire de travail
     WORKDIR /app

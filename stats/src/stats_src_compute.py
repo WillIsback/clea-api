@@ -1,6 +1,7 @@
 from vectordb.src.crud import get_documents
 from vectordb.src.database import get_db, SearchQuery
 from stats.src.stats_src_schemas import DocumentStats, SearchStats, SystemStats, DashboardStats
+from .stats_src_query_labeler import QueryLabeler
 from datetime import datetime, timedelta
 from sqlalchemy import func
 from sqlalchemy.orm import Session
@@ -91,6 +92,7 @@ class StatsComputer:
             Un objet SearchStats contenant les statistiques calculées.
         """
         db = self._get_db_session()
+        labeler = QueryLabeler()
         
         try:
             # Nombre total de recherches
@@ -123,7 +125,7 @@ class StatsComputer:
                 func.count(SearchQuery.id).label('count')
             ).group_by(SearchQuery.query_text).order_by(
                 func.count(SearchQuery.id).desc()
-            ).limit(10).all()
+            ).limit(20).all()  # Augmenter légèrement pour avoir suffisamment de données après agrégation
             
             # Formatage des résultats pour les requêtes populaires
             top_queries = [
@@ -131,11 +133,17 @@ class StatsComputer:
                 for query, count in top_queries_result
             ]
             
+            # Labelliser et agréger les requêtes similaires
+            aggregated_queries = labeler.aggregate_similar_queries(top_queries)
+            
+            # Limiter au top 10 après l'agrégation
+            aggregated_queries = aggregated_queries[:10]
+            
             return SearchStats(
                 total_count=total_count,
                 last_month_count=last_month_count,
                 percent_change=percent_change,
-                top_queries=top_queries
+                top_queries=aggregated_queries
             )
         
         except Exception as e:

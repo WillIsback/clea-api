@@ -39,8 +39,8 @@ class SearchEngine:
 
     def __init__(
         self,
-        min_relevance_threshold: float = -0.0,
-        high_confidence_threshold: float = 0.0,
+        min_relevance_threshold: float = -5,
+        high_confidence_threshold: float = 5,
     ) -> None:
         """Initialise le moteur de recherche avec son générateur d'embeddings et son ranker.
 
@@ -75,7 +75,7 @@ class SearchEngine:
                 message="Aucun résultat trouvé.",
                 stats={"min": 0.0, "max": 0.0, "avg": 0.0, "median": 0.0},
             )
-
+        # Score de re-ranking varie entre -10 et 10
         # Calcul des statistiques
         max_score = max(scores)
         min_score = min(scores)
@@ -127,7 +127,7 @@ class SearchEngine:
         delta = mx - mn
         if delta == 0:
             # tous égaux mais > threshold → pertinence max
-            return [1.0] * len(scores)
+            return [0.5] * len(scores)
         return [(s - mn) / delta for s in scores]
     
     def log_search_query(self, db: Session, req: SearchRequest, response: SearchResponse) -> None:
@@ -181,17 +181,19 @@ class SearchEngine:
         # Génération de l'embedding pour la requête
         logger.debug(f"Recherche hybride: '{req.query}', top_k={req.top_k}")
         q_emb = self._embedder.generate_embedding(req.query)
-
-        # Construction et exécution de la requête SQL
-        sql, params = self._build_sql(req)
+        
+        CANDIDATE_POOL_SIZE = 200  # Nombre fixe de candidats à récupérer
+        
+        # Construction et exécution de la requête SQL pour les candidats initiaux
+        sql_candidates, params = self._build_sql(req, for_candidates=True)
         params.update(
             query_embedding=q_emb,
-            expanded_limit=req.top_k * 3,  # Récupérer plus pour le reranking
-            top_k=req.top_k,
+            candidate_limit=CANDIDATE_POOL_SIZE,
         )
 
-        raw_rows = db.execute(text(sql), params).fetchall()
-        if not raw_rows:
+        # Récupérer les candidats pour le reranking
+        candidates = db.execute(text(sql_candidates), params).fetchall()
+        if not candidates:
             logger.info(f"Aucun résultat trouvé pour '{req.query}'")
             return SearchResponse(
                 query=req.query,
@@ -207,48 +209,48 @@ class SearchEngine:
                 message="Aucun résultat trouvé.",
             )
 
-        # Rerank avec Cross-Encoder
-        contents = [r.chunk_content for r in raw_rows]
+        # Rerank avec Cross-Encoder (évaluation sémantique précise)
+        contents = [r.chunk_content for r in candidates]
         scores = self._ranker.rank_results(req.query, contents)
+      
+        # Filtrer et trier tous les candidats par score de pertinence
+        scored_results = list(zip(candidates, scores))
 
-        # Évaluation de la confiance dans les résultats
-        confidence = self.evaluate_confidence(scores)
-
-        # Filtrer les résultats sous le seuil de pertinence si demandé
+        # Filtrer par pertinence si demandé
         if req.filter_by_relevance:
-            filtered_results = [
+            scored_results = [
                 (row, score)
-                for row, score in zip(raw_rows, scores)
+                for row, score in scored_results
                 if score >= self.min_relevance_threshold
             ]
-
-            if filtered_results:
-                ranked = sorted(
-                    filtered_results,
-                    key=lambda t: t[1],
-                    reverse=True,
-                )[: req.top_k]
-            else:
-                logger.info(
-                    f"Tous les résultats filtrés pour '{req.query}' (scores trop bas)"
-                )
+            
+            if not scored_results:
+                logger.info(f"Tous les résultats filtrés pour '{req.query}' (scores trop bas)")
                 return SearchResponse(
                     query=req.query,
                     topK=req.top_k,
-                    totalResults=len(raw_rows),
+                    totalResults=len(candidates),
                     results=[],
-                    confidence=confidence,
+                    confidence=ConfidenceMetrics(
+                        level=0.1,
+                        message="Résultats disponibles mais de faible pertinence.",
+                        stats={"min": min(scores), "max": max(scores), "avg": sum(scores)/len(scores), 
+                            "median": statistics.median(scores)},
+                    ),
                     normalized=False,
                     message="Résultats disponibles mais de faible pertinence.",
                 )
-        else:
-            # Sans filtrage, trier simplement par score
-            ranked = sorted(
-                zip(raw_rows, scores),
-                key=lambda t: t[1],
-                reverse=True,
-            )[: req.top_k]
-
+                
+        # Trier tous les résultats par score (du plus pertinent au moins pertinent)
+        ranked = sorted(scored_results, key=lambda t: t[1], reverse=True)
+        
+        # Limiter au nombre demandé (top_k) APRÈS le tri complet
+        ranked = ranked[:req.top_k]
+        
+        # Évaluer la confiance UNIQUEMENT sur les scores des résultats affichés
+        final_scores = [score for _, score in ranked]
+        confidence = self.evaluate_confidence(final_scores)
+        
         # Normalisation des scores si demandée
         if req.normalize_scores:
             ranked_scores = [s for _, s in ranked]
@@ -285,7 +287,7 @@ class SearchEngine:
         response = SearchResponse(
             query=req.query,
             topK=req.top_k,
-            totalResults=len(raw_rows),
+            totalResults=len(ranked),
             results=results,
             confidence=confidence,
             normalized=req.normalize_scores,
@@ -298,12 +300,16 @@ class SearchEngine:
         return response
 
     @staticmethod
-    def _build_sql(req: SearchRequest) -> Tuple[str, Dict[str, Any]]:
+    def _build_sql(req: SearchRequest, for_candidates: bool = False) -> Tuple[str, Dict[str, Any]]:
         """Assemble la requête SQL paramétrée et les paramètres associés.
-
+        
+        Construit une requête SQL permettant de rechercher des documents par similarité
+        vectorielle et filtres de métadonnées.
+        
         Args:
-            req: Paramètres de la recherche.
-
+            req: Paramètres de la recherche avec filtres et critères.
+            for_candidates: Si True, construit une requête pour le pool initial de candidats.
+                
         Returns:
             Tuple contenant la chaîne SQL et le dictionnaire des paramètres.
         """
@@ -343,14 +349,26 @@ class SearchEngine:
             sql += " AND c.hierarchy_level = :hlevel"
             p["hlevel"] = req.hierarchy_level
 
-        sql += """
+        if for_candidates:
+            # Requête pour récupérer le pool de candidats
+            sql += """
+                ORDER BY distance
+                LIMIT :candidate_limit
+            )
+            SELECT * FROM ranked
+            ORDER BY distance;
+            """
+        else:
+            # Requête standard pour la récupération finale
+            sql += """
+                ORDER BY distance
+                LIMIT :expanded_limit
+            )
+            SELECT * FROM ranked
             ORDER BY distance
-            LIMIT :expanded_limit
-        )
-        SELECT * FROM ranked
-        ORDER BY distance
-        LIMIT :top_k;
-        """
+            LIMIT :top_k;
+            """
+            
         return sql, p
 
     @staticmethod

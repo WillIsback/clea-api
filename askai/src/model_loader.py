@@ -2,7 +2,7 @@ import logging
 from typing import Optional, Tuple
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM  # type: ignore
-
+import os
 
 class ModelLoader:
     """Chargeur de modèle LLM pour la génération de réponses.
@@ -12,7 +12,7 @@ class ModelLoader:
     prioritairement les modèles disponibles localement dans `askai/models/`.
     
     Args:
-        model_name: Nom du modèle à charger (défaut: "Qwen/Qwen3-0.6B").
+        model_name: Nom du modèle à charger (défaut: "Qwen3-0.6B").
         device: Périphérique de calcul; si None, utilise cuda si disponible, sinon cpu.
         load_in_8bit: Active la quantification 8-bit pour économiser la mémoire.
         base_path: Chemin de base vers le répertoire des modèles.
@@ -38,12 +38,12 @@ class ModelLoader:
 
     # Modèles supportés avec leurs configurations par défaut
     SUPPORTED_MODELS = {
-        "Qwen/Qwen3-0.6B": {
+        "Qwen3-0.6B": {
             "max_context_length": 32768,
             "thinking_enabled": True,
             "dependencies": ["protobuf", "tokenizers>=0.13.3"]
         },
-        "Qwen/Qwen3-1.7B": {
+        "Qwen3-1.7B": {
             "max_context_length": 32768,
             "thinking_enabled": True,
             "dependencies": ["protobuf", "tokenizers>=0.13.3"]
@@ -52,10 +52,9 @@ class ModelLoader:
 
     def __init__(
         self, 
-        model_name: str = "Qwen/Qwen3-0.6B", 
+        model_name: str = None, 
         device: Optional[str] = None,
         load_in_8bit: bool = False,
-        base_path: str = "askai/models",
         thinking_enabled: bool = True,
         auto_load: bool = False,
         test_mode: bool = False,
@@ -74,8 +73,16 @@ class ModelLoader:
             auto_fix: Tente de réparer automatiquement les problèmes de tokenizer.
         """
         self.logger = logging.getLogger("clea-api.askai.model_loader")
-        self.model_name = model_name
-        self.base_path = base_path
+        project_root = os.path.dirname(os.path.abspath(__name__))
+        
+        if model_name is None:
+            self.model_name = os.getenv("LLM_MODEL", "Qwen/Qwen3-0.6B")
+            self.model_path = os.path.join(project_root, "models", "llm", "Qwen3-0.6B")
+        else:
+            self.model_name = model_name
+            self.model_path = os.path.join(project_root, "models", "llm", model_name)
+        
+            
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self.load_in_8bit = load_in_8bit
         self.model = None
@@ -85,11 +92,11 @@ class ModelLoader:
         self.auto_fix = auto_fix
         
             
-        model_config = self.SUPPORTED_MODELS.get(model_name, {})
+        model_config = self.SUPPORTED_MODELS.get(self.model_name, {})
         self.max_context_length = model_config.get("max_context_length", 32768)
         self.thinking_enabled = thinking_enabled
         
-        self.logger.info(f"Initialisation du modèle {model_name} sur {self.device} (test_mode={test_mode})")
+        self.logger.info(f"Initialisation du modèle {self.model_name} sur {self.device} (test_mode={test_mode})")
         
         # En mode test, marquer immédiatement comme chargé
         if test_mode:
@@ -124,20 +131,35 @@ class ModelLoader:
             self.loaded = True
             return
             
-        try:           
-
-            self.logger.info(f"Chargement du modèle depuis: {self.model_name}")
-            
-            # load the tokenizer and the model
-            self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
-            self.model = AutoModelForCausalLM.from_pretrained(
-                self.model_name,
-                torch_dtype="auto",
-                device_map="auto"
-            )
-
-            self.loaded = True
-            self.logger.info(f"Modèle {self.model_name} chargé avec succès")
+        try:     
+            try:      
+                # Tentative de chargement du modèle local
+                self.logger.info(f"Tentative de chargement local du modèle depuis {self.model_path}")
+                self.tokenizer = AutoTokenizer.from_pretrained(self.model_path, local_files_only=True)
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    self.model_path,
+                    torch_dtype="auto",
+                    device_map="auto",
+                    local_files_only=True
+                )
+                self.logger.info(f"Modèle chargé localement depuis {self.model_path}")
+                self.loaded = True
+                self.logger.info(f"Modèle {self.model_path} chargé avec succès")
+                
+            except Exception as e:
+                # Chargement depuis Hugging Face si échec local
+                self.logger.error(f"Échec du chargement local: {e}. Tentative de chargement en ligne.")
+                self.logger.info(f"Chargement du modèle depuis: {self.model_name}")
+                model_name = os.path.join("Qwen", self.model_name)
+                # load the tokenizer and the model
+                self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    model_name,
+                    torch_dtype="auto",
+                    device_map="auto"
+                )
+                self.loaded = True
+                self.logger.info(f"Modèle {model_name} chargé avec succès")
 
         except Exception as e:
             self.logger.error(f"Erreur lors du chargement du modèle: {str(e)}")
@@ -297,3 +319,15 @@ class ModelLoader:
             full_response = self.tokenizer.decode(generated_ids, skip_special_tokens=True).strip("\n")
             self.logger.debug("Pas de thinking détecté, retour de la réponse complète")
             return "", full_response
+        
+        
+if __name__ == "__main__":
+    # Exemple d'utilisation
+    model_loader = ModelLoader(model_name="Qwen3-0.6B", auto_load=True)
+    prompt = "Quel est le capital de la France ?"
+    
+    # Génération avec thinking activé
+    thinking, response = model_loader.generate(prompt, enable_thinking=True)
+    
+    print("Thinking:", thinking)
+    print("Response:", response)

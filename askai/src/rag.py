@@ -150,7 +150,7 @@ class RAGProcessor:
             corpus_id=filters.get("corpus_id"),
             hierarchy_level=filters.get("hierarchy_level"),
             hierarchical=True,  # Toujours récupérer le contexte hiérarchique
-            filter_by_relevance=filters.get("filter_by_relevance", False),
+            filter_by_relevance=filters.get("filter_by_relevance", True),
             normalize_scores=filters.get("normalize_scores", True),
         )
         
