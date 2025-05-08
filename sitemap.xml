@@ -2,114 +2,118 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://WillIsback.github.io/clea-api/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/database/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/main/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://WillIsback.github.io/clea-api/model/</loc>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/schemas/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/Integration/askai/rag_js/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/Integration/doc_loader/doc_loader_js/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/Integration/pipeline/pipeline_js/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/Integration/stats/stats_computer_js/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/Integration/vectordb/crud_js/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/Integration/vectordb/index_js/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/Integration/vectordb/search_js/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/api/lib/askai/rag_references/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/api/lib/doc_loader/extractor_references/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/api/lib/doc_loader/splitter_references/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/api/lib/pipeline/pipeline_references/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/api/lib/stats/stats_computer_references/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/api/lib/vectordb/crud_references/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/api/lib/vectordb/index_references/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/api/lib/vectordb/search_references/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/api/rest/rest_api/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/lib/askai/rag_lib/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/lib/doc_loader/extractor_lib/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/lib/doc_loader/splitter_lib/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/lib/pipeline/pipeline_lib/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/lib/stats/stats_computer_lib/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/lib/vectordb/crud_lib/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/lib/vectordb/index_lib/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://WillIsback.github.io/clea-api/lib/vectordb/search_lib/</loc>
-         <lastmod>2025-05-05</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
 </urlset>

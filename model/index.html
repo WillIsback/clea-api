@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://WillIsback.github.io/clea-api/model/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Modèles utilisés par Cléa-API - Cléa-API Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../css/mkdocsoad.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Mod\u00e8les utilis\u00e9s par Cl\u00e9a-API";
+        var mkdocs_page_input_path = "model.md";
+        var mkdocs_page_url = "/clea-api/model/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Cléa-API Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Accueil</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../main/">Introduction</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../database/">Base de données</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../schemas/">Schémas</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Documentation des librairies</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../lib/askai/rag_lib/">RAG</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../lib/doc_loader/extractor_lib/">Extracteurs</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../lib/doc_loader/splitter_lib/">Segmentation</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../lib/pipeline/pipeline_lib/">Pipeline end-to-end</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../lib/vectordb/crud_lib/">Opérations CRUD</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../lib/vectordb/index_lib/">Indexation vectorielle</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../lib/stats/stats_computer_lib/">Recherche hybride</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >stats</a>
+    <ul>
+                <li class="toctree-l2"><a class="" href="../lib/stats/stats_lib.md">Statistiques</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Références API</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >REST API</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../api/rest/rest_api/">Documentation Swagger</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Références Python</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../api/lib/askai/rag_references/">RAG</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../api/lib/doc_loader/extractor_references/">Extracteurs</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../api/lib/doc_loader/splitter_references/">Segmentation</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../api/lib/pipeline/pipeline_references/">Pipeline</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../api/lib/vectordb/crud_references/">CRUD</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../api/lib/vectordb/index_references/">Indexation</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../api/lib/vectordb/search_references/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >stats</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../api/lib/stats/stats_computer_references/">Statistiques</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Intégrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >JavaScript / TypeScript</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" >askai</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../Integration/askai/rag_js/">RAG</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >doc_loader</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../Integration/doc_loader/doc_loader_js/">Extraction de documents</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >pipeline</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../Integration/pipeline/pipeline_js/">Pipeline end-to-end</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >vectordb</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../Integration/vectordb/crud_js/">Opérations CRUD</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../Integration/vectordb/index_js/">Indexation</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../Integration/vectordb/search_js/">Recherche</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >stats</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../Integration/stats/stats_computer_js/">Statistiques</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Cléa-API Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Modèles utilisés par Cléa-API</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/WillIsback/clea-api/edit/master/docs/model.md">Edit on Cléa-API</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="modeles-utilises-par-clea-api">Modèles utilisés par Cléa-API</h1>
+<p>Ce document détaille les modèles de machine learning intégrés par défaut dans Cléa-API pour les différentes fonctionnalités de recherche sémantique et génération de texte.</p>
+<h2 id="resume-des-modeles">Résumé des modèles</h2>
+<table>
+<thead>
+<tr>
+<th>Fonctionnalité</th>
+<th>Modèle utilisé</th>
+<th>Lien HuggingFace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Embeddings</strong></td>
+<td>almanach/camembertav2-base</td>
+<td><a href="https://huggingface.co/almanach/camembertav2-base">HuggingFace</a></td>
+</tr>
+<tr>
+<td><strong>Reranking</strong></td>
+<td>cross-encoder/mmarco-mMiniLMv2-L12-H384-v1</td>
+<td><a href="https://huggingface.co/cross-encoder/mmarco-mMiniLMv2-L12-H384-v1">HuggingFace</a></td>
+</tr>
+<tr>
+<td><strong>Génération LLM</strong></td>
+<td>Qwen/Qwen3-0.6B</td>
+<td><a href="https://huggingface.co/Qwen/Qwen3-0.6B">HuggingFace</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="modele-dembeddings-camembertav2">Modèle d'embeddings : CamemBERTav2</h2>
+<p>CamemBERTav2 est un modèle de langue française basé sur l'architecture DebertaV2, entraîné sur un corpus de 275 milliards de tokens de texte français. Il s'agit de la deuxième version du modèle CamemBERTa, significativement améliorée.</p>
+<h3 id="caracteristiques-principales">Caractéristiques principales</h3>
+<ul>
+<li><strong>Architecture</strong> : DebertaV2 adaptée pour le français</li>
+<li><strong>Taille du corpus d'entraînement</strong> : 275 milliards de tokens (contre ~32 milliards pour la version précédente)</li>
+<li><strong>Sources des données</strong> : OSCAR français (projet CulturaX), documents scientifiques français (HALvest) et Wikipédia français</li>
+<li><strong>Tokenizer</strong> : WordPiece avec 32 768 tokens, support des retours à la ligne, tabulations et emojis</li>
+<li><strong>Fenêtre de contexte</strong> : 1 024 tokens</li>
+</ul>
+<h3 id="performances">Performances</h3>
+<p>Le modèle CamemBERTav2 surpasse ses prédécesseurs sur de nombreuses tâches en français :</p>
+<table>
+<thead>
+<tr>
+<th>Modèle</th>
+<th>UPOS</th>
+<th>FTB-NER</th>
+<th>CLS</th>
+<th>PAWS-X</th>
+<th>XNLI</th>
+<th>FQuAD (F1)</th>
+<th>Medical-NER</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CamemBERT</td>
+<td>97.59</td>
+<td>89.97</td>
+<td>94.62</td>
+<td>91.36</td>
+<td>81.95</td>
+<td>80.98</td>
+<td>70.96</td>
+</tr>
+<tr>
+<td>CamemBERTa</td>
+<td>97.57</td>
+<td>90.33</td>
+<td>94.92</td>
+<td>91.67</td>
+<td>82.00</td>
+<td>81.15</td>
+<td>71.86</td>
+</tr>
+<tr>
+<td><strong>CamemBERTav2</strong></td>
+<td><strong>97.71</strong></td>
+<td><strong>93.40</strong></td>
+<td><strong>95.63</strong></td>
+<td><strong>93.06</strong></td>
+<td><strong>84.82</strong></td>
+<td><strong>83.04</strong></td>
+<td><strong>73.98</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="utilisation-dans-clea-api">Utilisation dans Cléa-API</h3>
+<p>Dans Cléa-API, ce modèle est utilisé pour la vectorisation des documents et des requêtes dans le module <code>vectordb.src.embeddings</code>. Il transforme les textes en vecteurs denses de grande dimension, permettant la recherche par similarité sémantique.</p>
+<h2 id="modele-de-reranking-cross-encoder-multilingue-ms-marco">Modèle de reranking : Cross-Encoder multilingue MS Marco</h2>
+<p>Il s'agit d'un modèle cross-encoder multilingue qui effectue une attention croisée entre une paire question-passage et produit un score de pertinence. Le modèle est utilisé comme reranker pour la recherche sémantique après une première étape de récupération (BM25 ou bi-encoder).</p>
+<h3 id="caracteristiques-principales_1">Caractéristiques principales</h3>
+<ul>
+<li><strong>Architecture</strong> : Cross-Encoder basé sur mMiniLMv2-L12-H384</li>
+<li><strong>Base</strong> : Distillé à partir de XLM-RoBERTa Large</li>
+<li><strong>Entraînement</strong> : Fine-tuned sur le dataset MMARCO (MS Marco traduit dans 14 langues)</li>
+<li><strong>Support multilingue</strong> : Entraîné sur 14 langues dont le français, l'anglais, l'allemand, l'espagnol, etc.</li>
+<li><strong>Utilisation</strong> : Reranking de passages pour améliorer la précision des résultats de recherche</li>
+</ul>
+<h3 id="avantages-du-modele-multilingue">Avantages du modèle multilingue</h3>
+<ul>
+<li><strong>Compréhension multilingue</strong> : Capacité à traiter efficacement les requêtes et documents en français et autres langues</li>
+<li><strong>Transfert de connaissances</strong> : Bénéficie des données d'entraînement dans toutes les langues pour améliorer les performances</li>
+<li><strong>Légèreté</strong> : Architecture compacte (L12-H384) optimisée pour des performances élevées avec des ressources limitées</li>
+</ul>
+<h2 id="modele-de-generation-llm-qwen3-06b">Modèle de génération (LLM) : Qwen3-0.6B</h2>
+<p>Qwen3-0.6B est un modèle de langage léger de la série Qwen3, offrant des capacités avancées de raisonnement et de génération de texte. Ce modèle est particulièrement adapté aux environnements avec ressources limitées tout en conservant des capacités de génération de qualité.</p>
+<h3 id="caracteristiques-principales_2">Caractéristiques principales</h3>
+<ul>
+<li><strong>Architecture</strong> : Modèle causal de langage (Transformer décodeur)</li>
+<li><strong>Paramètres</strong> : 0,6 milliard (dont 0,44 milliard hors embedding)</li>
+<li><strong>Nombre de couches</strong> : 28</li>
+<li><strong>Têtes d'attention (GQA)</strong> : 16 pour Q et 8 pour KV</li>
+<li><strong>Fenêtre de contexte</strong> : 32 768 tokens</li>
+<li><strong>Modes de génération</strong> : Support du mode "thinking" et "non-thinking"</li>
+</ul>
+<h3 id="modes-de-generation">Modes de génération</h3>
+<ol>
+<li><strong>Mode thinking</strong> (<code>enable_thinking=True</code>) :</li>
+<li>Adapté aux raisonnements complexes, mathématiques, et génération de code</li>
+<li>Génère un contenu de réflexion encapsulé dans un bloc <code>&lt;think&gt;...&lt;/think&gt;</code> avant la réponse finale</li>
+<li>
+<p>Paramètres recommandés : <code>Temperature=0.6</code>, <code>TopP=0.95</code>, <code>TopK=20</code></p>
+</li>
+<li>
+<p><strong>Mode non-thinking</strong> (<code>enable_thinking=False</code>) :</p>
+</li>
+<li>Optimisé pour les dialogues généraux et réponses directes</li>
+<li>Paramètres recommandés : <code>Temperature=0.7</code>, <code>TopP=0.8</code>, <code>TopK=20</code></li>
+</ol>
+<h3 id="utilisation-dans-clea-api_1">Utilisation dans Cléa-API</h3>
+<p>Dans Cléa-API, ce modèle est utilisé dans le module <code>askai</code> pour :
+- La génération de réponses basées sur les documents retrouvés (RAG)
+- Le résumé de documents
+- Les réponses aux questions sur des corpus spécifiques</p>
+<h2 id="configuration-des-modeles">Configuration des modèles</h2>
+<p>Les modèles peuvent être configurés via le fichier <code>.env</code> ou directement dans les modules correspondants :</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Configuration des modèles (dans .env)</span>
+<span class="nv">EMBEDDING_MODEL</span><span class="o">=</span><span class="s2">&quot;almanach/camembertav2-base&quot;</span>
+<span class="nv">CROSS_ENCODER_MODEL</span><span class="o">=</span><span class="s2">&quot;cross-encoder/mmarco-mMiniLMv2-L12-H384-v1&quot;</span>
+<span class="nv">LLM_MODEL</span><span class="o">=</span><span class="s2">&quot;Qwen/Qwen3-0.6B&quot;</span>
+</code></pre></div>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/WillIsback/clea-api" class="fa fa-code-fork" style="color: #fcfcfc"> Cléa-API</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
