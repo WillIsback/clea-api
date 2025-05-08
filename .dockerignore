@@ -61,10 +61,9 @@ mkdocs.yml
 
 # Fichiers spécifiques au développement
 clea_api.egg-info/
-uv.lock
 demo/
 cliff.toml
 CHANGELOG.md
 
 # Ne pas exclure les modèles
-!models/
+models/

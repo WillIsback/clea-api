@@ -275,7 +275,9 @@ class ModelLoader:
         )
         
         # Tokeniser le texte
-        inputs = self.tokenizer([chat_text], return_tensors="pt").to(self.model.device)
+        inputs = self.tokenizer([chat_text], return_tensors="pt")
+        device = next(self.model.parameters()).device
+        inputs = {k: v.to(device) for k, v in inputs.items()}
         
         # Paramètres de génération
         generation_config = {

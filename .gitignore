@@ -84,3 +84,8 @@ site/*
 models/embeddings/*
 models/llm/*
 models/reranking/*
+
+# local Docker files configuration
+docker
+docker-compose.yml
+.dockerignore

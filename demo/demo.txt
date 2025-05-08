@@ -511,8 +511,8 @@ def start_postgres() -> bool:
         print("PostgreSQL démarré avec succès.")
         
         # Vérification de la connexion à la base de données
-        import psycopg2
-        conn = psycopg2.connect(
+        import psycopg
+        conn = psycopg.connect(
             dbname=POSTGRES_DB,
             user=POSTGRES_USER,
             password=POSTGRES_PASSWORD,

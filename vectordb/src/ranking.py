@@ -5,6 +5,8 @@ from sentence_transformers.cross_encoder import CrossEncoder
 import os
 from dotenv import load_dotenv
 from utils import get_logger
+import torch
+
 load_dotenv()
 
 # Configuration du logger
@@ -34,16 +36,19 @@ class ResultRanker:
             "CROSS_ENCODER_MODEL",
             "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",  # Modèle par défaut
         )
+        # Vérifier la disponibilité du GPU
+        use_cuda = torch.cuda.is_available()
+        self.device = "cuda" if use_cuda else "cpu"
         try:
             # Tentative de chargement du modèle local
             logger.debug(f"Tentative de chargement local du modèle depuis {model_path}")
             # Initialisation du Cross-Encoder
-            self.model = CrossEncoder(model_path)
+            self.model = CrossEncoder(model_path, device=self.device)
             logger.debug(f"Modèle chargé localement depuis {model_path}")
         except Exception as e:
             logger.debug(f"Échec du chargement local: {e}. Tentative de chargement en ligne.")
             # Chargement depuis Hugging Face si échec local
-            self.model = CrossEncoder(model_name)
+            self.model = CrossEncoder(model_name, device=self.device)
             logger.debug(f"Modèle chargé en ligne depuis Hugging Face : {model_name}")
 
     def rank_results(self, query: str, texts: Sequence[str]) -> List[float]:

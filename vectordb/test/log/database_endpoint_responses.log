@@ -329,7 +329,7 @@
     }
   },
   "response": {
-    "error": "Échec de création de l'index: (psycopg2.errors.FeatureNotSupported) cannot use subquery in index predicate\nLINE 5:                 WHERE id IN (SELECT id FROM tmp_chunk_ids)\n                                 ^\n\n[SQL: \n                CREATE INDEX chunks_embedding_ivfflat_af99e9fb_19de_41fa_aa13_ece5e1009efd\n                ON chunks USING ivfflat (embedding vector_cosine_ops)\n                WITH (lists = 100)\n                WHERE id IN (SELECT id FROM tmp_chunk_ids)\n                ]\n(Background on this error at: https://sqlalche.me/e/20/tw8g)"
+    "error": "Échec de création de l'index: (psycopg.errors.FeatureNotSupported) cannot use subquery in index predicate\nLINE 5:                 WHERE id IN (SELECT id FROM tmp_chunk_ids)\n                                 ^\n\n[SQL: \n                CREATE INDEX chunks_embedding_ivfflat_af99e9fb_19de_41fa_aa13_ece5e1009efd\n                ON chunks USING ivfflat (embedding vector_cosine_ops)\n                WITH (lists = 100)\n                WHERE id IN (SELECT id FROM tmp_chunk_ids)\n                ]\n(Background on this error at: https://sqlalche.me/e/20/tw8g)"
   }
 }
 

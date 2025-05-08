@@ -20,7 +20,8 @@ from fastapi.responses import JSONResponse
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 from starlette.exceptions import HTTPException as StarletteHTTPException
-
+from starlette.responses import PlainTextResponse
+from vectordb.src.database import engine
 from vectordb.api.database_endpoint import router as database_router
 from vectordb.api.index_endpoint import router as index_router
 from vectordb.api.search_endpoint import router as search_router
@@ -271,10 +272,10 @@ app = FastAPI(
 # Middleware CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost"],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type"],
 )
 
 # Inclusion des routeurs
@@ -345,7 +346,24 @@ async def root():
     """
     return {"message": "Cléa API is running"}
 
-
+# Endpoint de santé dédié pour les healthchecks Docker
+@app.get("/health", response_class=PlainTextResponse)
+async def health_check():
+    """Endpoint dédié aux healthchecks pour Docker.
+    Vérifie la disponibilité de l'API et de la base de données.
+    
+    Returns:
+        str: Message simple indiquant que l'API est opérationnelle.
+    """
+    try:
+        # Vérification simplifiée de la connexion à la base de données
+        with engine.connect() as connection:
+            connection.execute(text("SELECT 1"))
+        return "OK"
+    except Exception as e:
+        logger.error(f"Échec du healthcheck: {e}")
+        raise StarletteHTTPException(status_code=503, detail="Service unavailable")
+    
 # Point d'entrée principal
 if __name__ == "__main__":
     # Analyser les arguments en ligne de commande
@@ -386,6 +404,9 @@ if __name__ == "__main__":
         host=args.host,
         port=args.port,
         log_level=uvicorn_log_level,
+        timeout_keep_alive=300,  # Augmenter ce timeout
+        timeout_graceful_shutdown=300,  # Et celui-ci aussi
+        limit_concurrency=5,  # Limiter la concurrence pour éviter les OOM
         reload=True,
         workers=args.workers,
         loop="auto",  # Utiliser uvloop si disponible

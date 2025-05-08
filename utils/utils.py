@@ -2,11 +2,11 @@ import logging
 import os
 from dotenv import load_dotenv
 import pwd
-import psycopg2
 from sqlalchemy import inspect
 import tomllib
-from pathlib import Path
-from typing import Optional
+from sqlalchemy import create_engine, text
+from sqlalchemy.exc import SQLAlchemyError
+
 
 # Configuration du logger
 logging.basicConfig(
@@ -17,12 +17,20 @@ logger = logging.getLogger("clea-api")
 # Charger les variables d'environnement depuis le fichier .env
 load_dotenv()
 
-# Variables de configuration PostgreSQL
-POSTGRES_USER = os.getenv("DB_USER")
-POSTGRES_PASSWORD = os.getenv("DB_PASSWORD")
-POSTGRES_DB = os.getenv("DB_NAME")
-POSTGRES_HOST = os.getenv("DB_HOST", "localhost")
-POSTGRES_PORT = os.getenv("DB_PORT", "5432")
+# Configuration de la base de données
+DB_USER = os.getenv("DB_USER", "postgres")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "password")
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_PORT = os.getenv("DB_PORT", "5432")
+DB_NAME = os.getenv("DB_NAME", "vectordb")
+
+DATABASE_URL = f"postgresql+psycopg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+
+engine = create_engine(
+    DATABASE_URL,
+    pool_pre_ping=True,    # ping automatique des connexions inactives
+    connect_args={"connect_timeout": 3},
+)
 
 
 def get_current_user() -> str:
@@ -52,27 +60,14 @@ def get_current_user() -> str:
 
 
 def check_postgres_status() -> bool:
-    """
-    Vérifie si le service PostgreSQL est en cours d'exécution.
-
-    Returns:
-        bool: True si PostgreSQL est en cours d'exécution, False sinon.
-    """
     try:
-        # Tenter une connexion simple pour vérifier que Postgres fonctionne
-        conn = psycopg2.connect(
-            dbname=POSTGRES_DB,
-            user=POSTGRES_USER,
-            password=POSTGRES_PASSWORD,
-            host=POSTGRES_HOST,
-            port=POSTGRES_PORT,
-            connect_timeout=3,
-        )
-        conn.close()
+        # Exécute une requête triviale
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
         return True
-    except Exception:
+    except SQLAlchemyError:
         return False
-
+    
 
 def verify_database_tables() -> bool:
     """Vérifie l'existence des tables nécessaires dans la base de données.

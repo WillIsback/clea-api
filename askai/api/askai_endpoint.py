@@ -187,14 +187,11 @@ async def ask_ai(
                 
                 yield "data: [DONE]\n\n"
 
-            return StreamingResponse(
-                stream_generator(), 
-                media_type="text/event-stream"
-            )
+            return StreamingResponse(stream_generator(), media_type="text/event-stream")
         else:
-            # Réponse standard (non streamée)
+            # Réponse standard (non streamée) SANS contexte
             if request.enable_thinking:
-                thinking, response, search_results = await processor.retrieve_and_generate(
+                thinking, response, _ = await processor.retrieve_and_generate(
                     query=request.query,
                     filters=filters,
                     prompt_type=request.prompt_type,
@@ -202,24 +199,69 @@ async def ask_ai(
                 )
                 return {
                     "response": response,
-                    "thinking": thinking,
-                    "context": search_results
+                    "thinking": thinking
                 }
             else:
-                response, search_results = await processor.retrieve_and_generate(
+                response, _ = await processor.retrieve_and_generate(
                     query=request.query,
                     filters=filters,
                     prompt_type=request.prompt_type,
                     enable_thinking=False
                 )
-                return {
-                    "response": response,
-                    "context": search_results
-                }
+                return {"response": response}
 
     except Exception as e:
         logger = logging.getLogger("clea-api.askai.endpoint")
         logger.error(f"Erreur lors du traitement de la demande: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
+@router.post("/context")
+async def get_context(
+    request: AskRequest = Body(...),
+    db: Session = Depends(get_db),
+    search_engine: SearchEngine = Depends(get_search_engine)
+):
+    """Endpoint pour récupérer uniquement le contexte documentaire pour une question.
+    
+    Cette fonction interroge la base documentaire avec la question fournie
+    et récupère les documents pertinents sans générer de réponse LLM.
+    
+    Args:
+        request: Paramètres de la requête (query, filters, etc.).
+        db: Session de base de données SQLAlchemy.
+        search_engine: Instance du moteur de recherche vectorielle.
+        
+    Returns:
+        Dict[str, Any]: Contexte documentaire pour la question.
+            
+    Raises:
+        HTTPException: Si une erreur survient lors du traitement.
+    """
+    try:
+        # Préparation des filtres
+        filters = request.filters or {}
+        if request.theme:
+            filters["theme"] = request.theme
+
+        # Initialisation du processeur RAG - sans charger le modèle LLM
+        processor = RAGProcessor(
+            model_loader=None,  # Pas de modèle nécessaire pour la recherche documentaire
+            search_engine=search_engine, 
+            db_session=db
+        )
+
+        # Récupérer uniquement les documents pertinents
+        search_results = await processor.retrieve_documents(
+            query=request.query,
+            filters=filters
+        )
+        
+        return {"context": search_results}
+
+    except Exception as e:
+        logger = logging.getLogger("clea-api.askai.context")
+        logger.error(f"Erreur lors de la récupération du contexte: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
     
 @router.get("/models")
