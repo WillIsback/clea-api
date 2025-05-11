@@ -88,3 +88,17 @@ models/*
 docker
 docker-compose.yml
 .dockerignore
+Dockerfile
+
+# Development Project files
+cliff.toml
+mkdocs.yml
+pyproject.toml
+uv.lock
+
+# Dossier tests
+vectordb/test/*
+doc_loader/test/*
+askai/test/*
+pipeline/test/*
+stats/test/*
