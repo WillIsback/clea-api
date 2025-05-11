@@ -81,9 +81,8 @@ mkdocs.yml
 site/
 site/*
 
-models/embeddings/*
-models/llm/*
-models/reranking/*
+
+models/*
 
 # local Docker files configuration
 docker

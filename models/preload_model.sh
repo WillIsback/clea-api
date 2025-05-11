@@ -25,6 +25,8 @@ EMBEDDINGS_DIR="$MODELS_DIR/embeddings"
 RERANKING_DIR="$MODELS_DIR/reranking"
 LLM_DIR="$MODELS_DIR/llm"
 
+mkdir -p "$EMBEDDINGS_DIR" "$RERANKING_DIR" "$LLM_DIR"
+
 # Configuration des modèles
 declare -A MODELS
 MODELS["embeddings"]="almanach/camembertav2-base"

@@ -7,6 +7,7 @@ les erreurs globales de l'application.
 """
 
 import os
+import sys
 from contextlib import asynccontextmanager
 import argparse
 import logging
@@ -58,6 +59,10 @@ API_HOST = os.getenv("API_HOST", "localhost")
 API_PORT = int(os.getenv("API_PORT", 8080))
 API_WORKERS = int(os.getenv("API_WORKERS", 1))
 API_LOG_LEVEL = os.getenv("API_LOG_LEVEL", "info")
+# Variable d'url Frontend pour CORS
+FRONTEND_URLS = os.getenv("FRONTEND_URLS", "http://localhost").split(",")
+# Détermine si toutes les origines sont autorisées
+ALLOW_ALL_ORIGINS = os.getenv("ALLOW_ALL_ORIGINS", "false").lower() == "true"
 # Récupération de la version depuis pyproject.toml
 VERSION = get_version_from_pyproject()
 # Stockage des ressources globales
@@ -80,7 +85,7 @@ def configure_logging(debug_mode: bool = False) -> None:
     logging.basicConfig(
         level=log_level,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        handlers=[logging.StreamHandler()],
+        handlers=[logging.StreamHandler(sys.stdout)],
     )
 
     # Logger principal de l'application
@@ -272,7 +277,7 @@ app = FastAPI(
 # Middleware CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost"],
+    allow_origins=["*"] if ALLOW_ALL_ORIGINS else [FRONTEND_URLS],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["Authorization", "Content-Type"],
